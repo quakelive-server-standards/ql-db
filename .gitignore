@@ -1,0 +1,6 @@
+node_modules
+app
+pepper.*
+loglevels.json
+*.sql
+.DS_Store

@@ -1,0 +1,30 @@
+{
+  "globalLevel": "",
+
+  "EventBus.ts": "",
+
+  "HttpServer.ts": "",
+
+  "RemoteMethodApi.ts": "",
+  "Api.ts": "",
+  "PostOnlyApi.ts": "",
+  "WebSocketApi.ts": "",
+
+  "DbMigration.ts": "",
+
+  "Mission.ts": "",
+
+  "ChangeLogic.ts": "",
+  "MissionLogic.ts": "",
+  "MissionParentLogic.ts": "",
+  "MissionPersonLogic.ts": "",
+  "MissionPlanLogic.ts": "",
+  "PersonLogic.ts": "",
+  "PlanLogic.ts": "",
+  "TimeEntryLogic.ts": "",
+
+  "mega-nice-pg-transaction/PgTransaction.ts": "",
+  "mega-nice-orm/crud.ts": "",
+  "mega-nice-orm/isud.ts": "",
+  "mega-nice-orm/rowTools.ts": ""
+}

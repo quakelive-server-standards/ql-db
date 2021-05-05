@@ -1,0 +1,13 @@
+version: '3.7'
+services:
+  dbtest:
+    image: 'postgres'
+    environment:
+      - POSTGRES_DB=workos_test
+      - POSTGRES_USER=workos_test
+      - POSTGRES_PASSWORD=1234
+    networks:
+      - workostest
+networks:
+  workostest:
+    external: true

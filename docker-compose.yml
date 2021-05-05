@@ -1,0 +1,27 @@
+version: '3.7'
+services:
+  app:
+    image: 'node'
+    command: bash -c 'npm install && npm run startTsNode'
+    ports:
+      - '3000:3000'
+    working_dir: '/hostdir'
+    volumes:
+      - './:/hostdir'
+    environment: 
+      - MODE=dev
+    depends_on: 
+      - db
+    networks:
+      - workos
+  db:
+    image: 'postgres'
+    environment:
+      - POSTGRES_DB=workos
+      - POSTGRES_USER=workos
+      - POSTGRES_PASSWORD=1234
+    networks: 
+      - workos
+networks:
+  workos:
+    external: true

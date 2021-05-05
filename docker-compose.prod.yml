@@ -1,0 +1,33 @@
+version: '3.7'
+services:
+    app:
+        image: node
+        restart: always
+        working_dir: '/hostdir'
+        volumes:
+            - './:/hostdir'
+        command: bash -c 'npm install && npm run build && npm start'
+        environment: 
+            - MODE=prod    
+        depends_on: 
+            - db
+        networks:
+            - default
+            - publicNet
+        labels:
+            traefik.docker.network: publicNet
+            traefik.enable: true
+            traefik.protocol: http
+            traefik.port: 3000
+            traefik.frontend.rule: "Host:workos.upupup.co"
+    db:
+      image: 'postgres'
+      environment:
+        - POSTGRES_DB=workos_prod
+        - POSTGRES_USER=workos_prod
+        - POSTGRES_PASSWORD=1234
+      networks: 
+        - default
+networks:
+  publicNet:
+      external: true

@@ -1,0 +1,38 @@
+{
+  "name": "coderitter-api-server",
+  "version": "0.0.0",
+  "description": "Coderitter API server",
+  "scripts": {
+    "start": "node ./app/App.js",
+    "startTs": "ts-node src/App.ts",
+    "test": "mocha -r ts-node/register \"test/**/*.test.ts\"",
+    "build": "rm -rf app && tsc",
+    "demoData": "ts-node createDemoData.ts"
+  },
+  "dependencies": {
+    "@types/pg": "^7.14.11",
+    "@types/ws": "^6.0.4",
+    "coderitter-api-postonly-request": "^1.0.2",
+    "coderitter-api-remote-method-api": "^6.0.0",
+    "coderitter-api-remote-method-call": "^4.0.1",
+    "knight-change": "^1.0.0",
+    "knight-criteria": "^1.0.0",
+    "knight-json": "^1.0.1",
+    "knight-log": "^1.0.0",
+    "knight-orm": "^0.1.0",
+    "knight-pg-migration": "^1.0.0",
+    "knight-pg-transaction": "^1.0.1",
+    "knight-validation": "^1.0.0",
+    "pg": "^8.5.1",
+    "ws": "^7.4.5"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.14",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^13.13.36",
+    "chai": "^4.2.0",
+    "mocha": "^6.2.3",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.7"
+  }
+}
