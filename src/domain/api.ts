@@ -19,7 +19,16 @@ export class CreateResult<T> extends Result {
   }
 }
 
-export class ReadResult<T> extends VersionResult {
+export class ReadResult<T> extends Result {
+  read: T[]
+
+  constructor(read: T[]) {
+    super()
+    this.read = read
+  }
+}
+
+export class VersionReadResult<T> extends VersionResult {
   read: T[]
 
   constructor(read: T[], version: number) {

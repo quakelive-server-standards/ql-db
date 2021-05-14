@@ -6,7 +6,6 @@ import { PgTransaction } from 'knight-pg-transaction'
 import { CreateResult, ReadResult } from '../api'
 import schema from '../DbSchema'
 import { txQuery } from '../txQuery'
-import { ChangeCreateResult, ChangeReadResult } from './api'
 import Change from './Change'
 import { ChangeValidator } from './validators'
 
@@ -30,7 +29,7 @@ export default class ChangeLogic {
 
       let createdChange = await create(schema, 'change', 'postgres', txQuery(tx), change)
 
-      return new ChangeCreateResult(createdChange)
+      return new CreateResult(createdChange)
     })
   }
 
@@ -42,7 +41,7 @@ export default class ChangeLogic {
       let changes: Change[] = await read(schema, 'change', 'postgres', txQuery(tx), criteria)
 
       l.var('changes', changes)
-      return new ChangeReadResult(changes)
+      return new ReadResult(changes)
     })
   }
 
