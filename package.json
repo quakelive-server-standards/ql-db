@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node ./app/App.js",
     "startTs": "ts-node src/App.ts",
-    "test": "mocha -r ts-node/register \"test/**/*.test.ts\"",
+    "test": "TS_NODE_PROJECT='./tsconfig.test.json' mocha -r ts-node/register \"test/**/*.test.ts\"",
     "build": "rm -rf app && tsc",
     "demoData": "ts-node createDemoData.ts"
   },

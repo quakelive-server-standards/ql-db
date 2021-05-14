@@ -13,15 +13,15 @@ services:
     depends_on: 
       - db
     networks:
-      - workos
+      - coderitter
   db:
     image: 'postgres'
     environment:
-      - POSTGRES_DB=workos
-      - POSTGRES_USER=workos
+      - POSTGRES_DB=coderitter
+      - POSTGRES_USER=coderitter
       - POSTGRES_PASSWORD=1234
     networks: 
-      - workos
+      - coderitter
 networks:
-  workos:
+  coderitter:
     external: true

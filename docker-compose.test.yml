@@ -3,11 +3,11 @@ services:
   dbtest:
     image: 'postgres'
     environment:
-      - POSTGRES_DB=workos_test
-      - POSTGRES_USER=workos_test
+      - POSTGRES_DB=coderitter_test
+      - POSTGRES_USER=coderitter_test
       - POSTGRES_PASSWORD=1234
     networks:
-      - workostest
+      - coderittertest
 networks:
-  workostest:
+  coderittertest:
     external: true

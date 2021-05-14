@@ -1,1 +1,1 @@
-docker run -it --rm --volume $(pwd):/hostdir --workdir /hostdir --network="workos" node:latest bash
+docker run -it --rm --volume $(pwd):/hostdir --workdir /hostdir --network="coderitter" node:latest bash
