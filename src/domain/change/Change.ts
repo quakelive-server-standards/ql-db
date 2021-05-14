@@ -1,4 +1,4 @@
-import { Change as KnightChange, Method } from "knight-change"
+import { Change as KnightChange, Method } from 'knight-change'
 
 export default class Change extends KnightChange {
   

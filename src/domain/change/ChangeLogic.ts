@@ -3,17 +3,18 @@ import { ReadCriteria } from 'knight-criteria'
 import Log from 'knight-log'
 import { create, read } from 'knight-orm'
 import { PgTransaction } from 'knight-pg-transaction'
+import { CreateResult, ReadResult } from '../api'
 import schema from '../DbSchema'
 import { txQuery } from '../txQuery'
 import { ChangeCreateResult, ChangeReadResult } from './api'
 import Change from './Change'
-import { ChangeValidator } from './ChangeValidator'
+import { ChangeValidator } from './validators'
 
 let log = new Log('ChangeLogic.ts')
 
 export default class ChangeLogic {
 
-  async create(change: Change, tx: PgTransaction): Promise<ChangeCreateResult> {
+  async create(change: Change, tx: PgTransaction): Promise<CreateResult<Change>> {
     let l = log.mt('create')
     l.param('change', change)
 
@@ -33,7 +34,7 @@ export default class ChangeLogic {
     })
   }
 
-  async read(criteria: ReadCriteria = {}, tx: PgTransaction): Promise<ChangeReadResult> {
+  async read(criteria: ReadCriteria = {}, tx: PgTransaction): Promise<ReadResult<Change>> {
     let l = log.mt('read')
     l.param('criteria', criteria)
 
