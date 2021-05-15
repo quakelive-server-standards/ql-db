@@ -1,5 +1,5 @@
 {
-  "name": "coderitter-api-server",
+  "name": "ql-db",
   "version": "0.0.0",
   "description": "Coderitter API server",
   "scripts": {
@@ -22,8 +22,9 @@
     "knight-orm": "^0.1.0",
     "knight-pg-migration": "^1.0.0",
     "knight-pg-transaction": "^1.0.1",
-    "knight-validation": "^1.0.0",
+    "knight-validation": "^1.1.0",
     "pg": "^8.5.1",
+    "ql-api": "^0.2.0",
     "ws": "^7.4.5"
   },
   "devDependencies": {

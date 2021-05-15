@@ -9,7 +9,7 @@ export class ChangeValidator extends Validator {
 
     this.add('entityName', new Required)
     this.add('entityName', new TypeOf('string'))
-    this.add('entityName', new Enum())
+    this.add('entityName', new Enum('Factory', 'Frag', 'Map', 'Match', 'MatchParticipation', 'Medal', 'Player', 'Round', 'Server', 'ServerVisit', 'Stats'))
 
     this.add('method', new Required)
     this.add('method', new TypeOf('object'))

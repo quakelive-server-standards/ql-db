@@ -4,7 +4,7 @@ import { HttpApiConfig } from './api/HttpApi'
 
 let log = new Log('config.ts')
 
-const databaseName = 'coderitter'
+const databaseName = 'qldb'
 
 /**
  * Development config

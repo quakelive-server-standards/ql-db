@@ -1,1 +1,1 @@
-docker run -it --rm --volume $(pwd):/hostdir --workdir /hostdir --network="coderitter" node:latest bash
+docker run -it --rm --volume $(pwd):/hostdir --workdir /hostdir --network="qldb" node:latest bash

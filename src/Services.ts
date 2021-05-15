@@ -9,6 +9,17 @@ import { getConfigByArgvOrEnvOrDefault, test } from './config'
 import ChangeLogic from './domain/change/ChangeLogic'
 import DbMigration from './domain/DbMigration'
 import DemoData from './domain/DemoData'
+import { FactoryLogic } from './domain/factory/FactoryLogic'
+import { FragLogic } from './domain/frag/FragLogic'
+import { MapLogic } from './domain/map/MapLogic'
+import { MatchLogic } from './domain/match/MatchLogic'
+import { MatchParticipationLogic } from './domain/matchParticipation/MatchParticipationLogic'
+import { MedalLogic } from './domain/medal/MedalLogic'
+import { PlayerLogic } from './domain/player/PlayerLogic'
+import { RoundLogic } from './domain/round/RoundLogic'
+import { ServerLogic } from './domain/server/ServerLogic'
+import { ServerVisitLogic } from './domain/serverVisit/ServerVisitLogic'
+import { StatsLogic } from './domain/stats/StatsLogic'
 import instantiator from './Instantiator'
 
 let log = new Log('Services.ts')
@@ -37,6 +48,18 @@ export default class Services {
 
   changeLogic = new ChangeLogic
 
+  factoryLogic = new FactoryLogic
+  fragLogic = new FragLogic
+  mapLogic = new MapLogic
+  matchLogic = new MatchLogic
+  matchParticipationLogic = new MatchParticipationLogic
+  medalLogic = new MedalLogic
+  playerLogic = new PlayerLogic
+  roundLogic = new RoundLogic
+  serverLogic = new ServerLogic
+  serverVisitLogic = new ServerVisitLogic
+  statsLogic = new StatsLogic
+
   async start() {
     log.admin('Starting services...')
 
@@ -48,6 +71,54 @@ export default class Services {
   }
 
   inject() {
+    this.factoryLogic.changeLogic = this.changeLogic
+
+    this.fragLogic.changeLogic = this.changeLogic
+    this.fragLogic.matchLogic = this.matchLogic
+    this.fragLogic.matchParticipationLogic = this.matchParticipationLogic
+    this.fragLogic.playerLogic = this.playerLogic
+    this.fragLogic.roundLogic = this.roundLogic
+    this.fragLogic.serverLogic = this.serverLogic
+
+    this.mapLogic.changeLogic = this.changeLogic
+
+    this.matchLogic.changeLogic = this.changeLogic
+    this.matchLogic.factoryLogic = this.factoryLogic
+    this.matchLogic.mapLogic = this.mapLogic
+    this.matchLogic.serverLogic = this.serverLogic
+
+    this.matchParticipationLogic.changeLogic = this.changeLogic
+    this.matchParticipationLogic.matchLogic = this.matchLogic
+    this.matchParticipationLogic.playerLogic = this.playerLogic
+    this.matchParticipationLogic.roundLogic = this.roundLogic
+    this.matchParticipationLogic.serverLogic = this.serverLogic
+    this.matchParticipationLogic.statsLogic = this.statsLogic
+
+    this.medalLogic.changeLogic = this.changeLogic
+    this.medalLogic.matchLogic = this.matchLogic
+    this.medalLogic.matchParticipationLogic = this.matchParticipationLogic
+    this.medalLogic.playerLogic = this.playerLogic
+    this.medalLogic.roundLogic = this.roundLogic
+    this.medalLogic.serverLogic = this.serverLogic
+
+    this.playerLogic.changeLogic = this.changeLogic
+
+    this.roundLogic.changeLogic = this.changeLogic
+    this.roundLogic.matchLogic = this.matchLogic
+    this.roundLogic.serverLogic = this.serverLogic
+
+    this.serverLogic.changeLogic = this.changeLogic
+
+    this.serverVisitLogic.changeLogic = this.changeLogic
+    this.serverVisitLogic.playerLogic = this.playerLogic
+    this.serverVisitLogic.serverLogic = this.serverLogic
+
+    this.statsLogic.changeLogic = this.changeLogic
+    this.statsLogic.matchLogic = this.matchLogic
+    this.statsLogic.matchParticipationLogic = this.matchParticipationLogic
+    this.statsLogic.playerLogic = this.playerLogic
+    this.statsLogic.roundLogic = this.roundLogic
+    this.statsLogic.serverLogic = this.serverLogic
   }
 
   async startDb() {

@@ -13,15 +13,15 @@ services:
     depends_on: 
       - db
     networks:
-      - coderitter
+      - qldb
   db:
     image: 'postgres'
     environment:
-      - POSTGRES_DB=coderitter
-      - POSTGRES_USER=coderitter
+      - POSTGRES_DB=qldb
+      - POSTGRES_USER=qldb
       - POSTGRES_PASSWORD=1234
     networks: 
-      - coderitter
+      - qldb
 networks:
-  coderitter:
+  qldb:
     external: true

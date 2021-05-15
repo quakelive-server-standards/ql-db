@@ -3,11 +3,11 @@ services:
   dbtest:
     image: 'postgres'
     environment:
-      - POSTGRES_DB=coderitter_test
-      - POSTGRES_USER=coderitter_test
+      - POSTGRES_DB=qldb_test
+      - POSTGRES_USER=qldb_test
       - POSTGRES_PASSWORD=1234
     networks:
-      - coderittertest
+      - qldbtest
 networks:
-  coderittertest:
+  qldbtest:
     external: true
