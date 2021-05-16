@@ -1,6 +1,6 @@
 import { Result } from 'coderitter-api-remote-method-call'
 import { Changes } from 'knight-change'
-import { CreateOrGetResult, EntitiesResult, EntitiesVersionResult, EntityResult } from './domain/api'
+import { CountResult, CreateOrGetResult, EntitiesResult, EntitiesVersionResult, EntityResult } from './domain/api'
 import Change from './domain/change/Change'
 
 export default {
@@ -14,5 +14,6 @@ export default {
   'EntitiesResult': () => new EntitiesResult,
   'EntitiesVersionResult': () => new EntitiesVersionResult,
   'CreateOrGetResult': () => new CreateOrGetResult,
+  'CountResult': () => new CountResult
   
 } as {[ className: string ]: () => any }
