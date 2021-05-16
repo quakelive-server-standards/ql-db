@@ -1,65 +1,44 @@
 import { Result } from 'coderitter-api-remote-method-call'
 
-export class VersionResult extends Result {
+export class EntityResult<T> extends Result {
+
+  entity: T
+
+  constructor(entity?: T) {
+    super()
+    this.entity = entity as any
+  }
+}
+
+export class EntitiesResult<T> extends Result {
+
+  entities: T[]
   
+  constructor(entities?: T[]) {
+    super()
+
+    this.entities = entities as any
+  }
+}
+
+export class EntitiesVersionResult<T> extends EntitiesResult<T> {
+
   version: number
 
-  constructor(version: number) {
-    super()
-    this.version = version
-  } 
-}
+  constructor(entities?: T[], version?: number) {
+    super(entities)
 
-export class CreateResult<T> extends Result {
-  created: T
-
-  constructor(created?: T) {
-    super()
-    this.created = created as any
+    this.version = version as any
   }
 }
 
-export class ReadResult<T> extends Result {
-  read: T[]
+export class CreateOrGetResult<T> extends EntityResult<T> {
+  
+  created?: boolean
 
-  constructor(read?: T[]) {
-    super()
-    this.read = read as any
-  }
-}
+  constructor(entity?: T, created?: boolean) {
+    super(entity)
 
-export class VersionReadResult<T> extends VersionResult {
-  read: T[]
-
-  constructor(read?: T[], version?: number) {
-    super(version as any)
-    this.read = read as any
-  }
-}
-
-export class CountResult extends Result {
-  count: number
-
-  constructor(count?: number) {
-    super()
-    this.count = count as any
-  }
-}
-
-export class UpdateResult<T> extends Result {
-  updated: T
-
-  constructor(updated?: T) {
-    super()
-    this.updated = updated as any
-  }
-}
-
-export class DeleteResult<T> extends Result {
-  deleted: T
-
-  constructor(deleted?: T) {
-    super()
-    this.deleted = deleted as any
+    this.created = created
   }
 }

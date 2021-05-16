@@ -100,7 +100,7 @@ export default class WebSocketApi {
     l.var('changeReadResult', changeReadResult)
 
     let changes = new Changes
-    changes.changes = changeReadResult.read
+    changes.changes = changeReadResult.entities
 
     let clients: WebSocket[]
     if (client != undefined) {
