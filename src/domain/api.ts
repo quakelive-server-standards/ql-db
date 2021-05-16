@@ -42,3 +42,14 @@ export class CreateOrGetResult<T> extends EntityResult<T> {
     this.created = created
   }
 }
+
+export class CountResult extends Result {
+  
+  count: number
+
+  constructor(count?: number) {
+    super()
+
+    this.count = count as any
+  }
+}
