@@ -2,9 +2,9 @@ import { Result } from 'coderitter-api-remote-method-call'
 
 export class VersionResult extends Result {
   
-  version?: number
+  version: number
 
-  constructor(version?: number) {
+  constructor(version: number) {
     super()
     this.version = version
   } 
@@ -13,27 +13,27 @@ export class VersionResult extends Result {
 export class CreateResult<T> extends Result {
   created: T
 
-  constructor(created: T) {
+  constructor(created?: T) {
     super()
-    this.created = created
+    this.created = created as any
   }
 }
 
 export class ReadResult<T> extends Result {
   read: T[]
 
-  constructor(read: T[]) {
+  constructor(read?: T[]) {
     super()
-    this.read = read
+    this.read = read as any
   }
 }
 
 export class VersionReadResult<T> extends VersionResult {
   read: T[]
 
-  constructor(read: T[], version: number) {
-    super(version)
-    this.read = read
+  constructor(read?: T[], version?: number) {
+    super(version as any)
+    this.read = read as any
   }
 }
 
@@ -49,17 +49,17 @@ export class CountResult extends Result {
 export class UpdateResult<T> extends Result {
   updated: T
 
-  constructor(updated: T) {
+  constructor(updated?: T) {
     super()
-    this.updated = updated
+    this.updated = updated as any
   }
 }
 
 export class DeleteResult<T> extends Result {
   deleted: T
 
-  constructor(deleted: T) {
+  constructor(deleted?: T) {
     super()
-    this.deleted = deleted
+    this.deleted = deleted as any
   }
 }
