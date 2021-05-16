@@ -1,5 +1,5 @@
 import { Changes } from 'knight-change'
-import { toJson, toJsonObj } from 'knight-json'
+import { toJson } from 'knight-json'
 import Log from 'knight-log'
 import { PgTransaction } from 'knight-pg-transaction'
 import { Pool } from 'pg'
@@ -100,7 +100,7 @@ export default class WebSocketApi {
     l.var('changeReadResult', changeReadResult)
 
     let changes = new Changes
-    changes.changes = changeReadResult.changes
+    changes.changes = changeReadResult.read
 
     let clients: WebSocket[]
     if (client != undefined) {
