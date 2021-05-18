@@ -43,29 +43,29 @@ describe('domain/MatchLogic.ts', function() {
       let result = await Services.get().matchLogic.create(match, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.created.id).to.equal(1)
-      expect(result.created.aborted).to.equal(true)
-      expect(result.created.cvars.capturelimit).to.equal(1)
-      expect(result.created.cvars.fraglimit).to.equal(2)
-      expect(result.created.cvars.g_instagib).to.equal(true)
-      expect(result.created.cvars.g_quadHog).to.equal(true)
-      expect(result.created.cvars.g_training).to.equal(true)
-      expect(result.created.cvars.mercylimit).to.equal(3)
-      expect(result.created.cvars.roundlimit).to.equal(4)
-      expect(result.created.cvars.scorelimit).to.equal(5)
-      expect(result.created.cvars.timelimit).to.equal(6)
-      expect(result.created.exitMessage).to.equal('Exit')
-      expect(result.created.factoryId).to.equal(1)
-      expect(result.created.finishDate).to.deep.equal(date1)
-      expect(result.created.guid).to.equal('012345678901234567890123456789012345')
-      expect(result.created.lastLeadChangeTime).to.equal(7)
-      expect(result.created.length).to.equal(8)
-      expect(result.created.mapId).to.equal(1)
-      expect(result.created.restarted).to.equal(true)
-      expect(result.created.score1).to.equal(9)
-      expect(result.created.score2).to.equal(10)
-      expect(result.created.serverId).to.equal(1)
-      expect(result.created.startDate).to.deep.equal(date2)
+      expect(result.entity.id).to.equal(1)
+      expect(result.entity.aborted).to.equal(true)
+      expect(result.entity.cvars.capturelimit).to.equal(1)
+      expect(result.entity.cvars.fraglimit).to.equal(2)
+      expect(result.entity.cvars.g_instagib).to.equal(true)
+      expect(result.entity.cvars.g_quadHog).to.equal(true)
+      expect(result.entity.cvars.g_training).to.equal(true)
+      expect(result.entity.cvars.mercylimit).to.equal(3)
+      expect(result.entity.cvars.roundlimit).to.equal(4)
+      expect(result.entity.cvars.scorelimit).to.equal(5)
+      expect(result.entity.cvars.timelimit).to.equal(6)
+      expect(result.entity.exitMessage).to.equal('Exit')
+      expect(result.entity.factoryId).to.equal(1)
+      expect(result.entity.finishDate).to.deep.equal(date1)
+      expect(result.entity.guid).to.equal('012345678901234567890123456789012345')
+      expect(result.entity.lastLeadChangeTime).to.equal(7)
+      expect(result.entity.length).to.equal(8)
+      expect(result.entity.mapId).to.equal(1)
+      expect(result.entity.restarted).to.equal(true)
+      expect(result.entity.score1).to.equal(9)
+      expect(result.entity.score2).to.equal(10)
+      expect(result.entity.serverId).to.equal(1)
+      expect(result.entity.startDate).to.deep.equal(date2)
     })
   })
 
@@ -104,29 +104,29 @@ describe('domain/MatchLogic.ts', function() {
       let result = await Services.get().matchLogic.read({}, tx())
       
       expect(result.isValue()).to.be.true
-      expect(result.read[0].id).to.equal(1)
-      expect(result.read[0].aborted).to.equal(true)
-      expect(result.read[0].cvars.capturelimit).to.equal(1)
-      expect(result.read[0].cvars.fraglimit).to.equal(2)
-      expect(result.read[0].cvars.g_instagib).to.equal(true)
-      expect(result.read[0].cvars.g_quadHog).to.equal(true)
-      expect(result.read[0].cvars.g_training).to.equal(true)
-      expect(result.read[0].cvars.mercylimit).to.equal(3)
-      expect(result.read[0].cvars.roundlimit).to.equal(4)
-      expect(result.read[0].cvars.scorelimit).to.equal(5)
-      expect(result.read[0].cvars.timelimit).to.equal(6)
-      expect(result.read[0].exitMessage).to.equal('Exit')
-      expect(result.read[0].factoryId).to.equal(1)
-      expect(result.read[0].finishDate).to.deep.equal(date1)
-      expect(result.read[0].guid).to.equal('012345678901234567890123456789012345')
-      expect(result.read[0].lastLeadChangeTime).to.equal(7)
-      expect(result.read[0].length).to.equal(8)
-      expect(result.read[0].mapId).to.equal(1)
-      expect(result.read[0].restarted).to.equal(true)
-      expect(result.read[0].score1).to.equal(9)
-      expect(result.read[0].score2).to.equal(10)
-      expect(result.read[0].serverId).to.equal(1)
-      expect(result.read[0].startDate).to.deep.equal(date2)
+      expect(result.entities[0].id).to.equal(1)
+      expect(result.entities[0].aborted).to.equal(true)
+      expect(result.entities[0].cvars.capturelimit).to.equal(1)
+      expect(result.entities[0].cvars.fraglimit).to.equal(2)
+      expect(result.entities[0].cvars.g_instagib).to.equal(true)
+      expect(result.entities[0].cvars.g_quadHog).to.equal(true)
+      expect(result.entities[0].cvars.g_training).to.equal(true)
+      expect(result.entities[0].cvars.mercylimit).to.equal(3)
+      expect(result.entities[0].cvars.roundlimit).to.equal(4)
+      expect(result.entities[0].cvars.scorelimit).to.equal(5)
+      expect(result.entities[0].cvars.timelimit).to.equal(6)
+      expect(result.entities[0].exitMessage).to.equal('Exit')
+      expect(result.entities[0].factoryId).to.equal(1)
+      expect(result.entities[0].finishDate).to.deep.equal(date1)
+      expect(result.entities[0].guid).to.equal('012345678901234567890123456789012345')
+      expect(result.entities[0].lastLeadChangeTime).to.equal(7)
+      expect(result.entities[0].length).to.equal(8)
+      expect(result.entities[0].mapId).to.equal(1)
+      expect(result.entities[0].restarted).to.equal(true)
+      expect(result.entities[0].score1).to.equal(9)
+      expect(result.entities[0].score2).to.equal(10)
+      expect(result.entities[0].serverId).to.equal(1)
+      expect(result.entities[0].startDate).to.deep.equal(date2)
     })
 
     it('should load the factory', async function() {
@@ -137,8 +137,8 @@ describe('domain/MatchLogic.ts', function() {
       let result = await Services.get().matchLogic.read({ factory: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].factory).to.be.not.undefined
-      expect(result.read[0].factory.id).to.equal(1)
+      expect(result.entities[0].factory).to.be.not.undefined
+      expect(result.entities[0].factory.id).to.equal(1)
     })
 
     it('should load all frags', async function() {
@@ -150,10 +150,10 @@ describe('domain/MatchLogic.ts', function() {
       let result = await Services.get().matchLogic.read({ frags: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].frags).to.be.not.undefined
-      expect(result.read[0].frags.length).to.equal(2)
-      expect(result.read[0].frags[0].id).to.equal(2)
-      expect(result.read[0].frags[1].id).to.equal(1)
+      expect(result.entities[0].frags).to.be.not.undefined
+      expect(result.entities[0].frags.length).to.equal(2)
+      expect(result.entities[0].frags[0].id).to.equal(2)
+      expect(result.entities[0].frags[1].id).to.equal(1)
     })
 
     it('should load the map', async function() {
@@ -164,8 +164,8 @@ describe('domain/MatchLogic.ts', function() {
       let result = await Services.get().matchLogic.read({ map: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].map).to.be.not.undefined
-      expect(result.read[0].map.id).to.equal(1)
+      expect(result.entities[0].map).to.be.not.undefined
+      expect(result.entities[0].map.id).to.equal(1)
     })
 
     it('should load all medals', async function() {
@@ -177,10 +177,10 @@ describe('domain/MatchLogic.ts', function() {
       let result = await Services.get().matchLogic.read({ medals: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].medals).to.be.not.undefined
-      expect(result.read[0].medals.length).to.equal(2)
-      expect(result.read[0].medals[0].id).to.equal(1)
-      expect(result.read[0].medals[1].id).to.equal(2)
+      expect(result.entities[0].medals).to.be.not.undefined
+      expect(result.entities[0].medals.length).to.equal(2)
+      expect(result.entities[0].medals[0].id).to.equal(1)
+      expect(result.entities[0].medals[1].id).to.equal(2)
     })
 
     it('should load all match participations', async function() {
@@ -192,10 +192,10 @@ describe('domain/MatchLogic.ts', function() {
       let result = await Services.get().matchLogic.read({ participations: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].participations).to.be.not.undefined
-      expect(result.read[0].participations.length).to.equal(2)
-      expect(result.read[0].participations[0].id).to.equal(1)
-      expect(result.read[0].participations[1].id).to.equal(2)
+      expect(result.entities[0].participations).to.be.not.undefined
+      expect(result.entities[0].participations.length).to.equal(2)
+      expect(result.entities[0].participations[0].id).to.equal(1)
+      expect(result.entities[0].participations[1].id).to.equal(2)
     })
 
     it('should load all rounds', async function() {
@@ -207,10 +207,10 @@ describe('domain/MatchLogic.ts', function() {
       let result = await Services.get().matchLogic.read({ rounds: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].rounds).to.be.not.undefined
-      expect(result.read[0].rounds.length).to.equal(2)
-      expect(result.read[0].rounds[0].id).to.equal(1)
-      expect(result.read[0].rounds[1].id).to.equal(2)
+      expect(result.entities[0].rounds).to.be.not.undefined
+      expect(result.entities[0].rounds.length).to.equal(2)
+      expect(result.entities[0].rounds[0].id).to.equal(1)
+      expect(result.entities[0].rounds[1].id).to.equal(2)
     })
 
     it('should load the server', async function() {
@@ -221,8 +221,8 @@ describe('domain/MatchLogic.ts', function() {
       let result = await Services.get().matchLogic.read({ server: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].server).to.be.not.undefined
-      expect(result.read[0].server.id).to.equal(1)
+      expect(result.entities[0].server).to.be.not.undefined
+      expect(result.entities[0].server.id).to.equal(1)
     })
   })
 
@@ -295,29 +295,29 @@ describe('domain/MatchLogic.ts', function() {
       let result = await Services.get().matchLogic.update(match, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.updated.id).to.equal(1)
-      expect(result.updated.aborted).to.equal(false)
-      expect(result.updated.cvars.capturelimit).to.equal(2)
-      expect(result.updated.cvars.fraglimit).to.equal(3)
-      expect(result.updated.cvars.g_instagib).to.equal(false)
-      expect(result.updated.cvars.g_quadHog).to.equal(false)
-      expect(result.updated.cvars.g_training).to.equal(false)
-      expect(result.updated.cvars.mercylimit).to.equal(4)
-      expect(result.updated.cvars.roundlimit).to.equal(5)
-      expect(result.updated.cvars.scorelimit).to.equal(6)
-      expect(result.updated.cvars.timelimit).to.equal(7)
-      expect(result.updated.exitMessage).to.equal('Enter')
-      expect(result.updated.factoryId).to.equal(2)
-      expect(result.updated.finishDate).to.deep.equal(date2)
-      expect(result.updated.guid).to.equal('123456789012345678901234567890123456')
-      expect(result.updated.lastLeadChangeTime).to.equal(8)
-      expect(result.updated.length).to.equal(9)
-      expect(result.updated.mapId).to.equal(2)
-      expect(result.updated.restarted).to.equal(false)
-      expect(result.updated.score1).to.equal(10)
-      expect(result.updated.score2).to.equal(11)
-      expect(result.updated.serverId).to.equal(2)
-      expect(result.updated.startDate).to.deep.equal(date1)
+      expect(result.entity.id).to.equal(1)
+      expect(result.entity.aborted).to.equal(false)
+      expect(result.entity.cvars.capturelimit).to.equal(2)
+      expect(result.entity.cvars.fraglimit).to.equal(3)
+      expect(result.entity.cvars.g_instagib).to.equal(false)
+      expect(result.entity.cvars.g_quadHog).to.equal(false)
+      expect(result.entity.cvars.g_training).to.equal(false)
+      expect(result.entity.cvars.mercylimit).to.equal(4)
+      expect(result.entity.cvars.roundlimit).to.equal(5)
+      expect(result.entity.cvars.scorelimit).to.equal(6)
+      expect(result.entity.cvars.timelimit).to.equal(7)
+      expect(result.entity.exitMessage).to.equal('Enter')
+      expect(result.entity.factoryId).to.equal(2)
+      expect(result.entity.finishDate).to.deep.equal(date2)
+      expect(result.entity.guid).to.equal('123456789012345678901234567890123456')
+      expect(result.entity.lastLeadChangeTime).to.equal(8)
+      expect(result.entity.length).to.equal(9)
+      expect(result.entity.mapId).to.equal(2)
+      expect(result.entity.restarted).to.equal(false)
+      expect(result.entity.score1).to.equal(10)
+      expect(result.entity.score2).to.equal(11)
+      expect(result.entity.serverId).to.equal(2)
+      expect(result.entity.startDate).to.deep.equal(date1)
     })
   })
 
@@ -359,29 +359,29 @@ describe('domain/MatchLogic.ts', function() {
       let result = await Services.get().matchLogic.delete(match, tx())
       
       expect(result.isValue()).to.be.true
-      expect(result.deleted.id).to.equal(1)
-      expect(result.deleted.aborted).to.equal(true)
-      expect(result.deleted.cvars.capturelimit).to.equal(1)
-      expect(result.deleted.cvars.fraglimit).to.equal(2)
-      expect(result.deleted.cvars.g_instagib).to.equal(true)
-      expect(result.deleted.cvars.g_quadHog).to.equal(true)
-      expect(result.deleted.cvars.g_training).to.equal(true)
-      expect(result.deleted.cvars.mercylimit).to.equal(3)
-      expect(result.deleted.cvars.roundlimit).to.equal(4)
-      expect(result.deleted.cvars.scorelimit).to.equal(5)
-      expect(result.deleted.cvars.timelimit).to.equal(6)
-      expect(result.deleted.exitMessage).to.equal('Exit')
-      expect(result.deleted.factoryId).to.equal(1)
-      expect(result.deleted.finishDate).to.deep.equal(date1)
-      expect(result.deleted.guid).to.equal('012345678901234567890123456789012345')
-      expect(result.deleted.lastLeadChangeTime).to.equal(7)
-      expect(result.deleted.length).to.equal(8)
-      expect(result.deleted.mapId).to.equal(1)
-      expect(result.deleted.restarted).to.equal(true)
-      expect(result.deleted.score1).to.equal(9)
-      expect(result.deleted.score2).to.equal(10)
-      expect(result.deleted.serverId).to.equal(1)
-      expect(result.deleted.startDate).to.deep.equal(date2)
+      expect(result.entity.id).to.equal(1)
+      expect(result.entity.aborted).to.equal(true)
+      expect(result.entity.cvars.capturelimit).to.equal(1)
+      expect(result.entity.cvars.fraglimit).to.equal(2)
+      expect(result.entity.cvars.g_instagib).to.equal(true)
+      expect(result.entity.cvars.g_quadHog).to.equal(true)
+      expect(result.entity.cvars.g_training).to.equal(true)
+      expect(result.entity.cvars.mercylimit).to.equal(3)
+      expect(result.entity.cvars.roundlimit).to.equal(4)
+      expect(result.entity.cvars.scorelimit).to.equal(5)
+      expect(result.entity.cvars.timelimit).to.equal(6)
+      expect(result.entity.exitMessage).to.equal('Exit')
+      expect(result.entity.factoryId).to.equal(1)
+      expect(result.entity.finishDate).to.deep.equal(date1)
+      expect(result.entity.guid).to.equal('012345678901234567890123456789012345')
+      expect(result.entity.lastLeadChangeTime).to.equal(7)
+      expect(result.entity.length).to.equal(8)
+      expect(result.entity.mapId).to.equal(1)
+      expect(result.entity.restarted).to.equal(true)
+      expect(result.entity.score1).to.equal(9)
+      expect(result.entity.score2).to.equal(10)
+      expect(result.entity.serverId).to.equal(1)
+      expect(result.entity.startDate).to.deep.equal(date2)
     })
   })
 })

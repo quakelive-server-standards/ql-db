@@ -27,10 +27,23 @@ export async function queryFn(sqlString: string, values?: any[]) {
   return result.rows
 }
 
-export function containsMisfit(field: string, misfitType: string, misfits: Misfit[]): boolean {
+export function containsMisfit(fieldOrFields: string|string[], misfitType: string, misfits: Misfit[]): boolean {
   for (let misfit of misfits) {
-    if (misfit.field == field && misfit.name == misfitType) {
+    if (typeof fieldOrFields == 'string' && misfit.field == fieldOrFields && misfit.name == misfitType) {
       return true
+    }
+    else if (fieldOrFields instanceof Array && misfit.fields != undefined && misfit.fields.length == fieldOrFields.length) {
+      let fieldsMatch = true
+      for (let field of fieldOrFields) {
+        if (! (field in misfit.fields)) {
+          fieldsMatch = false
+          break
+        }
+      }
+
+      if (fieldsMatch) {
+        return true
+      }
     }
   }
 

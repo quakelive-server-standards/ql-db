@@ -4,7 +4,7 @@ import Log from 'knight-log'
 import { count, create, delete_, read, update } from 'knight-orm'
 import { PgTransaction } from 'knight-pg-transaction'
 import { MisfitsError } from 'knight-validation'
-import { CountResult, CreateResult, DeleteResult, UpdateResult, VersionReadResult } from '../api'
+import { CountResult, EntitiesVersionResult, EntityResult } from '../api'
 import Change from '../change/Change'
 import ChangeLogic from '../change/ChangeLogic'
 import schema from '../DbSchema'
@@ -24,7 +24,7 @@ export class MatchLogic {
   mapLogic!: MapLogic
   serverLogic!: ServerLogic
 
-  create(match: Match, tx: PgTransaction): Promise<CreateResult<Match>> {
+  create(match: Match, tx: PgTransaction): Promise<EntityResult<Match>> {
     let l = log.mt('create')
     l.param('match', match)
 
@@ -43,13 +43,13 @@ export class MatchLogic {
       let created = await create(schema, 'match', 'postgres', txQuery(tx), match)
       l.dev('Created entity', created)
 
-      let result = new CreateResult(created)
+      let result = new EntityResult(created)
       l.returning('Returning result...', result)
       return result
     })
   }
 
-  read(criteria: ReadCriteria, tx: PgTransaction): Promise<VersionReadResult<Match>> {
+  read(criteria: ReadCriteria, tx: PgTransaction): Promise<EntitiesVersionResult<Match>> {
     let l = log.mt('read')
     l.param('criteria', criteria)
 
@@ -61,7 +61,7 @@ export class MatchLogic {
       let version = await this.changeLogic.latestVersion(tx)
       l.var('version', version)
 
-      return new VersionReadResult(readed, version)
+      return new EntitiesVersionResult(readed, version)
     })
   }
 
@@ -81,7 +81,7 @@ export class MatchLogic {
     })
   }
 
-  update(match: Match, tx: PgTransaction): Promise<UpdateResult<Match>> {
+  update(match: Match, tx: PgTransaction): Promise<EntityResult<Match>> {
     let l = log.mt('update')
     l.param('match', match)
 
@@ -110,13 +110,13 @@ export class MatchLogic {
         throw new MisfitsError(changeCreateResult.misfits)
       }
 
-      let result = new UpdateResult(updated)
+      let result = new EntityResult(updated)
       l.returning('Returning result...', result)
       return result
     })
   }
 
-  delete(match: Match, tx: PgTransaction): Promise<DeleteResult<Match>> {
+  delete(match: Match, tx: PgTransaction): Promise<EntityResult<Match>> {
     let l = log.mt('delete')
     l.var('match', match)
 
@@ -145,7 +145,7 @@ export class MatchLogic {
         throw new MisfitsError(changeCreateResult.misfits)
       }
 
-      let result = new DeleteResult(deleted)
+      let result = new EntityResult(deleted)
       l.returning('Returning result...', result)
       return result      
     })

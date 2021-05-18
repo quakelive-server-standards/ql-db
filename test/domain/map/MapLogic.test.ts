@@ -14,8 +14,8 @@ describe('domain/MapLogic.ts', function() {
       let result = await Services.get().mapLogic.create(map, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.created.id).to.equal(1)
-      expect(result.created.name).to.equal('aerowalk')
+      expect(result.entity.id).to.equal(1)
+      expect(result.entity.name).to.equal('aerowalk')
     })
   })
 
@@ -28,9 +28,9 @@ describe('domain/MapLogic.ts', function() {
       let result = await Services.get().mapLogic.read({}, tx())
       
       expect(result.isValue()).to.be.true
-      expect(result.read.length).to.equal(1)
-      expect(result.read[0].id).to.equal(1)
-      expect(result.read[0].name).to.equal('aerowalk')
+      expect(result.entities.length).to.equal(1)
+      expect(result.entities[0].id).to.equal(1)
+      expect(result.entities[0].name).to.equal('aerowalk')
     })
 
     it('should load all matches', async function() {
@@ -42,10 +42,10 @@ describe('domain/MapLogic.ts', function() {
       let result = await Services.get().mapLogic.read({ matches: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].matches).to.be.not.undefined
-      expect(result.read[0].matches.length).to.equal(2)
-      expect(result.read[0].matches[0].id).to.equal(1)
-      expect(result.read[0].matches[1].id).to.equal(2)
+      expect(result.entities[0].matches).to.be.not.undefined
+      expect(result.entities[0].matches.length).to.equal(2)
+      expect(result.entities[0].matches[0].id).to.equal(1)
+      expect(result.entities[0].matches[1].id).to.equal(2)
     })
   })
 
@@ -62,8 +62,8 @@ describe('domain/MapLogic.ts', function() {
       let result = await Services.get().mapLogic.update(map, tx())
       
       expect(result.isValue()).to.be.true
-      expect(result.updated.id).to.equal(1)
-      expect(result.updated.name).to.equal('bloodrun')
+      expect(result.entity.id).to.equal(1)
+      expect(result.entity.name).to.equal('bloodrun')
     })
   })
 
@@ -79,8 +79,8 @@ describe('domain/MapLogic.ts', function() {
       let result = await Services.get().mapLogic.delete(map, tx())
       
       expect(result.isValue()).to.be.true
-      expect(result.deleted.id).to.equal(1)
-      expect(result.deleted.name).to.equal('aerowalk')
+      expect(result.entity.id).to.equal(1)
+      expect(result.entity.name).to.equal('aerowalk')
     })
   })
 })

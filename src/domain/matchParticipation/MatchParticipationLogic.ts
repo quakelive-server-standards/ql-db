@@ -4,7 +4,7 @@ import Log from 'knight-log'
 import { count, create, delete_, read, update } from 'knight-orm'
 import { PgTransaction } from 'knight-pg-transaction'
 import { MisfitsError } from 'knight-validation'
-import { CountResult, CreateResult, DeleteResult, UpdateResult, VersionReadResult } from '../api'
+import { CountResult, EntitiesVersionResult, EntityResult } from '../api'
 import Change from '../change/Change'
 import ChangeLogic from '../change/ChangeLogic'
 import schema from '../DbSchema'
@@ -29,7 +29,7 @@ export class MatchParticipationLogic {
   statsLogic!: StatsLogic
 
 
-  create(matchParticipation: MatchParticipation, tx: PgTransaction): Promise<CreateResult<MatchParticipation>> {
+  create(matchParticipation: MatchParticipation, tx: PgTransaction): Promise<EntityResult<MatchParticipation>> {
     let l = log.mt('create')
     l.param('matchParticipation', matchParticipation)
 
@@ -48,13 +48,13 @@ export class MatchParticipationLogic {
       let created = await create(schema, 'match_participation', 'postgres', txQuery(tx), matchParticipation)
       l.dev('Created entity', created)
 
-      let result = new CreateResult(created)
+      let result = new EntityResult(created)
       l.returning('Returning result...', result)
       return result
     })
   }
 
-  read(criteria: ReadCriteria, tx: PgTransaction): Promise<VersionReadResult<MatchParticipation>> {
+  read(criteria: ReadCriteria, tx: PgTransaction): Promise<EntitiesVersionResult<MatchParticipation>> {
     let l = log.mt('read')
     l.param('criteria', criteria)
 
@@ -66,7 +66,7 @@ export class MatchParticipationLogic {
       let version = await this.changeLogic.latestVersion(tx)
       l.var('version', version)
 
-      return new VersionReadResult(readed, version)
+      return new EntitiesVersionResult(readed, version)
     })
   }
 
@@ -86,7 +86,7 @@ export class MatchParticipationLogic {
     })
   }
 
-  update(matchParticipation: MatchParticipation, tx: PgTransaction): Promise<UpdateResult<MatchParticipation>> {
+  update(matchParticipation: MatchParticipation, tx: PgTransaction): Promise<EntityResult<MatchParticipation>> {
     let l = log.mt('update')
     l.param('matchParticipation', matchParticipation)
 
@@ -115,13 +115,13 @@ export class MatchParticipationLogic {
         throw new MisfitsError(changeCreateResult.misfits)
       }
 
-      let result = new UpdateResult(updated)
+      let result = new EntityResult(updated)
       l.returning('Returning result...', result)
       return result
     })
   }
 
-  delete(matchParticipation: MatchParticipation, tx: PgTransaction): Promise<DeleteResult<MatchParticipation>> {
+  delete(matchParticipation: MatchParticipation, tx: PgTransaction): Promise<EntityResult<MatchParticipation>> {
     let l = log.mt('delete')
     l.var('matchParticipation', matchParticipation)
 
@@ -150,7 +150,7 @@ export class MatchParticipationLogic {
         throw new MisfitsError(changeCreateResult.misfits)
       }
 
-      let result = new DeleteResult(deleted)
+      let result = new EntityResult(deleted)
       l.returning('Returning result...', result)
       return result      
     })

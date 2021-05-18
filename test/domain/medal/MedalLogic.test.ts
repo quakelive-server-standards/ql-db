@@ -29,15 +29,15 @@ describe('domain/MedalLogic.ts', function() {
       let result = await Services.get().medalLogic.create(medal, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.created.id).to.equal(1)
-      expect(result.created.date).to.deep.equal(now)
-      expect(result.created.matchId).to.equal(1)
-      expect(result.created.matchParticipationId).to.equal(1)
-      expect(result.created.medal).to.equal(MedalType.Accuracy)
-      expect(result.created.playerId).to.equal(1)
-      expect(result.created.roundId).to.equal(1)
-      expect(result.created.serverId).to.equal(1)
-      expect(result.created.warmup).to.equal(true)
+      expect(result.entity.id).to.equal(1)
+      expect(result.entity.date).to.deep.equal(now)
+      expect(result.entity.matchId).to.equal(1)
+      expect(result.entity.matchParticipationId).to.equal(1)
+      expect(result.entity.medal).to.equal(MedalType.Accuracy)
+      expect(result.entity.playerId).to.equal(1)
+      expect(result.entity.roundId).to.equal(1)
+      expect(result.entity.serverId).to.equal(1)
+      expect(result.entity.warmup).to.equal(true)
     })
   })
 
@@ -59,16 +59,16 @@ describe('domain/MedalLogic.ts', function() {
       let result = await Services.get().medalLogic.read({}, tx())
       
       expect(result.isValue()).to.be.true
-      expect(result.read.length).to.equal(1)
-      expect(result.read[0].id).to.equal(1)
-      expect(result.read[0].date).to.deep.equal(now)
-      expect(result.read[0].matchId).to.equal(1)
-      expect(result.read[0].matchParticipationId).to.equal(1)
-      expect(result.read[0].medal).to.equal(MedalType.Accuracy)
-      expect(result.read[0].playerId).to.equal(1)
-      expect(result.read[0].roundId).to.equal(1)
-      expect(result.read[0].serverId).to.equal(1)
-      expect(result.read[0].warmup).to.equal(true)
+      expect(result.entities.length).to.equal(1)
+      expect(result.entities[0].id).to.equal(1)
+      expect(result.entities[0].date).to.deep.equal(now)
+      expect(result.entities[0].matchId).to.equal(1)
+      expect(result.entities[0].matchParticipationId).to.equal(1)
+      expect(result.entities[0].medal).to.equal(MedalType.Accuracy)
+      expect(result.entities[0].playerId).to.equal(1)
+      expect(result.entities[0].roundId).to.equal(1)
+      expect(result.entities[0].serverId).to.equal(1)
+      expect(result.entities[0].warmup).to.equal(true)
     })
 
     it('should load the match', async function() {
@@ -79,8 +79,8 @@ describe('domain/MedalLogic.ts', function() {
       let result = await Services.get().medalLogic.read({ match: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].match).to.be.not.undefined
-      expect(result.read[0].match.id).to.equal(1)
+      expect(result.entities[0].match).to.be.not.undefined
+      expect(result.entities[0].match.id).to.equal(1)
     })
 
     it('should load the match', async function() {
@@ -91,8 +91,8 @@ describe('domain/MedalLogic.ts', function() {
       let result = await Services.get().medalLogic.read({ matchParticipation: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].matchParticipation).to.be.not.undefined
-      expect(result.read[0].matchParticipation.id).to.equal(1)
+      expect(result.entities[0].matchParticipation).to.be.not.undefined
+      expect(result.entities[0].matchParticipation.id).to.equal(1)
     })
 
     it('should load the player', async function() {
@@ -103,8 +103,8 @@ describe('domain/MedalLogic.ts', function() {
       let result = await Services.get().medalLogic.read({ player: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].player).to.be.not.undefined
-      expect(result.read[0].player.id).to.equal(1)
+      expect(result.entities[0].player).to.be.not.undefined
+      expect(result.entities[0].player.id).to.equal(1)
     })
 
     it('should load the round', async function() {
@@ -115,8 +115,8 @@ describe('domain/MedalLogic.ts', function() {
       let result = await Services.get().medalLogic.read({ round: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].round).to.be.not.undefined
-      expect(result.read[0].round.id).to.equal(1)
+      expect(result.entities[0].round).to.be.not.undefined
+      expect(result.entities[0].round.id).to.equal(1)
     })
 
     it('should load the server', async function() {
@@ -127,8 +127,8 @@ describe('domain/MedalLogic.ts', function() {
       let result = await Services.get().medalLogic.read({ server: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].server).to.be.not.undefined
-      expect(result.read[0].server.id).to.equal(1)
+      expect(result.entities[0].server).to.be.not.undefined
+      expect(result.entities[0].server.id).to.equal(1)
     })
   })
 
@@ -173,15 +173,15 @@ describe('domain/MedalLogic.ts', function() {
       let result = await Services.get().medalLogic.update(medal, tx())
       
       expect(result.isValue()).to.be.true
-      expect(result.updated.id).to.equal(1)
-      expect(result.updated.date).to.deep.equal(date2)
-      expect(result.updated.matchId).to.equal(2)
-      expect(result.updated.matchParticipationId).to.equal(2)
-      expect(result.updated.medal).to.equal(MedalType.Assists)
-      expect(result.updated.playerId).to.equal(2)
-      expect(result.updated.roundId).to.equal(2)
-      expect(result.updated.serverId).to.equal(2)
-      expect(result.updated.warmup).to.equal(false)
+      expect(result.entity.id).to.equal(1)
+      expect(result.entity.date).to.deep.equal(date2)
+      expect(result.entity.matchId).to.equal(2)
+      expect(result.entity.matchParticipationId).to.equal(2)
+      expect(result.entity.medal).to.equal(MedalType.Assists)
+      expect(result.entity.playerId).to.equal(2)
+      expect(result.entity.roundId).to.equal(2)
+      expect(result.entity.serverId).to.equal(2)
+      expect(result.entity.warmup).to.equal(false)
     })
   })
 
@@ -206,15 +206,15 @@ describe('domain/MedalLogic.ts', function() {
       let result = await Services.get().medalLogic.delete(medal, tx())
       
       expect(result.isValue()).to.be.true
-      expect(result.deleted.id).to.equal(1)
-      expect(result.deleted.date).to.deep.equal(now)
-      expect(result.deleted.matchId).to.equal(1)
-      expect(result.deleted.matchParticipationId).to.equal(1)
-      expect(result.deleted.medal).to.equal(MedalType.Accuracy)
-      expect(result.deleted.playerId).to.equal(1)
-      expect(result.deleted.roundId).to.equal(1)
-      expect(result.deleted.serverId).to.equal(1)
-      expect(result.deleted.warmup).to.equal(true)
+      expect(result.entity.id).to.equal(1)
+      expect(result.entity.date).to.deep.equal(now)
+      expect(result.entity.matchId).to.equal(1)
+      expect(result.entity.matchParticipationId).to.equal(1)
+      expect(result.entity.medal).to.equal(MedalType.Accuracy)
+      expect(result.entity.playerId).to.equal(1)
+      expect(result.entity.roundId).to.equal(1)
+      expect(result.entity.serverId).to.equal(1)
+      expect(result.entity.warmup).to.equal(true)
     })
   })
 })

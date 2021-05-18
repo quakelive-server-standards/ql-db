@@ -32,7 +32,7 @@ describe('domain/MatchParticipationLogic.ts', function() {
       let result = await Services.get().matchParticipationLogic.create(matchParticipation, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.created.id).to.equal(1)
+      expect(result.entity.id).to.equal(1)
       expect(matchParticipation.finishDate).to.deep.equal(date1)
       expect(matchParticipation.matchId).to.equal(1)
       expect(matchParticipation.playerId).to.equal(1)
@@ -65,17 +65,17 @@ describe('domain/MatchParticipationLogic.ts', function() {
       let result = await Services.get().matchParticipationLogic.read({}, tx())
       
       expect(result.isValue()).to.be.true
-      expect(result.read.length).to.equal(1)
-      expect(result.read[0].id).to.equal(1)
-      expect(result.read[0].finishDate).to.deep.equal(date1)
-      expect(result.read[0].matchId).to.equal(1)
-      expect(result.read[0].playerId).to.equal(1)
-      expect(result.read[0].roundId).to.equal(1)
-      expect(result.read[0].serverId).to.equal(1)
-      expect(result.read[0].startDate).to.deep.equal(date2)
-      expect(result.read[0].statsId).to.equal(1)
-      expect(result.read[0].team).to.equal(TeamType.Blue)
-      expect(result.read[0].warmup).to.equal(true)
+      expect(result.entities.length).to.equal(1)
+      expect(result.entities[0].id).to.equal(1)
+      expect(result.entities[0].finishDate).to.deep.equal(date1)
+      expect(result.entities[0].matchId).to.equal(1)
+      expect(result.entities[0].playerId).to.equal(1)
+      expect(result.entities[0].roundId).to.equal(1)
+      expect(result.entities[0].serverId).to.equal(1)
+      expect(result.entities[0].startDate).to.deep.equal(date2)
+      expect(result.entities[0].statsId).to.equal(1)
+      expect(result.entities[0].team).to.equal(TeamType.Blue)
+      expect(result.entities[0].warmup).to.equal(true)
     })
 
     it('should load all deaths', async function() {
@@ -87,10 +87,10 @@ describe('domain/MatchParticipationLogic.ts', function() {
       let result = await Services.get().matchParticipationLogic.read({ deaths: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].deaths).to.be.not.undefined
-      expect(result.read[0].deaths.length).to.equal(2)
-      expect(result.read[0].deaths[0].id).to.equal(2)
-      expect(result.read[0].deaths[1].id).to.equal(1)
+      expect(result.entities[0].deaths).to.be.not.undefined
+      expect(result.entities[0].deaths.length).to.equal(2)
+      expect(result.entities[0].deaths[0].id).to.equal(2)
+      expect(result.entities[0].deaths[1].id).to.equal(1)
     })
 
     it('should load all kills', async function() {
@@ -102,10 +102,10 @@ describe('domain/MatchParticipationLogic.ts', function() {
       let result = await Services.get().matchParticipationLogic.read({ kills: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].kills).to.be.not.undefined
-      expect(result.read[0].kills.length).to.equal(2)
-      expect(result.read[0].kills[0].id).to.equal(2)
-      expect(result.read[0].kills[1].id).to.equal(1)
+      expect(result.entities[0].kills).to.be.not.undefined
+      expect(result.entities[0].kills.length).to.equal(2)
+      expect(result.entities[0].kills[0].id).to.equal(2)
+      expect(result.entities[0].kills[1].id).to.equal(1)
     })
 
     it('should load the match', async function() {
@@ -116,8 +116,8 @@ describe('domain/MatchParticipationLogic.ts', function() {
       let result = await Services.get().matchParticipationLogic.read({ match: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].match).to.be.not.undefined
-      expect(result.read[0].match.id).to.equal(1)
+      expect(result.entities[0].match).to.be.not.undefined
+      expect(result.entities[0].match.id).to.equal(1)
     })
 
     it('should load all medals', async function() {
@@ -129,10 +129,10 @@ describe('domain/MatchParticipationLogic.ts', function() {
       let result = await Services.get().matchParticipationLogic.read({ medals: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].medals).to.be.not.undefined
-      expect(result.read[0].medals.length).to.equal(2)
-      expect(result.read[0].medals[0].id).to.equal(1)
-      expect(result.read[0].medals[1].id).to.equal(2)
+      expect(result.entities[0].medals).to.be.not.undefined
+      expect(result.entities[0].medals.length).to.equal(2)
+      expect(result.entities[0].medals[0].id).to.equal(1)
+      expect(result.entities[0].medals[1].id).to.equal(2)
     })
 
     it('should load the player', async function() {
@@ -143,8 +143,8 @@ describe('domain/MatchParticipationLogic.ts', function() {
       let result = await Services.get().matchParticipationLogic.read({ player: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].player).to.be.not.undefined
-      expect(result.read[0].player.id).to.equal(1)
+      expect(result.entities[0].player).to.be.not.undefined
+      expect(result.entities[0].player.id).to.equal(1)
     })
 
     it('should load the round', async function() {
@@ -155,8 +155,8 @@ describe('domain/MatchParticipationLogic.ts', function() {
       let result = await Services.get().matchParticipationLogic.read({ round: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].round).to.be.not.undefined
-      expect(result.read[0].round.id).to.equal(1)
+      expect(result.entities[0].round).to.be.not.undefined
+      expect(result.entities[0].round.id).to.equal(1)
     })
 
     it('should load the server', async function() {
@@ -167,8 +167,8 @@ describe('domain/MatchParticipationLogic.ts', function() {
       let result = await Services.get().matchParticipationLogic.read({ server: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].server).to.be.not.undefined
-      expect(result.read[0].server.id).to.equal(1)
+      expect(result.entities[0].server).to.be.not.undefined
+      expect(result.entities[0].server.id).to.equal(1)
     })
 
     it('should load the stats', async function() {
@@ -179,8 +179,8 @@ describe('domain/MatchParticipationLogic.ts', function() {
       let result = await Services.get().matchParticipationLogic.read({ stats: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].stats).to.be.not.undefined
-      expect(result.read[0].stats.id).to.equal(1)
+      expect(result.entities[0].stats).to.be.not.undefined
+      expect(result.entities[0].stats.id).to.equal(1)
     })
   })
 
@@ -227,16 +227,16 @@ describe('domain/MatchParticipationLogic.ts', function() {
       let result = await Services.get().matchParticipationLogic.update(matchParticipation, tx())
       
       expect(result.isValue()).to.be.true
-      expect(result.updated.id).to.equal(1)
-      expect(result.updated.finishDate).to.deep.equal(date2)
-      expect(result.updated.matchId).to.equal(2)
-      expect(result.updated.playerId).to.equal(2)
-      expect(result.updated.roundId).to.equal(2)
-      expect(result.updated.serverId).to.equal(2)
-      expect(result.updated.startDate).to.deep.equal(date1)
-      expect(result.updated.statsId).to.equal(2)
-      expect(result.updated.team).to.equal(TeamType.Red)
-      expect(result.updated.warmup).to.equal(false)
+      expect(result.entity.id).to.equal(1)
+      expect(result.entity.finishDate).to.deep.equal(date2)
+      expect(result.entity.matchId).to.equal(2)
+      expect(result.entity.playerId).to.equal(2)
+      expect(result.entity.roundId).to.equal(2)
+      expect(result.entity.serverId).to.equal(2)
+      expect(result.entity.startDate).to.deep.equal(date1)
+      expect(result.entity.statsId).to.equal(2)
+      expect(result.entity.team).to.equal(TeamType.Red)
+      expect(result.entity.warmup).to.equal(false)
     })
   })
 
@@ -263,16 +263,16 @@ describe('domain/MatchParticipationLogic.ts', function() {
       let result = await Services.get().matchParticipationLogic.delete(matchParticipation, tx())
       
       expect(result.isValue()).to.be.true
-      expect(result.deleted.id).to.equal(1)
-      expect(result.deleted.finishDate).to.deep.equal(date1)
-      expect(result.deleted.matchId).to.equal(1)
-      expect(result.deleted.playerId).to.equal(1)
-      expect(result.deleted.roundId).to.equal(1)
-      expect(result.deleted.serverId).to.equal(1)
-      expect(result.deleted.startDate).to.deep.equal(date2)
-      expect(result.deleted.statsId).to.equal(1)
-      expect(result.deleted.team).to.equal(TeamType.Blue)
-      expect(result.deleted.warmup).to.equal(true)
+      expect(result.entity.id).to.equal(1)
+      expect(result.entity.finishDate).to.deep.equal(date1)
+      expect(result.entity.matchId).to.equal(1)
+      expect(result.entity.playerId).to.equal(1)
+      expect(result.entity.roundId).to.equal(1)
+      expect(result.entity.serverId).to.equal(1)
+      expect(result.entity.startDate).to.deep.equal(date2)
+      expect(result.entity.statsId).to.equal(1)
+      expect(result.entity.team).to.equal(TeamType.Blue)
+      expect(result.entity.warmup).to.equal(true)
     })
   })
 })

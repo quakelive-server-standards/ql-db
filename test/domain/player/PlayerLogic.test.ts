@@ -18,11 +18,11 @@ describe('domain/PlayerLogic.ts', function() {
       let result = await Services.get().playerLogic.create(player, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.created.id).to.equal(1)
-      expect(result.created.firstSeen).to.deep.equal(now)
-      expect(result.created.model).to.equal('Keel')
-      expect(result.created.name).to.equal('Player1')
-      expect(result.created.steamId).to.equal('01234567890123456')
+      expect(result.entity.id).to.equal(1)
+      expect(result.entity.firstSeen).to.deep.equal(now)
+      expect(result.entity.model).to.equal('Keel')
+      expect(result.entity.name).to.equal('Player1')
+      expect(result.entity.steamId).to.equal('01234567890123456')
     })
   })
 
@@ -40,12 +40,12 @@ describe('domain/PlayerLogic.ts', function() {
       let result = await Services.get().playerLogic.read({}, tx())
       
       expect(result.isValue()).to.be.true
-      expect(result.read.length).to.equal(1)
-      expect(result.read[0].id).to.equal(1)
-      expect(result.read[0].firstSeen).to.deep.equal(now)
-      expect(result.read[0].model).to.equal('Keel')
-      expect(result.read[0].name).to.equal('Player1')
-      expect(result.read[0].steamId).to.equal('01234567890123456')
+      expect(result.entities.length).to.equal(1)
+      expect(result.entities[0].id).to.equal(1)
+      expect(result.entities[0].firstSeen).to.deep.equal(now)
+      expect(result.entities[0].model).to.equal('Keel')
+      expect(result.entities[0].name).to.equal('Player1')
+      expect(result.entities[0].steamId).to.equal('01234567890123456')
     })
 
     it('should load all deaths', async function() {
@@ -57,10 +57,10 @@ describe('domain/PlayerLogic.ts', function() {
       let result = await Services.get().playerLogic.read({ deaths: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].deaths).to.be.not.undefined
-      expect(result.read[0].deaths.length).to.equal(2)
-      expect(result.read[0].deaths[0].id).to.equal(2)
-      expect(result.read[0].deaths[1].id).to.equal(1)
+      expect(result.entities[0].deaths).to.be.not.undefined
+      expect(result.entities[0].deaths.length).to.equal(2)
+      expect(result.entities[0].deaths[0].id).to.equal(2)
+      expect(result.entities[0].deaths[1].id).to.equal(1)
     })
 
     it('should load all kills', async function() {
@@ -72,10 +72,10 @@ describe('domain/PlayerLogic.ts', function() {
       let result = await Services.get().playerLogic.read({ kills: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].kills).to.be.not.undefined
-      expect(result.read[0].kills.length).to.equal(2)
-      expect(result.read[0].kills[0].id).to.equal(2)
-      expect(result.read[0].kills[1].id).to.equal(1)
+      expect(result.entities[0].kills).to.be.not.undefined
+      expect(result.entities[0].kills.length).to.equal(2)
+      expect(result.entities[0].kills[0].id).to.equal(2)
+      expect(result.entities[0].kills[1].id).to.equal(1)
     })
 
     it('should load all match participations', async function() {
@@ -87,10 +87,10 @@ describe('domain/PlayerLogic.ts', function() {
       let result = await Services.get().playerLogic.read({ matchParticipations: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].matchParticipations).to.be.not.undefined
-      expect(result.read[0].matchParticipations.length).to.equal(2)
-      expect(result.read[0].matchParticipations[0].id).to.equal(1)
-      expect(result.read[0].matchParticipations[1].id).to.equal(2)
+      expect(result.entities[0].matchParticipations).to.be.not.undefined
+      expect(result.entities[0].matchParticipations.length).to.equal(2)
+      expect(result.entities[0].matchParticipations[0].id).to.equal(1)
+      expect(result.entities[0].matchParticipations[1].id).to.equal(2)
     })
 
     it('should load all medals', async function() {
@@ -102,10 +102,10 @@ describe('domain/PlayerLogic.ts', function() {
       let result = await Services.get().playerLogic.read({ medals: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].medals).to.be.not.undefined
-      expect(result.read[0].medals.length).to.equal(2)
-      expect(result.read[0].medals[0].id).to.equal(1)
-      expect(result.read[0].medals[1].id).to.equal(2)
+      expect(result.entities[0].medals).to.be.not.undefined
+      expect(result.entities[0].medals.length).to.equal(2)
+      expect(result.entities[0].medals[0].id).to.equal(1)
+      expect(result.entities[0].medals[1].id).to.equal(2)
     })
 
     it('should load all server visits', async function() {
@@ -117,10 +117,10 @@ describe('domain/PlayerLogic.ts', function() {
       let result = await Services.get().playerLogic.read({ serverVisits: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].serverVisits).to.be.not.undefined
-      expect(result.read[0].serverVisits.length).to.equal(2)
-      expect(result.read[0].serverVisits[0].id).to.equal(1)
-      expect(result.read[0].serverVisits[1].id).to.equal(2)
+      expect(result.entities[0].serverVisits).to.be.not.undefined
+      expect(result.entities[0].serverVisits.length).to.equal(2)
+      expect(result.entities[0].serverVisits[0].id).to.equal(1)
+      expect(result.entities[0].serverVisits[1].id).to.equal(2)
     })
   })
 
@@ -146,11 +146,11 @@ describe('domain/PlayerLogic.ts', function() {
       let result = await Services.get().playerLogic.update(player, tx())
       
       expect(result.isValue()).to.be.true
-      expect(result.updated.id).to.equal(1)
-      expect(result.updated.firstSeen).to.deep.equal(date2)
-      expect(result.updated.model).to.equal('Sarge')
-      expect(result.updated.name).to.equal('Player2')
-      expect(result.updated.steamId).to.equal('12345678901234567')
+      expect(result.entity.id).to.equal(1)
+      expect(result.entity.firstSeen).to.deep.equal(date2)
+      expect(result.entity.model).to.equal('Sarge')
+      expect(result.entity.name).to.equal('Player2')
+      expect(result.entity.steamId).to.equal('12345678901234567')
     })
   })
 
@@ -171,11 +171,11 @@ describe('domain/PlayerLogic.ts', function() {
       let result = await Services.get().playerLogic.delete(player, tx())
       
       expect(result.isValue()).to.be.true
-      expect(result.deleted.id).to.equal(1)
-      expect(result.deleted.firstSeen).to.deep.equal(now)
-      expect(result.deleted.model).to.equal('Keel')
-      expect(result.deleted.name).to.equal('Player1')
-      expect(result.deleted.steamId).to.equal('01234567890123456')
+      expect(result.entity.id).to.equal(1)
+      expect(result.entity.firstSeen).to.deep.equal(now)
+      expect(result.entity.model).to.equal('Keel')
+      expect(result.entity.name).to.equal('Player1')
+      expect(result.entity.steamId).to.equal('01234567890123456')
     })
   })
 })

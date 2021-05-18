@@ -1,3 +1,20 @@
 {
-  "globalLevel": ""
+  "globalLevel": "",
+
+  "FactoryLogic": "",
+  "FragLogic": "",
+  "MapLogic": "",
+  "MatchLogic": "",
+  "MatchParticipationLogic": "",
+  "MedalLogic": "",
+  "PlayerLogic": "",
+  "RoundLogic": "",
+  "ServerLogic": "",
+  "ServerVisitLogic": "",
+  "StatsLogic": "",
+  
+  "QlStatsIntegrator": "",
+
+  "knight-orm/crud.ts": "",
+  "knight-orm/isud.ts": ""
 }

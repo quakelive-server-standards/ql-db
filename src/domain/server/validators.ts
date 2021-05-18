@@ -1,11 +1,11 @@
 import { PgTransaction } from 'knight-pg-transaction'
-import { Absent, Exists, Required, TypeOf, Validator } from 'knight-validation'
+import { Absent, Exists, Required, TypeOf, Unique, Validator } from 'knight-validation'
 import { Server } from './Server'
 import { ServerLogic } from './ServerLogic'
 
 export class ServerValidator extends Validator {
 
-  constructor() {
+  constructor(serverLogic: ServerLogic, tx: PgTransaction) {
     super()
 
     this.add('ip', new Required)
@@ -15,6 +15,11 @@ export class ServerValidator extends Validator {
     this.add('port', new TypeOf('number'))
     
     this.add('title', new TypeOf('string'))
+
+    this.add(['ip', 'port'], new Unique(async (server: Server) => {
+      let result = await serverLogic.count({ ip: server.ip, port: server.port }, tx)
+      return result.count == 0
+    }))
   }
 }
 
@@ -38,11 +43,11 @@ export class ServerIdValidator extends Validator {
 
 export class ServerCreateValidator extends Validator {
 
-  constructor() {
+  constructor(serverLogic: ServerLogic, tx: PgTransaction) {
     super()
 
     this.add('id', new Absent)
-    this.add(new ServerValidator)
+    this.add(new ServerValidator(serverLogic, tx))
   }
 }
 
@@ -52,7 +57,7 @@ export class ServerUpdateValidator extends Validator {
     super()
     
     this.add(new ServerIdValidator(serverLogic, tx))
-    this.add(new ServerValidator)
+    this.add(new ServerValidator(serverLogic, tx))
   }
 }
 

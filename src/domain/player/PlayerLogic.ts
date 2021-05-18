@@ -4,7 +4,7 @@ import Log from 'knight-log'
 import { count, create, delete_, read, update } from 'knight-orm'
 import { PgTransaction } from 'knight-pg-transaction'
 import { MisfitsError } from 'knight-validation'
-import { CountResult, CreateResult, DeleteResult, UpdateResult, VersionReadResult } from '../api'
+import { CountResult, CreateOrGetResult, EntitiesVersionResult, EntityResult } from '../api'
 import Change from '../change/Change'
 import ChangeLogic from '../change/ChangeLogic'
 import schema from '../DbSchema'
@@ -18,7 +18,7 @@ export class PlayerLogic {
 
   changeLogic!: ChangeLogic
 
-  create(player: Player, tx: PgTransaction): Promise<CreateResult<Player>> {
+  create(player: Player, tx: PgTransaction): Promise<EntityResult<Player>> {
     let l = log.mt('create')
     l.param('player', player)
 
@@ -37,13 +37,49 @@ export class PlayerLogic {
       let created = await create(schema, 'player', 'postgres', txQuery(tx), player)
       l.dev('Created entity', created)
 
-      let result = new CreateResult(created)
+      let result = new EntityResult(created)
       l.returning('Returning result...', result)
       return result
     })
   }
 
-  read(criteria: ReadCriteria, tx: PgTransaction): Promise<VersionReadResult<Player>> {
+  createOrGet(steamId: string, name: string, tx: PgTransaction): Promise<CreateOrGetResult<Player>> {
+    let l = log.mt('createOrGet')
+    l.param('steamId', steamId)
+    l.param('name', name)
+    
+    return tx.runInTransaction(async () => {
+      let readResult = await this.read({ steamId: steamId }, tx)
+
+      if (readResult.entities.length == 1) {
+        let result = new CreateOrGetResult(readResult.entities[0], false)
+        l.returning('Returning existing player...', result)
+        return result
+      }
+
+      l.dev('Did not found existing player. Creating one...')
+
+      let player = new Player
+      player.steamId = steamId
+      player.name = name
+
+      l.var('player', player)
+
+      let createResult = await this.create(player, tx)
+
+      l.var('createResult', createResult)
+
+      if (createResult.isMisfits()) {
+        throw new MisfitsError(createResult.misfits)
+      }
+
+      let result = new CreateOrGetResult(createResult.entity, true)
+      l.returning('Returning result...', result)
+      return result
+    })
+  }
+
+  read(criteria: ReadCriteria, tx: PgTransaction): Promise<EntitiesVersionResult<Player>> {
     let l = log.mt('read')
     l.param('criteria', criteria)
 
@@ -55,7 +91,7 @@ export class PlayerLogic {
       let version = await this.changeLogic.latestVersion(tx)
       l.var('version', version)
 
-      return new VersionReadResult(readed, version)
+      return new EntitiesVersionResult(readed, version)
     })
   }
 
@@ -75,7 +111,7 @@ export class PlayerLogic {
     })
   }
 
-  update(player: Player, tx: PgTransaction): Promise<UpdateResult<Player>> {
+  update(player: Player, tx: PgTransaction): Promise<EntityResult<Player>> {
     let l = log.mt('update')
     l.param('player', player)
 
@@ -104,13 +140,13 @@ export class PlayerLogic {
         throw new MisfitsError(changeCreateResult.misfits)
       }
 
-      let result = new UpdateResult(updated)
+      let result = new EntityResult(updated)
       l.returning('Returning result...', result)
       return result
     })
   }
 
-  delete(player: Player, tx: PgTransaction): Promise<DeleteResult<Player>> {
+  delete(player: Player, tx: PgTransaction): Promise<EntityResult<Player>> {
     let l = log.mt('delete')
     l.var('player', player)
 
@@ -139,7 +175,7 @@ export class PlayerLogic {
         throw new MisfitsError(changeCreateResult.misfits)
       }
 
-      let result = new DeleteResult(deleted)
+      let result = new EntityResult(deleted)
       l.returning('Returning result...', result)
       return result      
     })

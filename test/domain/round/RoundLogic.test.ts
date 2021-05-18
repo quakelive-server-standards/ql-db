@@ -26,14 +26,14 @@ describe('domain/RoundLogic.ts', function() {
       let result = await Services.get().roundLogic.create(round, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.created.id).to.equal(1)
-      expect(result.created.finishDate).to.deep.equal(date1)
-      expect(result.created.matchId).to.equal(1)
-      expect(result.created.round).to.equal(1)
-      expect(result.created.serverId).to.equal(1)
-      expect(result.created.startDate).to.deep.equal(date2)
-      expect(result.created.teamWon).to.equal(TeamType.Blue)
-      expect(result.created.time).to.equal(2)
+      expect(result.entity.id).to.equal(1)
+      expect(result.entity.finishDate).to.deep.equal(date1)
+      expect(result.entity.matchId).to.equal(1)
+      expect(result.entity.round).to.equal(1)
+      expect(result.entity.serverId).to.equal(1)
+      expect(result.entity.startDate).to.deep.equal(date2)
+      expect(result.entity.teamWon).to.equal(TeamType.Blue)
+      expect(result.entity.time).to.equal(2)
     })
   })
 
@@ -55,15 +55,15 @@ describe('domain/RoundLogic.ts', function() {
       let result = await Services.get().roundLogic.read({}, tx())
       
       expect(result.isValue()).to.be.true
-      expect(result.read.length).to.equal(1)
-      expect(result.read[0].id).to.equal(1)
-      expect(result.read[0].finishDate).to.deep.equal(date1)
-      expect(result.read[0].matchId).to.equal(1)
-      expect(result.read[0].round).to.equal(1)
-      expect(result.read[0].serverId).to.equal(1)
-      expect(result.read[0].startDate).to.deep.equal(date2)
-      expect(result.read[0].teamWon).to.equal(TeamType.Blue)
-      expect(result.read[0].time).to.equal(2)
+      expect(result.entities.length).to.equal(1)
+      expect(result.entities[0].id).to.equal(1)
+      expect(result.entities[0].finishDate).to.deep.equal(date1)
+      expect(result.entities[0].matchId).to.equal(1)
+      expect(result.entities[0].round).to.equal(1)
+      expect(result.entities[0].serverId).to.equal(1)
+      expect(result.entities[0].startDate).to.deep.equal(date2)
+      expect(result.entities[0].teamWon).to.equal(TeamType.Blue)
+      expect(result.entities[0].time).to.equal(2)
     })
 
     it('should load all frags', async function() {
@@ -75,10 +75,10 @@ describe('domain/RoundLogic.ts', function() {
       let result = await Services.get().roundLogic.read({ frags: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].frags).to.be.not.undefined
-      expect(result.read[0].frags.length).to.equal(2)
-      expect(result.read[0].frags[0].id).to.equal(2)
-      expect(result.read[0].frags[1].id).to.equal(1)
+      expect(result.entities[0].frags).to.be.not.undefined
+      expect(result.entities[0].frags.length).to.equal(2)
+      expect(result.entities[0].frags[0].id).to.equal(2)
+      expect(result.entities[0].frags[1].id).to.equal(1)
     })
 
     it('should load the match', async function() {
@@ -89,8 +89,8 @@ describe('domain/RoundLogic.ts', function() {
       let result = await Services.get().roundLogic.read({ match: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].match).to.be.not.undefined
-      expect(result.read[0].match.id).to.equal(1)
+      expect(result.entities[0].match).to.be.not.undefined
+      expect(result.entities[0].match.id).to.equal(1)
     })
 
     it('should load all medals', async function() {
@@ -102,10 +102,10 @@ describe('domain/RoundLogic.ts', function() {
       let result = await Services.get().roundLogic.read({ medals: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].medals).to.be.not.undefined
-      expect(result.read[0].medals.length).to.equal(2)
-      expect(result.read[0].medals[0].id).to.equal(1)
-      expect(result.read[0].medals[1].id).to.equal(2)
+      expect(result.entities[0].medals).to.be.not.undefined
+      expect(result.entities[0].medals.length).to.equal(2)
+      expect(result.entities[0].medals[0].id).to.equal(1)
+      expect(result.entities[0].medals[1].id).to.equal(2)
     })
 
     it('should load all match participations', async function() {
@@ -117,10 +117,10 @@ describe('domain/RoundLogic.ts', function() {
       let result = await Services.get().roundLogic.read({ participations: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].participations).to.be.not.undefined
-      expect(result.read[0].participations.length).to.equal(2)
-      expect(result.read[0].participations[0].id).to.equal(1)
-      expect(result.read[0].participations[1].id).to.equal(2)
+      expect(result.entities[0].participations).to.be.not.undefined
+      expect(result.entities[0].participations.length).to.equal(2)
+      expect(result.entities[0].participations[0].id).to.equal(1)
+      expect(result.entities[0].participations[1].id).to.equal(2)
     })
 
     it('should load the server', async function() {
@@ -131,8 +131,8 @@ describe('domain/RoundLogic.ts', function() {
       let result = await Services.get().roundLogic.read({ server: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].server).to.be.not.undefined
-      expect(result.read[0].server.id).to.equal(1)
+      expect(result.entities[0].server).to.be.not.undefined
+      expect(result.entities[0].server.id).to.equal(1)
     })
   })
 
@@ -169,14 +169,14 @@ describe('domain/RoundLogic.ts', function() {
       let result = await Services.get().roundLogic.update(round, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.updated.id).to.equal(1)
-      expect(result.updated.finishDate).to.deep.equal(date2)
-      expect(result.updated.matchId).to.equal(2)
-      expect(result.updated.round).to.equal(2)
-      expect(result.updated.serverId).to.equal(2)
-      expect(result.updated.startDate).to.deep.equal(date1)
-      expect(result.updated.teamWon).to.equal(TeamType.Red)
-      expect(result.updated.time).to.equal(3)
+      expect(result.entity.id).to.equal(1)
+      expect(result.entity.finishDate).to.deep.equal(date2)
+      expect(result.entity.matchId).to.equal(2)
+      expect(result.entity.round).to.equal(2)
+      expect(result.entity.serverId).to.equal(2)
+      expect(result.entity.startDate).to.deep.equal(date1)
+      expect(result.entity.teamWon).to.equal(TeamType.Red)
+      expect(result.entity.time).to.equal(3)
     })
   })
 
@@ -201,14 +201,14 @@ describe('domain/RoundLogic.ts', function() {
       let result = await Services.get().roundLogic.delete(round, tx())
       
       expect(result.isValue()).to.be.true
-      expect(result.deleted.id).to.equal(1)
-      expect(result.deleted.finishDate).to.deep.equal(date1)
-      expect(result.deleted.matchId).to.equal(1)
-      expect(result.deleted.round).to.equal(1)
-      expect(result.deleted.serverId).to.equal(1)
-      expect(result.deleted.startDate).to.deep.equal(date2)
-      expect(result.deleted.teamWon).to.equal(TeamType.Blue)
-      expect(result.deleted.time).to.equal(2)
+      expect(result.entity.id).to.equal(1)
+      expect(result.entity.finishDate).to.deep.equal(date1)
+      expect(result.entity.matchId).to.equal(1)
+      expect(result.entity.round).to.equal(1)
+      expect(result.entity.serverId).to.equal(1)
+      expect(result.entity.startDate).to.deep.equal(date2)
+      expect(result.entity.teamWon).to.equal(TeamType.Blue)
+      expect(result.entity.time).to.equal(2)
     })
   })
 })

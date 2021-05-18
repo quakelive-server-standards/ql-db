@@ -18,18 +18,18 @@ import { Server } from '../server/Server'
 export class Frag {
   
   id?: number
-  matchId?: number
-  roundId?: number
+  matchId?: number | null
+  roundId?: number | null
   serverId?: number
 
   date?: Date
   killer?: FragParticipant
-  otherTeamAlive?: number
-  otherTeamDead?: number
+  otherTeamAlive?: number | null
+  otherTeamDead?: number | null
   reason?: ReasonType
   suicide?: boolean
-  teamAlive?: number
-  teamDead?: number
+  teamAlive?: number | null
+  teamDead?: number | null
   time?: number
   victim?: FragParticipant
   warmup?: boolean
@@ -52,10 +52,10 @@ export class FragParticipant {
   ammo?: number
   armor?: number
   bot?: boolean
-  botSkill?: number
+  botSkill?: number | null
   health?: number
-  holdable?: HoldableType
-  powerUps?: PowerUpType[]
+  holdable?: HoldableType | null
+  powerUps?: PowerUpType[] | null
   position?: {
     x?: number
     y?: number

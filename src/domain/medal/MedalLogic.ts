@@ -4,7 +4,7 @@ import Log from 'knight-log'
 import { count, create, delete_, read, update } from 'knight-orm'
 import { PgTransaction } from 'knight-pg-transaction'
 import { MisfitsError } from 'knight-validation'
-import { CountResult, CreateResult, DeleteResult, UpdateResult, VersionReadResult } from '../api'
+import { CountResult, EntitiesVersionResult, EntityResult } from '../api'
 import Change from '../change/Change'
 import ChangeLogic from '../change/ChangeLogic'
 import schema from '../DbSchema'
@@ -28,7 +28,7 @@ export class MedalLogic {
   roundLogic!: RoundLogic
   serverLogic!: ServerLogic
 
-  create(medal: Medal, tx: PgTransaction): Promise<CreateResult<Medal>> {
+  create(medal: Medal, tx: PgTransaction): Promise<EntityResult<Medal>> {
     let l = log.mt('create')
     l.param('medal', medal)
 
@@ -47,13 +47,13 @@ export class MedalLogic {
       let created = await create(schema, 'medal', 'postgres', txQuery(tx), medal)
       l.dev('Created entity', created)
 
-      let result = new CreateResult(created)
+      let result = new EntityResult(created)
       l.returning('Returning result...', result)
       return result
     })
   }
 
-  read(criteria: ReadCriteria, tx: PgTransaction): Promise<VersionReadResult<Medal>> {
+  read(criteria: ReadCriteria, tx: PgTransaction): Promise<EntitiesVersionResult<Medal>> {
     let l = log.mt('read')
     l.param('criteria', criteria)
 
@@ -65,7 +65,7 @@ export class MedalLogic {
       let version = await this.changeLogic.latestVersion(tx)
       l.var('version', version)
 
-      return new VersionReadResult(readed, version)
+      return new EntitiesVersionResult(readed, version)
     })
   }
 
@@ -85,7 +85,7 @@ export class MedalLogic {
     })
   }
 
-  update(medal: Medal, tx: PgTransaction): Promise<UpdateResult<Medal>> {
+  update(medal: Medal, tx: PgTransaction): Promise<EntityResult<Medal>> {
     let l = log.mt('update')
     l.param('medal', medal)
 
@@ -114,13 +114,13 @@ export class MedalLogic {
         throw new MisfitsError(changeCreateResult.misfits)
       }
 
-      let result = new UpdateResult(updated)
+      let result = new EntityResult(updated)
       l.returning('Returning result...', result)
       return result
     })
   }
 
-  delete(medal: Medal, tx: PgTransaction): Promise<DeleteResult<Medal>> {
+  delete(medal: Medal, tx: PgTransaction): Promise<EntityResult<Medal>> {
     let l = log.mt('delete')
     l.var('medal', medal)
 
@@ -149,7 +149,7 @@ export class MedalLogic {
         throw new MisfitsError(changeCreateResult.misfits)
       }
 
-      let result = new DeleteResult(deleted)
+      let result = new EntityResult(deleted)
       l.returning('Returning result...', result)
       return result      
     })

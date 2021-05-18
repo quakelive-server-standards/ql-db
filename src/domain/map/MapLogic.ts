@@ -4,7 +4,7 @@ import Log from 'knight-log'
 import { count, create, delete_, read, update } from 'knight-orm'
 import { PgTransaction } from 'knight-pg-transaction'
 import { MisfitsError } from 'knight-validation'
-import { CountResult, CreateResult, DeleteResult, UpdateResult, VersionReadResult } from '../api'
+import { CountResult, CreateOrGetResult, EntitiesVersionResult, EntityResult } from '../api'
 import Change from '../change/Change'
 import ChangeLogic from '../change/ChangeLogic'
 import schema from '../DbSchema'
@@ -18,7 +18,7 @@ export class MapLogic {
 
   changeLogic!: ChangeLogic
 
-  create(map: Map, tx: PgTransaction): Promise<CreateResult<Map>> {
+  create(map: Map, tx: PgTransaction): Promise<EntityResult<Map>> {
     let l = log.mt('create')
     l.param('map', map)
 
@@ -37,13 +37,37 @@ export class MapLogic {
       let created = await create(schema, 'map', 'postgres', txQuery(tx), map)
       l.dev('Created entity', created)
 
-      let result = new CreateResult(created)
+      let result = new EntityResult(created)
       l.returning('Returning result...', result)
       return result
     })
   }
 
-  read(criteria: ReadCriteria, tx: PgTransaction): Promise<VersionReadResult<Map>> {
+  createOrGet(name: string, tx: PgTransaction): Promise<CreateOrGetResult<Map>> {
+    let l = log.mt('createOrGet')
+    l.param('name', name)
+
+    return tx.runInTransaction(async () => {
+      let readResult = await this.read({ name: name }, tx)
+
+      if (readResult.entities.length == 1) {
+        return new CreateOrGetResult(readResult.entities[0], false)
+      }
+
+      let map = new Map
+      map.name = name
+
+      let createResult = await this.create(map, tx)
+
+      if (createResult.isMisfits()) {
+        throw new MisfitsError(createResult.misfits)
+      }
+
+      return new CreateOrGetResult(createResult.entity, true)
+    })
+  }
+
+  read(criteria: ReadCriteria, tx: PgTransaction): Promise<EntitiesVersionResult<Map>> {
     let l = log.mt('read')
     l.param('criteria', criteria)
 
@@ -55,7 +79,7 @@ export class MapLogic {
       let version = await this.changeLogic.latestVersion(tx)
       l.var('version', version)
 
-      return new VersionReadResult(readed, version)
+      return new EntitiesVersionResult(readed, version)
     })
   }
 
@@ -75,7 +99,7 @@ export class MapLogic {
     })
   }
 
-  update(map: Map, tx: PgTransaction): Promise<UpdateResult<Map>> {
+  update(map: Map, tx: PgTransaction): Promise<EntityResult<Map>> {
     let l = log.mt('update')
     l.param('map', map)
 
@@ -104,13 +128,13 @@ export class MapLogic {
         throw new MisfitsError(changeCreateResult.misfits)
       }
 
-      let result = new UpdateResult(updated)
+      let result = new EntityResult(updated)
       l.returning('Returning result...', result)
       return result
     })
   }
 
-  delete(map: Map, tx: PgTransaction): Promise<DeleteResult<Map>> {
+  delete(map: Map, tx: PgTransaction): Promise<EntityResult<Map>> {
     let l = log.mt('delete')
     l.var('map', map)
 
@@ -139,7 +163,7 @@ export class MapLogic {
         throw new MisfitsError(changeCreateResult.misfits)
       }
 
-      let result = new DeleteResult(deleted)
+      let result = new EntityResult(deleted)
       l.returning('Returning result...', result)
       return result      
     })

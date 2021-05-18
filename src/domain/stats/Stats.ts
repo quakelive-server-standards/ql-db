@@ -7,10 +7,10 @@ import { Server } from '../server/Server'
 export class Stats {
   
   id?: number
-  matchId?: number
-  matchParticipationId?: number
+  matchId?: number | null
+  matchParticipationId?: number | null
   playerId?: number
-  roundId?: number
+  roundId?: number | null
   serverId?: number
 
   aborted?: boolean

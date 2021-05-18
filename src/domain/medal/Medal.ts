@@ -8,10 +8,10 @@ import { Server } from '../server/Server'
 export class Medal {
   
   id?: number
-  matchId?: number
-  matchParticipationId?: number
+  matchId?: number | null
+  matchParticipationId?: number | null
   playerId?: number
-  roundId?: number
+  roundId?: number | null
   serverId?: number
 
   date?: Date

@@ -17,10 +17,10 @@ describe('domain/FactoryLogic.ts', function() {
       let result = await Services.get().factoryLogic.create(factory, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.created.id).to.equal(1)
-      expect(result.created.gameType).to.equal(GameType.Duel)
-      expect(result.created.name).to.equal('stdduel')
-      expect(result.created.title).to.equal('Standard Duel')
+      expect(result.entity.id).to.equal(1)
+      expect(result.entity.gameType).to.equal(GameType.Duel)
+      expect(result.entity.name).to.equal('stdduel')
+      expect(result.entity.title).to.equal('Standard Duel')
     })
   })
 
@@ -35,11 +35,11 @@ describe('domain/FactoryLogic.ts', function() {
       let result = await Services.get().factoryLogic.read({}, tx())
       
       expect(result.isValue()).to.be.true
-      expect(result.read.length).to.equal(1)
-      expect(result.read[0].id).to.equal(1)
-      expect(result.read[0].gameType).to.equal(GameType.Duel)
-      expect(result.read[0].name).to.equal('stdduel')
-      expect(result.read[0].title).to.equal('Standard Duel')
+      expect(result.entities.length).to.equal(1)
+      expect(result.entities[0].id).to.equal(1)
+      expect(result.entities[0].gameType).to.equal(GameType.Duel)
+      expect(result.entities[0].name).to.equal('stdduel')
+      expect(result.entities[0].title).to.equal('Standard Duel')
     })
 
     it('should load all matches', async function() {
@@ -51,10 +51,10 @@ describe('domain/FactoryLogic.ts', function() {
       let result = await Services.get().factoryLogic.read({ matches: {} }, tx())
 
       expect(result.isValue()).to.be.true
-      expect(result.read[0].matches).to.be.not.undefined
-      expect(result.read[0].matches.length).to.equal(2)
-      expect(result.read[0].matches[0].id).to.equal(1)
-      expect(result.read[0].matches[1].id).to.equal(2)
+      expect(result.entities[0].matches).to.be.not.undefined
+      expect(result.entities[0].matches.length).to.equal(2)
+      expect(result.entities[0].matches[0].id).to.equal(1)
+      expect(result.entities[0].matches[1].id).to.equal(2)
     })
   })
 
@@ -75,10 +75,10 @@ describe('domain/FactoryLogic.ts', function() {
       let result = await Services.get().factoryLogic.update(factory, tx())
       
       expect(result.isValue()).to.be.true
-      expect(result.updated.id).to.equal(1)
-      expect(result.updated.gameType).to.equal(GameType.Duel)
-      expect(result.updated.name).to.equal('stdduel')
-      expect(result.updated.title).to.equal('Standard Duel')
+      expect(result.entity.id).to.equal(1)
+      expect(result.entity.gameType).to.equal(GameType.Duel)
+      expect(result.entity.name).to.equal('stdduel')
+      expect(result.entity.title).to.equal('Standard Duel')
     })
   })
 
@@ -96,10 +96,10 @@ describe('domain/FactoryLogic.ts', function() {
       let result = await Services.get().factoryLogic.delete(factory, tx())
       
       expect(result.isValue()).to.be.true
-      expect(result.deleted.id).to.equal(1)
-      expect(result.deleted.gameType).to.equal(GameType.Duel)
-      expect(result.deleted.name).to.equal('stdduel')
-      expect(result.deleted.title).to.equal('Standard Duel')
+      expect(result.entity.id).to.equal(1)
+      expect(result.entity.gameType).to.equal(GameType.Duel)
+      expect(result.entity.name).to.equal('stdduel')
+      expect(result.entity.title).to.equal('Standard Duel')
     })
   })
 })

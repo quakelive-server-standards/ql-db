@@ -4,7 +4,7 @@ import Log from 'knight-log'
 import { count, create, delete_, read, update } from 'knight-orm'
 import { PgTransaction } from 'knight-pg-transaction'
 import { MisfitsError } from 'knight-validation'
-import { CountResult, CreateResult, DeleteResult, UpdateResult, VersionReadResult } from '../api'
+import { CountResult, EntitiesVersionResult, EntityOrNullResult, EntityResult } from '../api'
 import Change from '../change/Change'
 import ChangeLogic from '../change/ChangeLogic'
 import schema from '../DbSchema'
@@ -22,7 +22,7 @@ export class ServerVisitLogic {
   playerLogic!: PlayerLogic
   serverLogic!: ServerLogic
 
-  create(serverVisit: ServerVisit, tx: PgTransaction): Promise<CreateResult<ServerVisit>> {
+  create(serverVisit: ServerVisit, tx: PgTransaction): Promise<EntityResult<ServerVisit>> {
     let l = log.mt('create')
     l.param('serverVisit', serverVisit)
 
@@ -41,13 +41,13 @@ export class ServerVisitLogic {
       let created = await create(schema, 'server_visit', 'postgres', txQuery(tx), serverVisit)
       l.dev('Created entity', created)
 
-      let result = new CreateResult(created)
+      let result = new EntityResult(created)
       l.returning('Returning result...', result)
       return result
     })
   }
 
-  read(criteria: ReadCriteria, tx: PgTransaction): Promise<VersionReadResult<ServerVisit>> {
+  read(criteria: ReadCriteria, tx: PgTransaction): Promise<EntitiesVersionResult<ServerVisit>> {
     let l = log.mt('read')
     l.param('criteria', criteria)
 
@@ -59,7 +59,7 @@ export class ServerVisitLogic {
       let version = await this.changeLogic.latestVersion(tx)
       l.var('version', version)
 
-      return new VersionReadResult(readed, version)
+      return new EntitiesVersionResult(readed, version)
     })
   }
 
@@ -79,7 +79,7 @@ export class ServerVisitLogic {
     })
   }
 
-  update(serverVisit: ServerVisit, tx: PgTransaction): Promise<UpdateResult<ServerVisit>> {
+  update(serverVisit: ServerVisit, tx: PgTransaction): Promise<EntityResult<ServerVisit>> {
     let l = log.mt('update')
     l.param('serverVisit', serverVisit)
 
@@ -108,13 +108,13 @@ export class ServerVisitLogic {
         throw new MisfitsError(changeCreateResult.misfits)
       }
 
-      let result = new UpdateResult(updated)
+      let result = new EntityResult(updated)
       l.returning('Returning result...', result)
       return result
     })
   }
 
-  delete(serverVisit: ServerVisit, tx: PgTransaction): Promise<DeleteResult<ServerVisit>> {
+  delete(serverVisit: ServerVisit, tx: PgTransaction): Promise<EntityResult<ServerVisit>> {
     let l = log.mt('delete')
     l.var('serverVisit', serverVisit)
 
@@ -143,9 +143,60 @@ export class ServerVisitLogic {
         throw new MisfitsError(changeCreateResult.misfits)
       }
 
-      let result = new DeleteResult(deleted)
+      let result = new EntityResult(deleted)
       l.returning('Returning result...', result)
       return result      
+    })
+  }
+
+  async getActive(serverId: number, steamId: string, tx: PgTransaction): Promise<EntityOrNullResult<ServerVisit>> {
+    let l = log.mt('getActive')
+    l.param('serverId', serverId)
+    l.param('steamId', steamId)
+
+    return tx.runInTransaction(async () => {
+      let readResult = await this.read({
+        serverId: serverId,
+        connectDate: {
+          operator: '!=',
+          value: null
+        },
+        disconnectDate: null,
+        player: {
+          '@filterGlobally': true,
+          steamId: steamId
+        }
+      }, tx)
+
+      l.var('readResult', readResult)
+
+      if (readResult.entities.length == 0) {
+        let result: EntityOrNullResult<ServerVisit> = new EntityOrNullResult
+        l.returning('Did not found any active server visits. Returning result...', result)
+        return result
+      }
+
+      if (readResult.entities.length == 1) {
+        let result = new EntityOrNullResult(readResult.entities[0])
+        l.returning('Found exactly one active server visit. Returning result...', result)
+        return result
+      }
+
+      l.dev('Found more than one active server visit. Determining latest...')
+
+      let latestVisit
+      for (let visit of readResult.entities) {
+        if (latestVisit == null) {
+          latestVisit = visit
+        }
+        else if (latestVisit.connectDate!.getTime() < visit.connectDate!.getTime()) {
+          latestVisit = visit
+        }
+      }
+
+      let result = new EntityOrNullResult(latestVisit)
+      l.returning('Determined latest server visit. Returning result...', result)
+      return result
     })
   }
 }

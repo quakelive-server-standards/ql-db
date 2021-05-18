@@ -4,11 +4,12 @@ import Log from 'knight-log'
 import { count, create, delete_, read, update } from 'knight-orm'
 import { PgTransaction } from 'knight-pg-transaction'
 import { MisfitsError } from 'knight-validation'
-import { CountResult, CreateResult, DeleteResult, UpdateResult, VersionReadResult } from '../api'
+import { CountResult, EntitiesVersionResult, EntityResult } from '../api'
 import Change from '../change/Change'
 import ChangeLogic from '../change/ChangeLogic'
 import schema from '../DbSchema'
 import { txQuery } from '../txQuery'
+import { CreateOrGetServerResult } from './api'
 import { Server } from './Server'
 import { ServerCreateValidator, ServerDeleteValidator, ServerUpdateValidator } from './validators'
 
@@ -18,12 +19,12 @@ export class ServerLogic {
 
   changeLogic!: ChangeLogic
 
-  create(server: Server, tx: PgTransaction): Promise<CreateResult<Server>> {
+  create(server: Server, tx: PgTransaction): Promise<EntityResult<Server>> {
     let l = log.mt('create')
     l.param('server', server)
 
     return tx.runInTransaction(async () => {
-      let validator = new ServerCreateValidator
+      let validator = new ServerCreateValidator(this, tx)
       let misfits = await validator.validate(server)
       l.var('Validation resulted in the following misfits', misfits)
 
@@ -37,13 +38,39 @@ export class ServerLogic {
       let created = await create(schema, 'server', 'postgres', txQuery(tx), server)
       l.dev('Created entity', created)
 
-      let result = new CreateResult(created)
+      let result = new EntityResult(created)
       l.returning('Returning result...', result)
       return result
     })
   }
 
-  read(criteria: ReadCriteria, tx: PgTransaction): Promise<VersionReadResult<Server>> {
+  createOrGet(ip: string, port: number, tx: PgTransaction): Promise<CreateOrGetServerResult> {
+    let l = log.mt('createOrGet')
+    l.param('ip', ip)
+    l.param('port', port)
+
+    return tx.runInTransaction(async () => {
+      let readResult = await this.read({ ip: ip, port: port}, tx)
+
+      if (readResult.entities.length == 1) {
+        return new CreateOrGetServerResult(readResult.entities[0], false)
+      }
+
+      let server = new Server
+      server.ip = ip
+      server.port = port
+
+      let createResult = await this.create(server, tx)
+
+      if (createResult.isMisfits()) {
+        throw new MisfitsError(createResult.misfits)
+      }
+
+      return new CreateOrGetServerResult(createResult.entity, true)
+    })
+  }
+
+  read(criteria: ReadCriteria, tx: PgTransaction): Promise<EntitiesVersionResult<Server>> {
     let l = log.mt('read')
     l.param('criteria', criteria)
 
@@ -55,7 +82,7 @@ export class ServerLogic {
       let version = await this.changeLogic.latestVersion(tx)
       l.var('version', version)
 
-      return new VersionReadResult(readed, version)
+      return new EntitiesVersionResult(readed, version)
     })
   }
 
@@ -75,7 +102,7 @@ export class ServerLogic {
     })
   }
 
-  update(server: Server, tx: PgTransaction): Promise<UpdateResult<Server>> {
+  update(server: Server, tx: PgTransaction): Promise<EntityResult<Server>> {
     let l = log.mt('update')
     l.param('server', server)
 
@@ -104,13 +131,13 @@ export class ServerLogic {
         throw new MisfitsError(changeCreateResult.misfits)
       }
 
-      let result = new UpdateResult(updated)
+      let result = new EntityResult(updated)
       l.returning('Returning result...', result)
       return result
     })
   }
 
-  delete(server: Server, tx: PgTransaction): Promise<DeleteResult<Server>> {
+  delete(server: Server, tx: PgTransaction): Promise<EntityResult<Server>> {
     let l = log.mt('delete')
     l.var('server', server)
 
@@ -139,7 +166,7 @@ export class ServerLogic {
         throw new MisfitsError(changeCreateResult.misfits)
       }
 
-      let result = new DeleteResult(deleted)
+      let result = new EntityResult(deleted)
       l.returning('Returning result...', result)
       return result      
     })

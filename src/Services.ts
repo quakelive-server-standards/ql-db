@@ -21,6 +21,7 @@ import { ServerLogic } from './domain/server/ServerLogic'
 import { ServerVisitLogic } from './domain/serverVisit/ServerVisitLogic'
 import { StatsLogic } from './domain/stats/StatsLogic'
 import instantiator from './Instantiator'
+import { QlStatsIntegrator } from './service/QlStatsIntegrator'
 
 let log = new Log('Services.ts')
 
@@ -59,6 +60,8 @@ export default class Services {
   serverLogic = new ServerLogic
   serverVisitLogic = new ServerVisitLogic
   statsLogic = new StatsLogic
+
+  qlStatsIntegrator = new QlStatsIntegrator
 
   async start() {
     log.admin('Starting services...')
@@ -119,6 +122,18 @@ export default class Services {
     this.statsLogic.playerLogic = this.playerLogic
     this.statsLogic.roundLogic = this.roundLogic
     this.statsLogic.serverLogic = this.serverLogic
+
+    this.qlStatsIntegrator.factoryLogic = this.factoryLogic
+    this.qlStatsIntegrator.fragLogic = this.fragLogic
+    this.qlStatsIntegrator.mapLogic = this.mapLogic
+    this.qlStatsIntegrator.matchLogic = this.matchLogic
+    this.qlStatsIntegrator.matchParticipationLogic = this.matchParticipationLogic
+    this.qlStatsIntegrator.medalLogic = this.medalLogic
+    this.qlStatsIntegrator.playerLogic = this.playerLogic
+    this.qlStatsIntegrator.roundLogic = this.roundLogic
+    this.qlStatsIntegrator.serverLogic = this.serverLogic
+    this.qlStatsIntegrator.serverVisitLogic = this.serverVisitLogic
+    this.qlStatsIntegrator.statsLogic = this.statsLogic
   }
 
   async startDb() {

@@ -4,10 +4,11 @@ import Log from 'knight-log'
 import { count, create, delete_, read, update } from 'knight-orm'
 import { PgTransaction } from 'knight-pg-transaction'
 import { MisfitsError } from 'knight-validation'
-import { CountResult, CreateResult, DeleteResult, UpdateResult, VersionReadResult } from '../api'
+import { CountResult, CreateOrGetResult, EntitiesVersionResult, EntityResult } from '../api'
 import Change from '../change/Change'
 import ChangeLogic from '../change/ChangeLogic'
 import schema from '../DbSchema'
+import { GameType } from '../enums/GameType'
 import { txQuery } from '../txQuery'
 import { Factory } from './Factory'
 import { FactoryCreateValidator, FactoryDeleteValidator, FactoryUpdateValidator } from './validators'
@@ -18,7 +19,7 @@ export class FactoryLogic {
 
   changeLogic!: ChangeLogic
 
-  create(factory: Factory, tx: PgTransaction): Promise<CreateResult<Factory>> {
+  create(factory: Factory, tx: PgTransaction): Promise<EntityResult<Factory>> {
     let l = log.mt('create')
     l.param('factory', factory)
 
@@ -37,13 +38,41 @@ export class FactoryLogic {
       let created = await create(schema, 'factory', 'postgres', txQuery(tx), factory)
       l.dev('Created entity', created)
 
-      let result = new CreateResult(created)
+      let result = new EntityResult(created)
       l.returning('Returning result...', result)
       return result
     })
   }
 
-  read(criteria: ReadCriteria, tx: PgTransaction): Promise<VersionReadResult<Factory>> {
+  createOrGet(name: string, title: string, gameType: GameType, tx: PgTransaction): Promise<CreateOrGetResult<Factory>> {
+    let l = log.mt('createOrGet')
+    l.param('name', name)
+    l.param('title', title)
+    l.param('gameType', gameType)
+
+    return tx.runInTransaction(async () => {
+      let readResult = await this.read({ name: name, gameType: gameType}, tx)
+
+      if (readResult.entities.length == 1) {
+        return new CreateOrGetResult(readResult.entities[0], false)
+      }
+
+      let factory = new Factory
+      factory.name = name
+      factory.title = title
+      factory.gameType = gameType
+
+      let createResult = await this.create(factory, tx)
+
+      if (createResult.isMisfits()) {
+        throw new MisfitsError(createResult.misfits)
+      }
+
+      return new CreateOrGetResult(createResult.entity, true)
+    })
+  }
+
+  read(criteria: ReadCriteria, tx: PgTransaction): Promise<EntitiesVersionResult<Factory>> {
     let l = log.mt('read')
     l.param('criteria', criteria)
 
@@ -55,7 +84,7 @@ export class FactoryLogic {
       let version = await this.changeLogic.latestVersion(tx)
       l.var('version', version)
 
-      return new VersionReadResult(readed, version)
+      return new EntitiesVersionResult(readed, version)
     })
   }
 
@@ -75,7 +104,7 @@ export class FactoryLogic {
     })
   }
 
-  update(factory: Factory, tx: PgTransaction): Promise<UpdateResult<Factory>> {
+  update(factory: Factory, tx: PgTransaction): Promise<EntityResult<Factory>> {
     let l = log.mt('update')
     l.param('factory', factory)
 
@@ -104,13 +133,13 @@ export class FactoryLogic {
         throw new MisfitsError(changeCreateResult.misfits)
       }
 
-      let result = new UpdateResult(updated)
+      let result = new EntityResult(updated)
       l.returning('Returning result...', result)
       return result
     })
   }
 
-  delete(factory: Factory, tx: PgTransaction): Promise<DeleteResult<Factory>> {
+  delete(factory: Factory, tx: PgTransaction): Promise<EntityResult<Factory>> {
     let l = log.mt('delete')
     l.var('factory', factory)
 
@@ -139,7 +168,7 @@ export class FactoryLogic {
         throw new MisfitsError(changeCreateResult.misfits)
       }
 
-      let result = new DeleteResult(deleted)
+      let result = new EntityResult(deleted)
       l.returning('Returning result...', result)
       return result      
     })
