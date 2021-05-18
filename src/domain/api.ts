@@ -10,6 +10,16 @@ export class EntityResult<T> extends Result {
   }
 }
 
+export class EntityOrNullResult<T> extends Result {
+
+  entity?: T
+
+  constructor(entity?: T) {
+    super()
+    this.entity = entity
+  }
+}
+
 export class EntitiesResult<T> extends Result {
 
   entities: T[]
