@@ -4,12 +4,13 @@ import Log from 'knight-log'
 import { count, create, delete_, read, update } from 'knight-orm'
 import { PgTransaction } from 'knight-pg-transaction'
 import { MisfitsError } from 'knight-validation'
-import { CountResult, EntitiesVersionResult, EntityResult } from '../api'
+import { CountResult, CreateOrGetResult, EntitiesVersionResult, EntityResult } from '../api'
 import Change from '../change/Change'
 import ChangeLogic from '../change/ChangeLogic'
 import schema from '../DbSchema'
 import { FactoryLogic } from '../factory/FactoryLogic'
 import { MapLogic } from '../map/MapLogic'
+import { CreateOrGetServerResult } from '../server/api'
 import { ServerLogic } from '../server/ServerLogic'
 import { txQuery } from '../txQuery'
 import { Match } from './Match'
@@ -46,6 +47,30 @@ export class MatchLogic {
       let result = new EntityResult(created)
       l.returning('Returning result...', result)
       return result
+    })
+  }
+
+  createOrGet(guid: string, tx: PgTransaction): Promise<CreateOrGetResult<Match>> {
+    let l = log.mt('createOrGet')
+    l.param('guid', guid)
+
+    return tx.runInTransaction(async () => {
+      let readResult = await this.read({ guid: guid }, tx)
+
+      if (readResult.entities.length == 1) {
+        return new CreateOrGetResult(readResult.entities[0], false)
+      }
+
+      let match = new Match
+      match.guid = guid
+
+      let createResult = await this.create(match, tx)
+
+      if (createResult.isMisfits()) {
+        throw new MisfitsError(createResult.misfits)
+      }
+
+      return new CreateOrGetResult(createResult.entity, true)
     })
   }
 

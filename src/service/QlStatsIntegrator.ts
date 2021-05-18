@@ -48,10 +48,6 @@ export class QlStatsIntegrator {
   serverVisitLogic!: ServerVisitLogic
   statsLogic!: StatsLogic
 
-  async bootUp() {
-    // delete all entities which are incomplete
-  }
-
   async integrate(serverIp: string, serverPort: number, event: MatchReportEvent | MatchStartedEvent | PlayerConnectEvent | PlayerDeathEvent | PlayerDisconnectEvent | PlayerKillEvent | PlayerMedalEvent | PlayerStatsEvent | PlayerSwitchTeamEvent | RoundOverEvent, tx: PgTransaction, eventEmitDate: Date = utc()) {
     let l = log.mt('integrate')
     l.param('serverIp', serverIp)
@@ -62,47 +58,45 @@ export class QlStatsIntegrator {
     let server = serverResult.server
 
     if (event instanceof MatchReportEvent) {
-      let matchesResult = await this.matchLogic.read({ guid: event.matchGuid }, tx)
-      let match = matchesResult.entities.length == 1 ? matchesResult.entities[0] : undefined
+      let matchResult = await this.matchLogic.createOrGet(event.matchGuid, tx)
+      let match = matchResult.entity
 
-      if (match) {
-        let factoryResult = await this.factoryLogic.createOrGet(event.factory, event.factoryTitle, mapGameType(event.gameType), tx)
-        let mapResult = await this.mapLogic.createOrGet(event.map, tx)
+      let factoryResult = await this.factoryLogic.createOrGet(event.factory, event.factoryTitle, mapGameType(event.gameType), tx)
+      let mapResult = await this.mapLogic.createOrGet(event.map, tx)
 
-        let factory = factoryResult.entity
-        let map = mapResult.entity
+      let factory = factoryResult.entity
+      let map = mapResult.entity
 
-        let finishDate = utc(match.startDate)
-        finishDate.setSeconds(finishDate.getSeconds() + event.gameLength)
-  
-        match.cvars = new Cvars
-        match.finishDate = finishDate
-        match.factoryId = factory.id
-        match.mapId = map.id
-        match.serverId = server.id
-        server.title = event.serverTitle
-  
-        match.aborted = event.aborted
-        match.cvars.capturelimit = event.captureLimit
-        match.exitMessage = event.exitMsg
-        match.cvars.fraglimit = event.fragLimit
-        match.length = event.gameLength
-        match.cvars.g_instagib = event.instagib
-        match.lastLeadChangeTime = event.lastLeadChangeTime
-        match.guid = event.matchGuid
-        match.cvars.mercylimit = event.mercyLimit
-        match.cvars.g_quadHog = event.quadHog
-        match.restarted = event.restarted
-        match.cvars.roundlimit = event.roundLimit
-        match.cvars.scorelimit = event.scoreLimit
-        match.cvars.timelimit = event.timeLimit
-        match.cvars.g_training = event.training
-        match.score1 = event.teamScore0
-        match.score2 = event.teamScore1
+      let finishDate = utc(match.startDate)
+      finishDate.setSeconds(finishDate.getSeconds() + event.gameLength)
 
-        await this.serverLogic.update(server, tx)
-        await this.matchLogic.update(match, tx)
-      }
+      match.cvars = new Cvars
+      match.finishDate = finishDate
+      match.factoryId = factory.id
+      match.mapId = map.id
+      match.serverId = server.id
+      server.title = event.serverTitle
+
+      match.aborted = event.aborted
+      match.cvars.capturelimit = event.captureLimit
+      match.exitMessage = event.exitMsg
+      match.cvars.fraglimit = event.fragLimit
+      match.length = event.gameLength
+      match.cvars.g_instagib = event.instagib
+      match.lastLeadChangeTime = event.lastLeadChangeTime
+      match.guid = event.matchGuid
+      match.cvars.mercylimit = event.mercyLimit
+      match.cvars.g_quadHog = event.quadHog
+      match.restarted = event.restarted
+      match.cvars.roundlimit = event.roundLimit
+      match.cvars.scorelimit = event.scoreLimit
+      match.cvars.timelimit = event.timeLimit
+      match.cvars.g_training = event.training
+      match.score1 = event.teamScore0
+      match.score2 = event.teamScore1
+
+      await this.serverLogic.update(server, tx)
+      await this.matchLogic.update(match, tx)
     }
     else if (event instanceof MatchStartedEvent) {
       let factoryResult = await this.factoryLogic.createOrGet(event.factory, event.factoryTitle, mapGameType(event.gameType), tx)
