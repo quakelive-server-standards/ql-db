@@ -843,7 +843,8 @@ export default {
       'player_id': 'playerId',
       'server_id': 'serverId',
       'connect_date': 'connectDate',
-      'disconnect_date': 'disconnectDate'
+      'disconnect_date': 'disconnectDate',
+      'just_now': 'justNow'
     },
     relationships: {
       'player': {
@@ -865,6 +866,7 @@ export default {
       serverVisit.id = row['id']
       serverVisit.connectDate = row['connect_date']
       serverVisit.disconnectDate = row['disconnect_date']
+      serverVisit.justNow = row['just_now']
       serverVisit.playerId = row['player_id']
       serverVisit.serverId = row['server_id']
 
@@ -875,6 +877,7 @@ export default {
         'id': serverVisit.id,
         'connect_date': serverVisit.connectDate,
         'disconnect_date': serverVisit.disconnectDate,
+        'just_now': serverVisit.justNow,
         'player_id': serverVisit.playerId,
         'server_id': serverVisit.serverId,
       }

@@ -55,7 +55,7 @@ export class QlStatsIntegrator {
     l.param('event', event)
 
     let serverResult = await this.serverLogic.createOrGet(serverIp, serverPort, tx)
-    let server = serverResult.server
+    let server = serverResult.entity
 
     if (event instanceof MatchReportEvent) {
       let matchResult = await this.matchLogic.createOrGet(event.matchGuid, tx)
@@ -148,11 +148,19 @@ export class QlStatsIntegrator {
       let playerResult = await this.playerLogic.createOrGet(event.steamId, event.name, tx)
       let player = playerResult.entity
 
+      let serverVisitsJustNow = await this.serverVisitLogic.read({ justNow: true, playerId: player.id }, tx)
+
+      for (let serverVisit of serverVisitsJustNow.entities) {
+        serverVisit.justNow = false
+        await this.serverVisitLogic.update(serverVisit, tx)
+      }
+
       let serverVisit = new ServerVisit
 
       serverVisit.playerId = player.id
       serverVisit.serverId = server.id
       serverVisit.connectDate = eventEmitDate
+      serverVisit.justNow = true
       // event.matchGuid
 
       await this.serverVisitLogic.create(serverVisit, tx)
@@ -222,12 +230,13 @@ export class QlStatsIntegrator {
       let playerResult = await this.playerLogic.createOrGet(event.steamId, event.name, tx)
       let player = playerResult.entity
 
-      let activeServerVisitResult = await this.serverVisitLogic.getActive(server.id!, event.steamId, tx)
-      let activeServerVisit = activeServerVisitResult.entity
+      let serverVisitJustNowResult = await this.serverVisitLogic.getJustNow(server.id!, event.steamId, tx)
+      let serverVisitJustNow = serverVisitJustNowResult.entity
 
-      if (activeServerVisit) {
-        activeServerVisit.disconnectDate = eventEmitDate
-        await this.serverVisitLogic.update(activeServerVisit, tx)
+      if (serverVisitJustNow) {
+        serverVisitJustNow.disconnectDate = eventEmitDate
+        serverVisitJustNow.justNow = false
+        await this.serverVisitLogic.update(serverVisitJustNow, tx)
       }
       else {
         let serverVisit = new ServerVisit
@@ -235,9 +244,17 @@ export class QlStatsIntegrator {
         serverVisit.playerId = player.id
         serverVisit.serverId = server.id
         serverVisit.disconnectDate = eventEmitDate
+        serverVisit.justNow = false
         // event.matchGuid
   
         await this.serverVisitLogic.create(serverVisit, tx)  
+      }
+
+      let serverVisitsJustNow = await this.serverVisitLogic.read({ justNow: true, playerId: player.id }, tx)
+
+      for (let serverVisit of serverVisitsJustNow.entities) {
+        serverVisit.justNow = false
+        await this.serverVisitLogic.update(serverVisit, tx)
       }
     }
     else if (event instanceof PlayerKillEvent) {

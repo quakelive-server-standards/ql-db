@@ -13,6 +13,7 @@ export class ServerVisit {
   playerId?: number
   serverId?: number
 
+  justNow?: boolean
   connectDate?: Date
   disconnectDate?: Date
 

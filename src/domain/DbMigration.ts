@@ -199,7 +199,8 @@ export default class DbMigration extends PostgresMigration {
         player_id INTEGER,
         server_id INTEGER,
         connect_date TIMESTAMP,
-        disconnect_date TIMESTAMP
+        disconnect_date TIMESTAMP,
+        just_now BOOLEAN
       )`
     )
 

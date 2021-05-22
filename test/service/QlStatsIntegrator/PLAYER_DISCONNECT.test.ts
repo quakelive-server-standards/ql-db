@@ -6,11 +6,11 @@ import { create, tx } from '../../tools'
 
 describe.only('service/QlStatsIntegrator.ts', function() {
   describe('PLAYER_DISCONNECT', function() {
-    it('should update the present ServerVisit on PLAYER_DISCONNECT event', async function() {
-      await create('server_visit', { serverId: 1, playerId: 1, connectDate: new Date, disconnectDate: new Date })
-      await create('server_visit', { serverId: 1, playerId: 2, connectDate: new Date, disconnectDate: new Date })
-      await create('server_visit', { serverId: 2, playerId: 1, connectDate: new Date, disconnectDate: new Date })
-      await create('server_visit', { serverId: 2, playerId: 2, connectDate: new Date, disconnectDate: new Date })
+    it('should update the active ServerVisit', async function() {
+      await create('server_visit', { serverId: 1, playerId: 1, connectDate: new Date, disconnectDate: new Date, justNow: false })
+      await create('server_visit', { serverId: 1, playerId: 2, connectDate: new Date, disconnectDate: new Date, justNow: false })
+      await create('server_visit', { serverId: 2, playerId: 1, connectDate: new Date, disconnectDate: new Date, justNow: false })
+      await create('server_visit', { serverId: 2, playerId: 2, connectDate: new Date, disconnectDate: new Date, justNow: false })
       await create('player', { steamId: '76561198170654797' })
       await create('player', { steamId: '76561198170654798' })
 
@@ -52,17 +52,18 @@ describe.only('service/QlStatsIntegrator.ts', function() {
       expect(serverVisitsResult.entities.length).to.equal(1)
       expect(serverVisitsResult.entities[0].connectDate).to.deep.equal(connectDate)
       expect(serverVisitsResult.entities[0].disconnectDate).to.deep.equal(disconnectDate)
+      expect(serverVisitsResult.entities[0].justNow).to.equal(false)
       expect(serverVisitsResult.entities[0].playerId).to.equal(1)
       expect(serverVisitsResult.entities[0].serverId).to.equal(1)
     })
 
-    it('should use the latest server visit on a PLAYER_DISCONNECT event if there is more than one active one', async function() {
+    it('should use the latest server visit if there is more than one active one and set the other ones justNow to false', async function() {
       let date1 = new Date
       let date2 = new Date(new Date(date1).setSeconds(date1.getSeconds() + 1))
       
-      await create('server_visit', { serverId: 1, playerId: 1, connectDate: date1 })
-      await create('server_visit', { serverId: 1, playerId: 1, connectDate: date2 })
-      await create('server_visit', { serverId: 1, playerId: 1, connectDate: date1 })
+      await create('server_visit', { serverId: 1, playerId: 1, connectDate: date1, justNow: true })
+      await create('server_visit', { serverId: 1, playerId: 1, connectDate: date2, justNow: true })
+      await create('server_visit', { serverId: 1, playerId: 1, connectDate: date1, justNow: true })
       await create('player', { steamId: '76561198170654797' })
 
       let qlDisconnectEvent = {
@@ -87,15 +88,21 @@ describe.only('service/QlStatsIntegrator.ts', function() {
       expect(serverVisitsResult.entities.length).to.equal(1)
       expect(serverVisitsResult.entities[0].connectDate).to.deep.equal(date2)
       expect(serverVisitsResult.entities[0].disconnectDate).to.deep.equal(disconnectDate)
+      expect(serverVisitsResult.entities[0].justNow).to.equal(false)
       expect(serverVisitsResult.entities[0].playerId).to.equal(1)
       expect(serverVisitsResult.entities[0].serverId).to.equal(1)
+
+      let otherServerVisitsResult = await Services.get().serverVisitLogic.read({ id: { operator: '!=', value: 2 }}, tx())
+      expect(otherServerVisitsResult.isValue()).to.be.true
+      expect(otherServerVisitsResult.entities.length).to.equal(2)
+      expect(otherServerVisitsResult.entities[0].justNow).to.equal(false)
+      expect(otherServerVisitsResult.entities[1].justNow).to.equal(false)
     })
 
-    it('should not consider server visits on a PLAYER_DISCONNECT event which do not have a connect date', async function() {
+    it('should not consider server visits which do not have a connect date', async function() {
       let connectDate = new Date
       
-      await create('server_visit', { serverId: 1, playerId: 1, connectDate: connectDate })
-      await create('server_visit', { serverId: 1, playerId: 1 })
+      await create('server_visit', { serverId: 1, playerId: 1, justNow: true })
       await create('player', { steamId: '76561198170654797' })
 
       let qlDisconnectEvent = {
@@ -114,17 +121,25 @@ describe.only('service/QlStatsIntegrator.ts', function() {
 
       await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, disconnectEvent, tx(), disconnectDate)
   
-      let serverVisitsResult = await Services.get().serverVisitLogic.read({ id: 1 }, tx())
+      let serverVisitsResult = await Services.get().serverVisitLogic.read({}, tx())
   
       expect(serverVisitsResult.isValue()).to.be.true
-      expect(serverVisitsResult.entities.length).to.equal(1)
-      expect(serverVisitsResult.entities[0].connectDate).to.deep.equal(connectDate)
+      expect(serverVisitsResult.entities.length).to.equal(2)
+      expect(serverVisitsResult.entities[0].id).to.equal(2)
+      expect(serverVisitsResult.entities[0].connectDate).to.be.null
       expect(serverVisitsResult.entities[0].disconnectDate).to.deep.equal(disconnectDate)
+      expect(serverVisitsResult.entities[0].justNow).to.equal(false)
       expect(serverVisitsResult.entities[0].playerId).to.equal(1)
       expect(serverVisitsResult.entities[0].serverId).to.equal(1)
+      expect(serverVisitsResult.entities[1].id).to.equal(1)
+      expect(serverVisitsResult.entities[1].connectDate).to.be.null
+      expect(serverVisitsResult.entities[1].disconnectDate).to.be.null
+      expect(serverVisitsResult.entities[1].justNow).to.equal(false)
+      expect(serverVisitsResult.entities[1].playerId).to.equal(1)
+      expect(serverVisitsResult.entities[1].serverId).to.equal(1)
     })
 
-    it('should create a server visit and the server and player on a PLAYER_DISCONNECT event', async function() {
+    it('should create a server visit and the server and player', async function() {
       let qlDisconnectEvent = {
         "DATA" : {
            "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
@@ -159,6 +174,7 @@ describe.only('service/QlStatsIntegrator.ts', function() {
       expect(serverVisitsResult.entities.length).to.equal(1)
       expect(serverVisitsResult.entities[0].connectDate).to.be.null
       expect(serverVisitsResult.entities[0].disconnectDate).to.deep.equal(disconnectDate)
+      expect(serverVisitsResult.entities[0].justNow).to.equal(false)
       expect(serverVisitsResult.entities[0].playerId).to.equal(1)
       expect(serverVisitsResult.entities[0].serverId).to.equal(1)
     })

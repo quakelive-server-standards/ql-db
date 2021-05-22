@@ -4,12 +4,11 @@ import Log from 'knight-log'
 import { count, create, delete_, read, update } from 'knight-orm'
 import { PgTransaction } from 'knight-pg-transaction'
 import { MisfitsError } from 'knight-validation'
-import { CountResult, EntitiesVersionResult, EntityResult } from '../api'
+import { CountResult, CreateOrGetResult, EntitiesVersionResult, EntityResult } from '../api'
 import Change from '../change/Change'
 import ChangeLogic from '../change/ChangeLogic'
 import schema from '../DbSchema'
 import { txQuery } from '../txQuery'
-import { CreateOrGetServerResult } from './api'
 import { Server } from './Server'
 import { ServerCreateValidator, ServerDeleteValidator, ServerUpdateValidator } from './validators'
 
@@ -44,7 +43,7 @@ export class ServerLogic {
     })
   }
 
-  createOrGet(ip: string, port: number, tx: PgTransaction): Promise<CreateOrGetServerResult> {
+  createOrGet(ip: string, port: number, tx: PgTransaction): Promise<CreateOrGetResult<Server>> {
     let l = log.mt('createOrGet')
     l.param('ip', ip)
     l.param('port', port)
@@ -53,7 +52,7 @@ export class ServerLogic {
       let readResult = await this.read({ ip: ip, port: port}, tx)
 
       if (readResult.entities.length == 1) {
-        return new CreateOrGetServerResult(readResult.entities[0], false)
+        return new CreateOrGetResult(readResult.entities[0], false)
       }
 
       let server = new Server
@@ -66,7 +65,7 @@ export class ServerLogic {
         throw new MisfitsError(createResult.misfits)
       }
 
-      return new CreateOrGetServerResult(createResult.entity, true)
+      return new CreateOrGetResult(createResult.entity, true)
     })
   }
 
