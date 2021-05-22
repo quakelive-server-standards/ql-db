@@ -1,5 +1,6 @@
 import Log from 'knight-log'
 import { PgTransaction } from 'knight-pg-transaction'
+import { MisfitsError } from 'knight-validation'
 import { GameType as StatsGameType, HoldableType as StatsHoldableType, MatchReportEvent, MatchStartedEvent, MedalType as StatsMedalType, ModType, PlayerConnectEvent, PlayerDeathEvent, PlayerDisconnectEvent, PlayerKillEvent, PlayerMedalEvent, PlayerStatsEvent, PlayerSwitchTeamEvent, PowerUpType as StatsPowerUpType, RoundOverEvent, TeamType as StatsTeamType, WeaponType as StatsWeaponType } from 'ql-stats-model'
 import { GameType } from '../domain/enums/GameType'
 import { HoldableType } from '../domain/enums/HoldableType'
@@ -8,11 +9,9 @@ import { PowerUpType } from '../domain/enums/PowerUpType'
 import { ReasonType } from '../domain/enums/ReasonType'
 import { TeamType } from '../domain/enums/TeamType'
 import { WeaponType } from '../domain/enums/WeaponType'
-import { Factory } from '../domain/factory/Factory'
 import { FactoryLogic } from '../domain/factory/FactoryLogic'
 import { Frag, FragParticipant } from '../domain/frag/Frag'
 import { FragLogic } from '../domain/frag/FragLogic'
-import { Map } from '../domain/map/Map'
 import { MapLogic } from '../domain/map/MapLogic'
 import { Cvars } from '../domain/match/Cvars'
 import { Match } from '../domain/match/Match'
@@ -21,15 +20,11 @@ import { MatchParticipation } from '../domain/matchParticipation/MatchParticipat
 import { MatchParticipationLogic } from '../domain/matchParticipation/MatchParticipationLogic'
 import { Medal } from '../domain/medal/Medal'
 import { MedalLogic } from '../domain/medal/MedalLogic'
-import { Player } from '../domain/player/Player'
 import { PlayerLogic } from '../domain/player/PlayerLogic'
-import { Round } from '../domain/round/Round'
 import { RoundLogic } from '../domain/round/RoundLogic'
-import { Server } from '../domain/server/Server'
 import { ServerLogic } from '../domain/server/ServerLogic'
 import { ServerVisit } from '../domain/serverVisit/ServerVisit'
 import { ServerVisitLogic } from '../domain/serverVisit/ServerVisitLogic'
-import { Stats } from '../domain/stats/Stats'
 import { StatsLogic } from '../domain/stats/StatsLogic'
 
 let log = new Log('QlStatsIntegrator.ts')
@@ -54,7 +49,7 @@ export class QlStatsIntegrator {
     l.param('serverPort', serverPort)
     l.param('event', event)
 
-    let serverResult = await this.serverLogic.createOrGet(serverIp, serverPort, tx)
+    let serverResult = await this.serverLogic.createOrGet(serverIp, serverPort, eventEmitDate, tx)
     let server = serverResult.entity
 
     if (event instanceof MatchReportEvent) {
@@ -99,11 +94,27 @@ export class QlStatsIntegrator {
       await this.matchLogic.update(match, tx)
     }
     else if (event instanceof MatchStartedEvent) {
+      l.dev('Processing MatchStartedEvent...')
+
+      if (server.title != event.serverTitle) {
+        l.dev(`Server title stored in the database (${server.title}) is different than the current one (${event.serverTitle}). Updating...`)
+        server.title = event.serverTitle
+        let serverUpdateResult = await this.serverLogic.update(server, tx)
+        l.var('serverUpdateResult', serverUpdateResult)
+        
+        if (serverUpdateResult.isMisfits()) {
+          throw new MisfitsError(serverUpdateResult.misfits)
+        }
+      }
+
       let factoryResult = await this.factoryLogic.createOrGet(event.factory, event.factoryTitle, mapGameType(event.gameType), tx)
       let mapResult = await this.mapLogic.createOrGet(event.map, tx)
 
       let factory = factoryResult.entity
       let map = mapResult.entity
+
+      l.dev('factory', factory)
+      l.dev('map', map)
 
       let match = new Match
 
@@ -111,7 +122,7 @@ export class QlStatsIntegrator {
       match.factoryId = factory.id
       match.mapId = map.id
       match.serverId = server.id
-      server.title = event.serverTitle
+      match.startDate = eventEmitDate
 
       match.cvars.capturelimit = event.captureLimit
       match.cvars.fraglimit = event.fragLimit
@@ -124,33 +135,63 @@ export class QlStatsIntegrator {
       match.cvars.timelimit = event.timeLimit
       match.cvars.g_training = event.training
 
+      l.dev('Creating match...', match)
+
       let matchResult = await this.matchLogic.create(match, tx)
+      l.var('matchResult', matchResult)
+      
       let id = matchResult.entity.id
 
-      let startDate = eventEmitDate
-
+      l.dev('Creating match participations...')
       for (let eventPlayer of event.players) {
-        let playerResult = await this.playerLogic.createOrGet(eventPlayer.steamId, eventPlayer.name, tx)
+        let playerResult = await this.playerLogic.createOrGet(eventPlayer.steamId, eventPlayer.name, eventEmitDate, tx)
         let player = playerResult.entity
+
+        l.dev('Creating match participation for player...', player)
+
+        let justNowServerVisitResult = await this.serverVisitLogic.getJustNow(server.id!, player.id!, tx)
+
+        if (justNowServerVisitResult.entity == undefined) {
+          l.dev('There is no server visit for that player. Creating one...')
+          let serverVisit = new ServerVisit
+          serverVisit.connectDate = eventEmitDate
+          serverVisit.justNow = true
+          serverVisit.playerId = player.id
+          serverVisit.serverId = server.id
+
+          let serverVisitCreateResult = await this.serverVisitLogic.create(serverVisit, tx)
+          l.var('serverVisitCreateResult', serverVisitCreateResult)
+
+          if (serverVisitCreateResult.isMisfits()) {
+            throw new MisfitsError(serverVisitCreateResult.misfits)
+          }
+        }
         
         let matchParticipation = new MatchParticipation
         matchParticipation.matchId = id
         matchParticipation.playerId = player.id
         matchParticipation.serverId = server.id
-        matchParticipation.startDate = startDate
+        matchParticipation.startDate = eventEmitDate
+        matchParticipation.team = mapTeamType(eventPlayer.team)
 
-        await this.matchParticipationLogic.create(matchParticipation, tx)
+        l.dev('Creating match participation...', matchParticipation)
+        let matchParticipationResult = await this.matchParticipationLogic.create(matchParticipation, tx)
+        l.dev('matchParticipationResult', matchParticipationResult)
+
+        if (matchParticipationResult.isMisfits()) {
+          throw new MisfitsError(matchParticipationResult.misfits)
+        }
       }
     }
     else if (event instanceof PlayerConnectEvent) {
       l.dev('Processing PlayerConnectEvent...')
 
-      let playerResult = await this.playerLogic.createOrGet(event.steamId, event.name, tx)
+      let playerResult = await this.playerLogic.createOrGet(event.steamId, event.name, eventEmitDate, tx)
       let player = playerResult.entity
 
-      let serverVisitsJustNow = await this.serverVisitLogic.read({ justNow: true, playerId: player.id }, tx)
+      let justNowServerVisitsResult = await this.serverVisitLogic.read({ justNow: true, playerId: player.id }, tx)
 
-      for (let serverVisit of serverVisitsJustNow.entities) {
+      for (let serverVisit of justNowServerVisitsResult.entities) {
         serverVisit.justNow = false
         await this.serverVisitLogic.update(serverVisit, tx)
       }
@@ -176,7 +217,7 @@ export class QlStatsIntegrator {
         let match = matchesResult.entities.length == 1 ? matchesResult.entities[0] : undefined
   
         if (match || warump) {
-          let victimResult = await this.playerLogic.createOrGet(event.victim.steamId, event.victim.name, tx)
+          let victimResult = await this.playerLogic.createOrGet(event.victim.steamId, event.victim.name, eventEmitDate, tx)
           let victim = victimResult.entity
 
           let frag = new Frag
@@ -227,10 +268,10 @@ export class QlStatsIntegrator {
     }
     else if (event instanceof PlayerDisconnectEvent) {
       l.dev('Processing PlayerDisconnectEvent...')
-      let playerResult = await this.playerLogic.createOrGet(event.steamId, event.name, tx)
+      let playerResult = await this.playerLogic.createOrGet(event.steamId, event.name, eventEmitDate, tx)
       let player = playerResult.entity
 
-      let serverVisitJustNowResult = await this.serverVisitLogic.getJustNow(server.id!, event.steamId, tx)
+      let serverVisitJustNowResult = await this.serverVisitLogic.getJustNow(server.id!, player.id!, tx)
       let serverVisitJustNow = serverVisitJustNowResult.entity
 
       if (serverVisitJustNow) {
@@ -263,8 +304,8 @@ export class QlStatsIntegrator {
       let match = matchesResult.entities.length == 1 ? matchesResult.entities[0] : undefined
 
       if (match || warmup) {
-        let killerResult = await this.playerLogic.createOrGet(event.killer.steamId, event.killer.name, tx)
-        let victimResult = await this.playerLogic.createOrGet(event.victim.steamId, event.victim.name, tx)
+        let killerResult = await this.playerLogic.createOrGet(event.killer.steamId, event.killer.name, eventEmitDate, tx)
+        let victimResult = await this.playerLogic.createOrGet(event.victim.steamId, event.victim.name, eventEmitDate, tx)
 
         let killer = killerResult.entity
         let victim = victimResult.entity
@@ -342,7 +383,7 @@ export class QlStatsIntegrator {
       let match = matchesResult.entities.length == 1 ? matchesResult.entities[0] : undefined
 
       if (match) {
-        let playerResult = await this.playerLogic.createOrGet(event.steamId, event.name, tx)
+        let playerResult = await this.playerLogic.createOrGet(event.steamId, event.name, eventEmitDate, tx)
         let player = playerResult.entity
 
         let medal = new Medal
@@ -364,7 +405,7 @@ export class QlStatsIntegrator {
       // let matchParticipation = await this.matchParticipationLogic.getActiveMatchParticipation(event.steamId, event.matchGuid)
 
       // if (match && matchParticipation || warmup) {
-      //   let playerResult = await this.playerLogic.createOrGet(event.steamId, event.name, tx)
+      //   let playerResult = await this.playerLogic.createOrGet(event.steamId, event.name, eventEmitDate, tx)
       //   let player = playerResult.entity
 
       //   let stats = new Stats
@@ -614,7 +655,7 @@ export class QlStatsIntegrator {
       //   let match = await this.getMatch(event.matchGuid)
 
       //   if (match) {
-      //     let playerResult = await this.playerLogic.createOrGet(event.steamId, event.name, tx)
+      //     let playerResult = await this.playerLogic.createOrGet(event.steamId, event.name, eventEmitDate, tx)
       //     let player = playerResult.entity
 
       //     let matchParticipation = new MatchParticipation

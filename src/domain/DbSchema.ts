@@ -471,8 +471,7 @@ export default {
       'stats_id': 'statsId',
       'finish_date': 'finishDate',
       'start_date': 'startDate',
-      'team': 'team',
-      'warmup': 'warmup'
+      'team': 'team'
     },
     relationships: {
       'deaths': {
@@ -536,7 +535,6 @@ export default {
       matchParticipation.startDate = row['start_date']
       matchParticipation.statsId = row['stats_id']
       matchParticipation.team = row['team']
-      matchParticipation.warmup = row['warmup']
 
       return matchParticipation
     },
@@ -550,8 +548,7 @@ export default {
         'server_id': matchParticipation.serverId,
         'start_date': matchParticipation.startDate,
         'stats_id': matchParticipation.statsId,
-        'team': matchParticipation.team,
-        'warmup': matchParticipation.warmup
+        'team': matchParticipation.team
       }
     }
   },

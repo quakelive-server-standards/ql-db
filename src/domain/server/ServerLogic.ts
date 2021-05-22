@@ -43,29 +43,53 @@ export class ServerLogic {
     })
   }
 
-  createOrGet(ip: string, port: number, tx: PgTransaction): Promise<CreateOrGetResult<Server>> {
+  createOrGet(ip: string, port: number, firstSeen: Date, tx: PgTransaction): Promise<CreateOrGetResult<Server>> {
     let l = log.mt('createOrGet')
     l.param('ip', ip)
     l.param('port', port)
 
     return tx.runInTransaction(async () => {
       let readResult = await this.read({ ip: ip, port: port}, tx)
+      l.dev('readResult', readResult)
 
       if (readResult.entities.length == 1) {
-        return new CreateOrGetResult(readResult.entities[0], false)
+        let existingServer = readResult.entities[0]
+        l.dev('Found existing server', existingServer)
+
+        if (existingServer.firstSeen == undefined) {
+          l.dev('Existing server does not have a first seen date. Updating...')
+          existingServer.firstSeen = firstSeen
+          
+          let serverUpdateResult = await this.update(existingServer, tx)
+          l.var('serverUpdateResult', serverUpdateResult)
+
+          if (serverUpdateResult.isMisfits()) {
+            throw new MisfitsError(serverUpdateResult.misfits)
+          }
+        }
+
+        let result = new CreateOrGetResult(existingServer, false)
+        l.returning('Returning result...', result)
+        return result
       }
 
       let server = new Server
       server.ip = ip
       server.port = port
+      server.firstSeen = firstSeen
+
+      l.dev('Creating new server...', server)
 
       let createResult = await this.create(server, tx)
+      l.dev('createResult', createResult)
 
       if (createResult.isMisfits()) {
         throw new MisfitsError(createResult.misfits)
       }
 
-      return new CreateOrGetResult(createResult.entity, true)
+      let result = new CreateOrGetResult(createResult.entity, true)
+      l.returning('Returning result...', result)
+      return result
     })
   }
 

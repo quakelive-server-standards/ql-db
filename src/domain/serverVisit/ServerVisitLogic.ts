@@ -149,24 +149,21 @@ export class ServerVisitLogic {
     })
   }
 
-  async getJustNow(serverId: number, steamId: string, tx: PgTransaction): Promise<EntityOrNullResult<ServerVisit>> {
+  async getJustNow(serverId: number, playerId: number, tx: PgTransaction): Promise<EntityOrNullResult<ServerVisit>> {
     let l = log.mt('getActive')
     l.param('serverId', serverId)
-    l.param('steamId', steamId)
+    l.param('playerId', playerId)
 
     return tx.runInTransaction(async () => {
       let readResult = await this.read({
         serverId: serverId,
-        justNow: true,
+        playerId: playerId,
         connectDate: {
           operator: '!=',
           value: null
         },
         disconnectDate: null,
-        player: {
-          '@filterGlobally': true,
-          steamId: steamId
-        }
+        justNow: true
       }, tx)
 
       l.var('readResult', readResult)

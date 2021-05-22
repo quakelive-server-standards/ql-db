@@ -16,10 +16,6 @@ export class ServerValidator extends Validator {
     
     this.add('title', new TypeOf('string'))
 
-    this.add(['ip', 'port'], new Unique(async (server: Server) => {
-      let result = await serverLogic.count({ ip: server.ip, port: server.port }, tx)
-      return result.count == 0
-    }))
   }
 }
 
@@ -48,6 +44,11 @@ export class ServerCreateValidator extends Validator {
 
     this.add('id', new Absent)
     this.add(new ServerValidator(serverLogic, tx))
+    
+    this.add(['ip', 'port'], new Unique(async (server: Server) => {
+      let result = await serverLogic.count({ ip: server.ip, port: server.port }, tx)
+      return result.count == 0
+    }))
   }
 }
 
@@ -58,6 +59,26 @@ export class ServerUpdateValidator extends Validator {
     
     this.add(new ServerIdValidator(serverLogic, tx))
     this.add(new ServerValidator(serverLogic, tx))
+
+    this.add(['ip', 'port'], new Unique(async (server: Server) => {
+      let result = await serverLogic.read({ ip: server.ip, port: server.port }, tx)
+
+      if (result.entities.length == 0) {
+        return true
+      }
+
+      if (result.entities.length > 1) {
+        return false
+      }
+
+      let existingServer = result.entities[0]
+
+      if (existingServer.id == server.id) {
+        return true
+      }
+
+      return false
+    }))
   }
 }
 

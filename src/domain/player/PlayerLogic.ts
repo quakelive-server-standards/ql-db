@@ -43,7 +43,7 @@ export class PlayerLogic {
     })
   }
 
-  createOrGet(steamId: string, name: string, tx: PgTransaction): Promise<CreateOrGetResult<Player>> {
+  createOrGet(steamId: string, name: string, firstSeen: Date, tx: PgTransaction): Promise<CreateOrGetResult<Player>> {
     let l = log.mt('createOrGet')
     l.param('steamId', steamId)
     l.param('name', name)
@@ -52,8 +52,25 @@ export class PlayerLogic {
       let readResult = await this.read({ steamId: steamId }, tx)
 
       if (readResult.entities.length == 1) {
-        let result = new CreateOrGetResult(readResult.entities[0], false)
-        l.returning('Returning existing player...', result)
+        let existingPlayer = readResult.entities[0]
+        l.dev('Found existing player', existingPlayer)
+
+        if (existingPlayer.name != name) {
+          l.dev(`Current player name (${name}) is different from the one stored in the database (${existingPlayer.name}). Updating...`)
+          existingPlayer.name = name
+          let playerUpdateResult = await this.update(existingPlayer, tx)
+          l.var('playerUpdateResult', playerUpdateResult)
+        }
+
+        if (existingPlayer.firstSeen == undefined) {
+          l.dev('Existing player does not have a first seen date. Updating...')
+          existingPlayer.firstSeen = firstSeen
+          let playerUpdateResult = await this.update(existingPlayer, tx)
+          l.var('playerUpdateResult', playerUpdateResult)
+        }
+
+        let result = new CreateOrGetResult(existingPlayer, false)
+        l.returning('Returning result...', result)
         return result
       }
 
@@ -62,6 +79,7 @@ export class PlayerLogic {
       let player = new Player
       player.steamId = steamId
       player.name = name
+      player.firstSeen = firstSeen
 
       l.var('player', player)
 

@@ -141,8 +141,7 @@ export default class DbMigration extends PostgresMigration {
         stats_id INTEGER,
         finish_date TIMESTAMP,
         start_date TIMESTAMP,
-        team VARCHAR(9),
-        warmup BOOLEAN
+        team VARCHAR(9)
       )`
     )
 

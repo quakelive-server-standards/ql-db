@@ -34,8 +34,9 @@ export function containsMisfit(fieldOrFields: string|string[], misfitType: strin
     }
     else if (fieldOrFields instanceof Array && misfit.fields != undefined && misfit.fields.length == fieldOrFields.length) {
       let fieldsMatch = true
+
       for (let field of fieldOrFields) {
-        if (! (field in misfit.fields)) {
+        if (misfit.fields.indexOf(field) == -1) {
           fieldsMatch = false
           break
         }

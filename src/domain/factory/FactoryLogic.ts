@@ -51,10 +51,22 @@ export class FactoryLogic {
     l.param('gameType', gameType)
 
     return tx.runInTransaction(async () => {
-      let readResult = await this.read({ name: name, gameType: gameType}, tx)
+      let readResult = await this.read({ name: name, gameType: gameType }, tx)
 
       if (readResult.entities.length == 1) {
-        return new CreateOrGetResult(readResult.entities[0], false)
+        let existingFactory = readResult.entities[0]
+
+        if (existingFactory.title != title) {
+          existingFactory.title = title
+
+          let factoryUpdateResult = await this.update(existingFactory, tx)
+
+          if (factoryUpdateResult.isMisfits()) {
+            throw new MisfitsError(factoryUpdateResult.misfits)
+          }
+        }
+
+        return new CreateOrGetResult(existingFactory, false)
       }
 
       let factory = new Factory

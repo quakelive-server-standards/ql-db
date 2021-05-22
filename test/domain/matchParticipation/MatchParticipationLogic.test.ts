@@ -27,7 +27,6 @@ describe('domain/MatchParticipationLogic.ts', function() {
       matchParticipation.startDate = date2
       matchParticipation.statsId = 1
       matchParticipation.team = TeamType.Blue
-      matchParticipation.warmup = true
 
       let result = await Services.get().matchParticipationLogic.create(matchParticipation, tx())
 
@@ -41,7 +40,6 @@ describe('domain/MatchParticipationLogic.ts', function() {
       expect(matchParticipation.startDate).to.deep.equal(date2)
       expect(matchParticipation.statsId).to.equal(1)
       expect(matchParticipation.team).to.equal(TeamType.Blue)
-      expect(matchParticipation.warmup).to.equal(true)
     })
   })
 
@@ -75,7 +73,6 @@ describe('domain/MatchParticipationLogic.ts', function() {
       expect(result.entities[0].startDate).to.deep.equal(date2)
       expect(result.entities[0].statsId).to.equal(1)
       expect(result.entities[0].team).to.equal(TeamType.Blue)
-      expect(result.entities[0].warmup).to.equal(true)
     })
 
     it('should load all deaths', async function() {
@@ -222,7 +219,6 @@ describe('domain/MatchParticipationLogic.ts', function() {
       matchParticipation.startDate = date1
       matchParticipation.statsId = 2
       matchParticipation.team = TeamType.Red
-      matchParticipation.warmup = false
 
       let result = await Services.get().matchParticipationLogic.update(matchParticipation, tx())
       
@@ -236,7 +232,6 @@ describe('domain/MatchParticipationLogic.ts', function() {
       expect(result.entity.startDate).to.deep.equal(date1)
       expect(result.entity.statsId).to.equal(2)
       expect(result.entity.team).to.equal(TeamType.Red)
-      expect(result.entity.warmup).to.equal(false)
     })
   })
 
@@ -272,7 +267,6 @@ describe('domain/MatchParticipationLogic.ts', function() {
       expect(result.entity.startDate).to.deep.equal(date2)
       expect(result.entity.statsId).to.equal(1)
       expect(result.entity.team).to.equal(TeamType.Blue)
-      expect(result.entity.warmup).to.equal(true)
     })
   })
 })

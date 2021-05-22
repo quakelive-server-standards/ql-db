@@ -4,9 +4,9 @@ import { PlayerConnectEvent, PlayerDisconnectEvent } from 'ql-stats-model'
 import Services from '../../../src/Services'
 import { create, tx } from '../../tools'
 
-describe.only('service/QlStatsIntegrator.ts', function() {
+describe('service/QlStatsIntegrator.ts', function() {
   describe('PLAYER_DISCONNECT', function() {
-    it('should update the active ServerVisit', async function() {
+    it('should update the active server visit', async function() {
       await create('server_visit', { serverId: 1, playerId: 1, connectDate: new Date, disconnectDate: new Date, justNow: false })
       await create('server_visit', { serverId: 1, playerId: 2, connectDate: new Date, disconnectDate: new Date, justNow: false })
       await create('server_visit', { serverId: 2, playerId: 1, connectDate: new Date, disconnectDate: new Date, justNow: false })
@@ -139,7 +139,7 @@ describe.only('service/QlStatsIntegrator.ts', function() {
       expect(serverVisitsResult.entities[1].serverId).to.equal(1)
     })
 
-    it('should create a server visit and the server and player', async function() {
+    it('should create a new server visit with a new server and a new player', async function() {
       let qlDisconnectEvent = {
         "DATA" : {
            "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",

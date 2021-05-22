@@ -19,7 +19,6 @@ export class MatchParticipation {
   finishDate?: Date
   startDate?: Date
   team?: TeamType
-  warmup?: boolean
 
   deaths?: Frag[]
   kills?: Frag[]
