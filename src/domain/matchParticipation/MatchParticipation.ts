@@ -16,6 +16,7 @@ export class MatchParticipation {
   serverId?: number
   statsId?: number
   
+  active?: boolean
   finishDate?: Date
   startDate?: Date
   team?: TeamType

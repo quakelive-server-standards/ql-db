@@ -22,6 +22,7 @@ export class Match {
   serverId?: number
 
   aborted?: boolean
+  active?: boolean
   cvars?: Cvars
   exitMessage?: string
   finishDate?: Date

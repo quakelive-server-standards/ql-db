@@ -50,6 +50,9 @@ export class MatchParticipationValidator extends Validator {
       return result.count == 1
     }))
 
+    this.add('active', new Required)
+    this.add('active', new TypeOf('boolean'))
+
     this.add('finishDate', new TypeOf(Date))
     
     this.add('startDate', new Required)

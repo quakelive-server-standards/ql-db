@@ -16,7 +16,7 @@ describe('domain/ServerVisitLogic.ts', function() {
 
       serverVisit.connectDate = date1
       serverVisit.disconnectDate = date2
-      serverVisit.justNow = true
+      serverVisit.active = true
       serverVisit.playerId = 1
       serverVisit.serverId = 1
 
@@ -26,7 +26,7 @@ describe('domain/ServerVisitLogic.ts', function() {
       expect(result.entity.id).to.equal(1)
       expect(result.entity.connectDate).to.deep.equal(date1)
       expect(result.entity.disconnectDate).to.deep.equal(date2)
-      expect(result.entity.justNow).to.equal(true)
+      expect(result.entity.active).to.equal(true)
       expect(result.entity.playerId).to.equal(1)
       expect(result.entity.serverId).to.equal(1)
     })
@@ -40,7 +40,7 @@ describe('domain/ServerVisitLogic.ts', function() {
       await create('server_visit', {
         connectDate: date1,
         disconnectDate: date2,
-        justNow: true,
+        active: true,
         playerId: 1,
         serverId: 1,
       })
@@ -52,7 +52,7 @@ describe('domain/ServerVisitLogic.ts', function() {
       expect(result.entities[0].id).to.equal(1)
       expect(result.entities[0].connectDate).to.deep.equal(date1)
       expect(result.entities[0].disconnectDate).to.deep.equal(date2)
-      expect(result.entities[0].justNow).to.equal(true)
+      expect(result.entities[0].active).to.equal(true)
       expect(result.entities[0].playerId).to.equal(1)
       expect(result.entities[0].serverId).to.equal(1)
     })
@@ -95,7 +95,7 @@ describe('domain/ServerVisitLogic.ts', function() {
       await create('server_visit', {
         connectDate: date1,
         disconnectDate: date2,
-        justNow: true,
+        active: true,
         playerId: 1,
         serverId: 1,
       })
@@ -104,7 +104,7 @@ describe('domain/ServerVisitLogic.ts', function() {
       serverVisit.id = 1
       serverVisit.connectDate = date2
       serverVisit.disconnectDate = date1
-      serverVisit.justNow = false
+      serverVisit.active = false
       serverVisit.playerId = 2
       serverVisit.serverId = 2
 
@@ -114,7 +114,7 @@ describe('domain/ServerVisitLogic.ts', function() {
       expect(result.entity.id).to.equal(1)
       expect(result.entity.connectDate).to.deep.equal(date2)
       expect(result.entity.disconnectDate).to.deep.equal(date1)
-      expect(result.entity.justNow).to.equal(false)
+      expect(result.entity.active).to.equal(false)
       expect(result.entity.playerId).to.equal(2)
       expect(result.entity.serverId).to.equal(2)
     })
@@ -128,7 +128,7 @@ describe('domain/ServerVisitLogic.ts', function() {
       await create('server_visit', {
         connectDate: date1,
         disconnectDate: date2,
-        justNow: true,
+        active: true,
         playerId: 1,
         serverId: 1,
         })
@@ -142,7 +142,7 @@ describe('domain/ServerVisitLogic.ts', function() {
       expect(result.entity.id).to.equal(1)
       expect(result.entity.connectDate).to.deep.equal(date1)
       expect(result.entity.disconnectDate).to.deep.equal(date2)
-      expect(result.entity.justNow).to.equal(true)
+      expect(result.entity.active).to.equal(true)
       expect(result.entity.playerId).to.equal(1)
       expect(result.entity.serverId).to.equal(1)
     })

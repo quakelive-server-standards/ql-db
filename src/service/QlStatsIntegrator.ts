@@ -149,13 +149,13 @@ export class QlStatsIntegrator {
 
         l.dev('Creating match participation for player...', player)
 
-        let justNowServerVisitResult = await this.serverVisitLogic.getJustNow(server.id!, player.id!, tx)
+        let activeServerVisitResult = await this.serverVisitLogic.getActive(server.id!, player.id!, tx)
 
-        if (justNowServerVisitResult.entity == undefined) {
+        if (activeServerVisitResult.entity == undefined) {
           l.dev('There is no server visit for that player. Creating one...')
           let serverVisit = new ServerVisit
           serverVisit.connectDate = eventEmitDate
-          serverVisit.justNow = true
+          serverVisit.active = true
           serverVisit.playerId = player.id
           serverVisit.serverId = server.id
 
@@ -171,6 +171,7 @@ export class QlStatsIntegrator {
         matchParticipation.matchId = id
         matchParticipation.playerId = player.id
         matchParticipation.serverId = server.id
+        matchParticipation.active = true
         matchParticipation.startDate = eventEmitDate
         matchParticipation.team = mapTeamType(eventPlayer.team)
 
@@ -189,10 +190,10 @@ export class QlStatsIntegrator {
       let playerResult = await this.playerLogic.createOrGet(event.steamId, event.name, eventEmitDate, tx)
       let player = playerResult.entity
 
-      let justNowServerVisitsResult = await this.serverVisitLogic.read({ justNow: true, playerId: player.id }, tx)
+      let activeServerVisitsResult = await this.serverVisitLogic.read({ active: true, playerId: player.id }, tx)
 
-      for (let serverVisit of justNowServerVisitsResult.entities) {
-        serverVisit.justNow = false
+      for (let serverVisit of activeServerVisitsResult.entities) {
+        serverVisit.active = false
         await this.serverVisitLogic.update(serverVisit, tx)
       }
 
@@ -201,7 +202,7 @@ export class QlStatsIntegrator {
       serverVisit.playerId = player.id
       serverVisit.serverId = server.id
       serverVisit.connectDate = eventEmitDate
-      serverVisit.justNow = true
+      serverVisit.active = true
       // event.matchGuid
 
       await this.serverVisitLogic.create(serverVisit, tx)
@@ -268,16 +269,17 @@ export class QlStatsIntegrator {
     }
     else if (event instanceof PlayerDisconnectEvent) {
       l.dev('Processing PlayerDisconnectEvent...')
+
       let playerResult = await this.playerLogic.createOrGet(event.steamId, event.name, eventEmitDate, tx)
       let player = playerResult.entity
 
-      let serverVisitJustNowResult = await this.serverVisitLogic.getJustNow(server.id!, player.id!, tx)
-      let serverVisitJustNow = serverVisitJustNowResult.entity
+      let activeServerVisitResult = await this.serverVisitLogic.getActive(server.id!, player.id!, tx)
+      let activeServerVisit = activeServerVisitResult.entity
 
-      if (serverVisitJustNow) {
-        serverVisitJustNow.disconnectDate = eventEmitDate
-        serverVisitJustNow.justNow = false
-        await this.serverVisitLogic.update(serverVisitJustNow, tx)
+      if (activeServerVisit) {
+        activeServerVisit.disconnectDate = eventEmitDate
+        activeServerVisit.active = false
+        await this.serverVisitLogic.update(activeServerVisit, tx)
       }
       else {
         let serverVisit = new ServerVisit
@@ -285,16 +287,16 @@ export class QlStatsIntegrator {
         serverVisit.playerId = player.id
         serverVisit.serverId = server.id
         serverVisit.disconnectDate = eventEmitDate
-        serverVisit.justNow = false
+        serverVisit.active = false
         // event.matchGuid
   
         await this.serverVisitLogic.create(serverVisit, tx)  
       }
 
-      let serverVisitsJustNow = await this.serverVisitLogic.read({ justNow: true, playerId: player.id }, tx)
+      let serverVisitsActive = await this.serverVisitLogic.read({ active: true, playerId: player.id }, tx)
 
-      for (let serverVisit of serverVisitsJustNow.entities) {
-        serverVisit.justNow = false
+      for (let serverVisit of serverVisitsActive.entities) {
+        serverVisit.active = false
         await this.serverVisitLogic.update(serverVisit, tx)
       }
     }
@@ -379,24 +381,60 @@ export class QlStatsIntegrator {
       }
     }
     else if (event instanceof PlayerMedalEvent) {
-      let matchesResult = await this.matchLogic.read({ guid: event.matchGuid }, tx)
-      let match = matchesResult.entities.length == 1 ? matchesResult.entities[0] : undefined
-
-      if (match) {
-        let playerResult = await this.playerLogic.createOrGet(event.steamId, event.name, eventEmitDate, tx)
-        let player = playerResult.entity
-
-        let medal = new Medal
-  
-        medal.matchId = match.id
-        medal.playerId = player.id
-        medal.serverId = server.id
-  
-        medal.medal = mapMedalType(event.medal)
-        medal.warmup = event.warmup
-  
-        await this.medalLogic.create(medal, tx)
+      let match
+      if (! event.warmup) {
+        let matchResult = await this.matchLogic.createOrGet(event.matchGuid, tx)
+        match = matchResult.entity
       }
+
+      let playerResult = await this.playerLogic.createOrGet(event.steamId, event.name, eventEmitDate, tx)
+      let player = playerResult.entity
+
+      let activeServerVisitResult = await this.serverVisitLogic.getActive(server.id!, player.id!, tx)
+      let activeServerVisit = activeServerVisitResult.entity
+
+      if (activeServerVisit == undefined) {
+        let serverVisit = new ServerVisit
+
+        serverVisit.playerId = player.id
+        serverVisit.serverId = server.id
+        serverVisit.connectDate = eventEmitDate
+        serverVisit.active = true
+  
+        await this.serverVisitLogic.create(serverVisit, tx)
+      }
+
+      let matchParticipation
+      if (match) {
+        let matchParticipationResult = await this.matchParticipationLogic.getActive(server.id!, player.id!, tx)
+
+        if (matchParticipationResult.entity == undefined) {
+          matchParticipation = new MatchParticipation
+          matchParticipation.active = true
+          matchParticipation.matchId = match.id
+          matchParticipation.playerId = player.id
+          matchParticipation.serverId = server.id
+
+          let matchParticipationCreateResult = await this.matchParticipationLogic.create(matchParticipation, tx)
+
+          if (matchParticipationCreateResult.isMisfits()) {
+            throw new MisfitsError(matchParticipationCreateResult.misfits)
+          }
+        }
+      }
+
+      let medal = new Medal
+
+      medal.matchId = match ? match.id : null
+      medal.matchParticipationId = matchParticipation ? matchParticipation.id : null
+      medal.playerId = player.id
+      medal.serverId = server.id
+
+      medal.date = eventEmitDate
+      medal.medal = mapMedalType(event.medal)
+      medal.warmup = event.warmup
+
+      await this.medalLogic.create(medal, tx)
     }
     else if (event instanceof PlayerStatsEvent) {
       // let warmup = event.warmup

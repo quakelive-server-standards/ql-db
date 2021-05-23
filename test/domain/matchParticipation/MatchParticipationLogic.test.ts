@@ -19,6 +19,7 @@ describe('domain/MatchParticipationLogic.ts', function() {
 
       let matchParticipation = new MatchParticipation
 
+      matchParticipation.active = true
       matchParticipation.finishDate = date1
       matchParticipation.matchId = 1
       matchParticipation.playerId = 1
@@ -32,6 +33,7 @@ describe('domain/MatchParticipationLogic.ts', function() {
 
       expect(result.isValue()).to.be.true
       expect(result.entity.id).to.equal(1)
+      expect(matchParticipation.active).to.equal(true)
       expect(matchParticipation.finishDate).to.deep.equal(date1)
       expect(matchParticipation.matchId).to.equal(1)
       expect(matchParticipation.playerId).to.equal(1)
@@ -49,6 +51,7 @@ describe('domain/MatchParticipationLogic.ts', function() {
       let date2 = new Date(date1.setSeconds(date1.getSeconds() + 1))
 
       await create('match_participation', {
+        active: true,
         finishDate: date1,
         matchId: 1,
         playerId: 1,
@@ -65,6 +68,7 @@ describe('domain/MatchParticipationLogic.ts', function() {
       expect(result.isValue()).to.be.true
       expect(result.entities.length).to.equal(1)
       expect(result.entities[0].id).to.equal(1)
+      expect(result.entities[0].active).to.equal(true)
       expect(result.entities[0].finishDate).to.deep.equal(date1)
       expect(result.entities[0].matchId).to.equal(1)
       expect(result.entities[0].playerId).to.equal(1)
@@ -198,6 +202,7 @@ describe('domain/MatchParticipationLogic.ts', function() {
       let date2 = new Date(date1.setSeconds(date1.getSeconds() + 1))
 
       await create('match_participation', {
+        active: true,
         finishDate: date1,
         matchId: 1,
         playerId: 1,
@@ -211,6 +216,7 @@ describe('domain/MatchParticipationLogic.ts', function() {
 
       let matchParticipation = new MatchParticipation
       matchParticipation.id = 1
+      matchParticipation.active = false
       matchParticipation.finishDate = date2
       matchParticipation.matchId = 2
       matchParticipation.playerId = 2
@@ -224,6 +230,7 @@ describe('domain/MatchParticipationLogic.ts', function() {
       
       expect(result.isValue()).to.be.true
       expect(result.entity.id).to.equal(1)
+      expect(result.entity.active).to.deep.equal(false)
       expect(result.entity.finishDate).to.deep.equal(date2)
       expect(result.entity.matchId).to.equal(2)
       expect(result.entity.playerId).to.equal(2)
@@ -241,6 +248,7 @@ describe('domain/MatchParticipationLogic.ts', function() {
       let date2 = new Date(date1.setSeconds(date1.getSeconds() + 1))
 
       await create('match_participation', {
+        active: true,
         finishDate: date1,
         matchId: 1,
         playerId: 1,
@@ -259,6 +267,7 @@ describe('domain/MatchParticipationLogic.ts', function() {
       
       expect(result.isValue()).to.be.true
       expect(result.entity.id).to.equal(1)
+      expect(result.entity.active).to.equal(true)
       expect(result.entity.finishDate).to.deep.equal(date1)
       expect(result.entity.matchId).to.equal(1)
       expect(result.entity.playerId).to.equal(1)

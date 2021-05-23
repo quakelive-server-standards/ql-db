@@ -121,6 +121,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
       expect(matchParticipationsResult.entities.length).to.equal(2)
       expect(matchParticipationsResult.entities[0].id).to.equal(1)
+      expect(matchParticipationsResult.entities[0].active).to.equal(true)
       expect(matchParticipationsResult.entities[0].finishDate).to.be.null
       expect(matchParticipationsResult.entities[0].matchId).to.equal(1)
       expect(matchParticipationsResult.entities[0].playerId).to.equal(1)
@@ -130,6 +131,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       expect(matchParticipationsResult.entities[0].statsId).to.be.null
       expect(matchParticipationsResult.entities[0].team).to.equal(TeamType.Free)
       expect(matchParticipationsResult.entities[1].id).to.equal(2)
+      expect(matchParticipationsResult.entities[1].active).to.equal(true)
       expect(matchParticipationsResult.entities[1].finishDate).to.be.null
       expect(matchParticipationsResult.entities[1].matchId).to.equal(1)
       expect(matchParticipationsResult.entities[1].playerId).to.equal(2)
@@ -199,14 +201,14 @@ describe('service/QlStatsIntegrator.ts', function() {
       expect(playersResult.count).to.equal(2)
 
       expect(serverVisitsResult.entities.length).to.equal(2)
+      expect(serverVisitsResult.entities[0].active).to.equal(true)
       expect(serverVisitsResult.entities[0].connectDate).to.deep.equal(date)
       expect(serverVisitsResult.entities[0].disconnectDate).to.be.null
-      expect(serverVisitsResult.entities[0].justNow).to.equal(true)
       expect(serverVisitsResult.entities[0].playerId).to.equal(1)
       expect(serverVisitsResult.entities[0].serverId).to.equal(1)
+      expect(serverVisitsResult.entities[1].active).to.equal(true)
       expect(serverVisitsResult.entities[1].connectDate).to.deep.equal(date)
       expect(serverVisitsResult.entities[1].disconnectDate).to.be.null
-      expect(serverVisitsResult.entities[1].justNow).to.equal(true)
       expect(serverVisitsResult.entities[1].playerId).to.equal(2)
       expect(serverVisitsResult.entities[1].serverId).to.equal(1)
     })
@@ -274,14 +276,14 @@ describe('service/QlStatsIntegrator.ts', function() {
       expect(playersResult.entities[1].steamId).to.equal('76561198145690430')
 
       expect(serverVisitsResult.entities.length).to.equal(2)
+      expect(serverVisitsResult.entities[0].active).to.equal(true)
       expect(serverVisitsResult.entities[0].connectDate).to.deep.equal(date)
       expect(serverVisitsResult.entities[0].disconnectDate).to.be.null
-      expect(serverVisitsResult.entities[0].justNow).to.equal(true)
       expect(serverVisitsResult.entities[0].playerId).to.equal(1)
       expect(serverVisitsResult.entities[0].serverId).to.equal(1)
+      expect(serverVisitsResult.entities[1].active).to.equal(true)
       expect(serverVisitsResult.entities[1].connectDate).to.deep.equal(date)
       expect(serverVisitsResult.entities[1].disconnectDate).to.be.null
-      expect(serverVisitsResult.entities[1].justNow).to.equal(true)
       expect(serverVisitsResult.entities[1].playerId).to.equal(2)
       expect(serverVisitsResult.entities[1].serverId).to.equal(1)
     })

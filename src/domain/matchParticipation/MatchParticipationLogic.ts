@@ -4,7 +4,7 @@ import Log from 'knight-log'
 import { count, create, delete_, read, update } from 'knight-orm'
 import { PgTransaction } from 'knight-pg-transaction'
 import { MisfitsError } from 'knight-validation'
-import { CountResult, EntitiesVersionResult, EntityResult } from '../api'
+import { CountResult, EntitiesVersionResult, EntityOrNullResult, EntityResult } from '../api'
 import Change from '../change/Change'
 import ChangeLogic from '../change/ChangeLogic'
 import schema from '../DbSchema'
@@ -153,6 +153,55 @@ export class MatchParticipationLogic {
       let result = new EntityResult(deleted)
       l.returning('Returning result...', result)
       return result      
+    })
+  }
+
+  async getActive(serverId: number, playerId: number, tx: PgTransaction): Promise<EntityOrNullResult<MatchParticipation>> {
+    let l = log.mt('getActive')
+    l.param('serverId', serverId)
+    l.param('playerId', playerId)
+
+    return tx.runInTransaction(async () => {
+      let readResult = await this.read({
+        serverId: serverId,
+        playerId: playerId,
+        active: true,
+        startDate: {
+          operator: '!=',
+          value: null
+        },
+        finishDate: null
+      }, tx)
+
+      l.var('readResult', readResult)
+
+      if (readResult.entities.length == 0) {
+        let result: EntityOrNullResult<MatchParticipation> = new EntityOrNullResult
+        l.returning('Did not found any active server visits. Returning result...', result)
+        return result
+      }
+
+      if (readResult.entities.length == 1) {
+        let result = new EntityOrNullResult(readResult.entities[0])
+        l.returning('Found exactly one active server visit. Returning result...', result)
+        return result
+      }
+
+      l.dev('Found more than one active match participation. Determining latest...')
+
+      let latestParticipation
+      for (let participation of readResult.entities) {
+        if (latestParticipation == null) {
+          latestParticipation = participation
+        }
+        else if (latestParticipation.startDate!.getTime() < participation.startDate!.getTime()) {
+          latestParticipation = participation
+        }
+      }
+
+      let result = new EntityOrNullResult(latestParticipation)
+      l.returning('Determined latest match participation. Returning result...', result)
+      return result
     })
   }
 }

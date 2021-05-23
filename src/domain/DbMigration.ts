@@ -110,6 +110,7 @@ export default class DbMigration extends PostgresMigration {
         map_id INTEGER,
         server_id INTEGER,
         aborted BOOLEAN,
+        active BOOLEAN,
         cvar_capturelimit INTEGER,
         cvar_fraglimit INTEGER,
         cvar_g_instagib BOOLEAN,
@@ -139,6 +140,7 @@ export default class DbMigration extends PostgresMigration {
         round_id INTEGER,
         server_id INTEGER,
         stats_id INTEGER,
+        active BOOLEAN,
         finish_date TIMESTAMP,
         start_date TIMESTAMP,
         team VARCHAR(9)
@@ -197,9 +199,9 @@ export default class DbMigration extends PostgresMigration {
         id SERIAL PRIMARY KEY,
         player_id INTEGER,
         server_id INTEGER,
+        active BOOLEAN,
         connect_date TIMESTAMP,
-        disconnect_date TIMESTAMP,
-        just_now BOOLEAN
+        disconnect_date TIMESTAMP
       )`
     )
 

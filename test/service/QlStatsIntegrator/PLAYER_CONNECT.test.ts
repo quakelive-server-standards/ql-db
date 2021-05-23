@@ -42,7 +42,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       expect(serverVisitsResult.entities.length).to.equal(1)
       expect(serverVisitsResult.entities[0].connectDate).to.deep.equal(date)
       expect(serverVisitsResult.entities[0].disconnectDate).to.be.null
-      expect(serverVisitsResult.entities[0].justNow).to.equal(true)
+      expect(serverVisitsResult.entities[0].active).to.equal(true)
       expect(serverVisitsResult.entities[0].playerId).to.equal(1)
       expect(serverVisitsResult.entities[0].serverId).to.equal(1)
     })
@@ -147,7 +147,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       expect(result.entities[0].firstSeen).to.deep.equal(date)
     })
 
-    it('should set justNow on the last server visit to false when it is still true because the PLAYER_DISCONNECT event did not happen', async function() {
+    it('should set active on the last server visit to false when it is still true because the PLAYER_DISCONNECT event did not happen', async function() {
       let qlConnectEvent1 = {
         "DATA" : {
            "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
@@ -184,9 +184,34 @@ describe('service/QlStatsIntegrator.ts', function() {
 
       expect(serverVisitsResult.entities.length).to.equal(2)
       expect(serverVisitsResult.entities[0].id).to.equal(1)
-      expect(serverVisitsResult.entities[0].justNow).to.equal(false)
+      expect(serverVisitsResult.entities[0].active).to.equal(false)
       expect(serverVisitsResult.entities[1].id).to.equal(2)
-      expect(serverVisitsResult.entities[1].justNow).to.equal(true)
+      expect(serverVisitsResult.entities[1].active).to.equal(true)
+    })
+
+    it('should set active on all match participation of the connecting player to false', async function() {
+      await create('match_participation', { active: true })
+
+      let qlConnectEvent1 = {
+        "DATA" : {
+           "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
+           "NAME" : "garz",
+           "STEAM_ID" : "76561198170654797",
+           "TIME" : 7,
+           "WARMUP" : true
+        },
+        "TYPE" : "PLAYER_CONNECT"
+      }
+
+      let date1 = new Date
+      let event1 = PlayerConnectEvent.fromQl(qlConnectEvent1['DATA'])
+
+      await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event1, tx(), date1)
+  
+      let matchParticipationsResult = await Services.get().matchParticipationLogic.read({}, tx())
+
+      expect(matchParticipationsResult.entities.length).to.equal(1)
+      expect(matchParticipationsResult.entities[0].active).to.equal(false)
     })
   })
 })

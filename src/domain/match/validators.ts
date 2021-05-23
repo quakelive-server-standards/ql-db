@@ -30,6 +30,10 @@ export class MatchValidator extends Validator {
     }))
 
     this.add('aborted', new TypeOf('boolean'))
+
+    this.add('active', new Required)
+    this.add('active', new TypeOf('boolean'))
+
     this.add('cvars', new TypeOf('object'))
     this.add('exitMessage', new TypeOf('string'))
     this.add('finishDate', new TypeOf(Date))

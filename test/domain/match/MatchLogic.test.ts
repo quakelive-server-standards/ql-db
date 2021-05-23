@@ -17,6 +17,7 @@ describe('domain/MatchLogic.ts', function() {
       let match = new Match
 
       match.aborted = true
+      match.active = true
       match.cvars = new Cvars
       match.cvars.capturelimit = 1
       match.cvars.fraglimit = 2
@@ -45,6 +46,7 @@ describe('domain/MatchLogic.ts', function() {
       expect(result.isValue()).to.be.true
       expect(result.entity.id).to.equal(1)
       expect(result.entity.aborted).to.equal(true)
+      expect(result.entity.active).to.equal(true)
       expect(result.entity.cvars.capturelimit).to.equal(1)
       expect(result.entity.cvars.fraglimit).to.equal(2)
       expect(result.entity.cvars.g_instagib).to.equal(true)
@@ -76,6 +78,7 @@ describe('domain/MatchLogic.ts', function() {
 
       await create('match', {
         aborted: true,
+        active: true,
         cvars: {
           capturelimit: 1,
           fraglimit: 2,
@@ -106,6 +109,7 @@ describe('domain/MatchLogic.ts', function() {
       expect(result.isValue()).to.be.true
       expect(result.entities[0].id).to.equal(1)
       expect(result.entities[0].aborted).to.equal(true)
+      expect(result.entities[0].active).to.equal(true)
       expect(result.entities[0].cvars.capturelimit).to.equal(1)
       expect(result.entities[0].cvars.fraglimit).to.equal(2)
       expect(result.entities[0].cvars.g_instagib).to.equal(true)
@@ -240,6 +244,7 @@ describe('domain/MatchLogic.ts', function() {
 
       await create('match', {
         aborted: true,
+        active: true,
         cvars: {
           capturelimit: 1,
           fraglimit: 2,
@@ -268,17 +273,17 @@ describe('domain/MatchLogic.ts', function() {
       let match = new Match
       match.id = 1
       match.aborted = false
-      match.cvars = {
-        capturelimit: 2,
-        fraglimit: 3,
-        g_instagib: false,
-        g_quadHog: false,
-        g_training: false,
-        mercylimit: 4,
-        roundlimit: 5,
-        scorelimit: 6,
-        timelimit: 7,
-      }
+      match.active = false
+      match.cvars = new Cvars
+      match.cvars.capturelimit = 2
+      match.cvars.fraglimit = 3
+      match.cvars.g_instagib = false
+      match.cvars.g_quadHog = false
+      match.cvars.g_training = false
+      match.cvars.mercylimit = 4
+      match.cvars.roundlimit = 5
+      match.cvars.scorelimit = 6
+      match.cvars.timelimit = 7
       match.exitMessage = 'Enter'
       match.factoryId = 2
       match.finishDate = date2
@@ -297,6 +302,7 @@ describe('domain/MatchLogic.ts', function() {
       expect(result.isValue()).to.be.true
       expect(result.entity.id).to.equal(1)
       expect(result.entity.aborted).to.equal(false)
+      expect(result.entity.active).to.equal(false)
       expect(result.entity.cvars.capturelimit).to.equal(2)
       expect(result.entity.cvars.fraglimit).to.equal(3)
       expect(result.entity.cvars.g_instagib).to.equal(false)
@@ -328,6 +334,7 @@ describe('domain/MatchLogic.ts', function() {
 
       await create('match', {
         aborted: true,
+        active: true,
         cvars: {
           capturelimit: 1,
           fraglimit: 2,
@@ -361,6 +368,7 @@ describe('domain/MatchLogic.ts', function() {
       expect(result.isValue()).to.be.true
       expect(result.entity.id).to.equal(1)
       expect(result.entity.aborted).to.equal(true)
+      expect(result.entity.active).to.equal(true)
       expect(result.entity.cvars.capturelimit).to.equal(1)
       expect(result.entity.cvars.fraglimit).to.equal(2)
       expect(result.entity.cvars.g_instagib).to.equal(true)

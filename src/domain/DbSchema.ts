@@ -339,6 +339,7 @@ export default {
       'map_id': 'mapId',
       'server_id': 'serverId',
       'aborted': 'aborted',
+      'active': 'active',
       'cvar_capturelimit': 'cvars.capturelimit',
       'cvar_fraglimit': 'cvars.fraglimit',
       'cvar_g_instagib': 'cvars.g_instagib',
@@ -407,6 +408,7 @@ export default {
 
       match.id = row['id']
       match.aborted = row['aborted']
+      match.active = row['active']
       match.cvars = new Cvars
       match.cvars.capturelimit = row['cvar_capturelimit']
       match.cvars.fraglimit = row['cvar_fraglimit']
@@ -436,6 +438,7 @@ export default {
       return {
         'id': match.id,
         'aborted': match.aborted,
+        'active': match.active,
         'cvar_capturelimit': match.cvars?.capturelimit,
         'cvar_fraglimit': match.cvars?.fraglimit,
         'cvar_g_instagib': match.cvars?.g_instagib,
@@ -527,6 +530,7 @@ export default {
       let matchParticipation = new MatchParticipation
 
       matchParticipation.id = row['id']
+      matchParticipation.active = row['active']
       matchParticipation.finishDate = row['finish_date']
       matchParticipation.matchId = row['match_id']
       matchParticipation.playerId = row['player_id']
@@ -541,6 +545,7 @@ export default {
     instanceToRow: (matchParticipation: MatchParticipation) => {
       return {
         'id': matchParticipation.id,
+        'active': matchParticipation.active,
         'finish_date': matchParticipation.finishDate,
         'match_id': matchParticipation.matchId,
         'player_id': matchParticipation.playerId,
@@ -841,7 +846,7 @@ export default {
       'server_id': 'serverId',
       'connect_date': 'connectDate',
       'disconnect_date': 'disconnectDate',
-      'just_now': 'justNow'
+      'active': 'active'
     },
     relationships: {
       'player': {
@@ -863,7 +868,7 @@ export default {
       serverVisit.id = row['id']
       serverVisit.connectDate = row['connect_date']
       serverVisit.disconnectDate = row['disconnect_date']
-      serverVisit.justNow = row['just_now']
+      serverVisit.active = row['active']
       serverVisit.playerId = row['player_id']
       serverVisit.serverId = row['server_id']
 
@@ -874,7 +879,7 @@ export default {
         'id': serverVisit.id,
         'connect_date': serverVisit.connectDate,
         'disconnect_date': serverVisit.disconnectDate,
-        'just_now': serverVisit.justNow,
+        'active': serverVisit.active,
         'player_id': serverVisit.playerId,
         'server_id': serverVisit.serverId,
       }
