@@ -1,10 +1,11 @@
 import { expect } from 'chai'
 import 'mocha'
 import { PlayerConnectEvent } from 'ql-stats-model'
+import { TeamType } from '../../../src/domain/enums/TeamType'
 import Services from '../../../src/Services'
 import { create, tx } from '../../tools'
 
-describe('service/QlStatsIntegrator.ts', function() {
+describe.only('service/QlStatsIntegrator.ts', function() {
   describe('PLAYER_CONNECT', function() {
     it('should create a new server visit together with a new server and a new player', async function() {
       let qlConnectEvent = {
@@ -147,7 +148,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       expect(result.entities[0].firstSeen).to.deep.equal(date)
     })
 
-    it('should set active on the last server visit to false when it is still true because the PLAYER_DISCONNECT event did not happen', async function() {
+    it('should set active on all former server visit to false', async function() {
       let qlConnectEvent1 = {
         "DATA" : {
            "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
@@ -162,7 +163,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       let date1 = new Date
       let event1 = PlayerConnectEvent.fromQl(qlConnectEvent1['DATA'])
 
-      await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event1, tx(), date1)
+      await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27961, event1, tx(), date1)
 
       let qlConnectEvent2 = {
         "DATA" : {
@@ -189,10 +190,33 @@ describe('service/QlStatsIntegrator.ts', function() {
       expect(serverVisitsResult.entities[1].active).to.equal(true)
     })
 
-    it('should set active on all match participation of the connecting player to false', async function() {
-      await create('match_participation', { active: true })
+    it('should create the match if it is not warmup and was not already created', async function() {
+      let qlConnectEvent = {
+        "DATA" : {
+           "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
+           "NAME" : "garz",
+           "STEAM_ID" : "76561198170654797",
+           "TIME" : 7,
+           "WARMUP" : false
+        },
+        "TYPE" : "PLAYER_CONNECT"
+      }
 
-      let qlConnectEvent1 = {
+      let date = new Date
+      let event = PlayerConnectEvent.fromQl(qlConnectEvent['DATA'])
+
+      await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+  
+      let matchesResult = await Services.get().matchLogic.read({}, tx())
+
+      expect(matchesResult.entities.length).to.equal(1)
+      expect(matchesResult.entities[0].active).to.equal(true)
+      expect(matchesResult.entities[0].startDate).to.deep.equal(new Date(date.setSeconds(date.getSeconds() - qlConnectEvent['DATA']['TIME'])))
+      expect(matchesResult.entities[0].guid).to.equal('95d60017-6adb-43bf-a146-c1757194d5fc')
+    })
+
+    it('should not create the match if it is warmup', async function() {
+      let qlConnectEvent = {
         "DATA" : {
            "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
            "NAME" : "garz",
@@ -203,15 +227,118 @@ describe('service/QlStatsIntegrator.ts', function() {
         "TYPE" : "PLAYER_CONNECT"
       }
 
-      let date1 = new Date
-      let event1 = PlayerConnectEvent.fromQl(qlConnectEvent1['DATA'])
+      let date = new Date
+      let event = PlayerConnectEvent.fromQl(qlConnectEvent['DATA'])
 
-      await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event1, tx(), date1)
+      await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+  
+      let matchesResult = await Services.get().matchLogic.read({}, tx())
+
+      expect(matchesResult.entities.length).to.equal(0)
+    })
+
+    it('should set an active on a match to false if the match is not active anymore', async function() {
+      await create('match', { active: true, guid: '95d60017-6adb-43bf-a146-c1757194d5fb', serverId: 1 })
+
+      let qlConnectEvent = {
+        "DATA" : {
+           "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
+           "NAME" : "garz",
+           "STEAM_ID" : "76561198170654797",
+           "TIME" : 7,
+           "WARMUP" : true
+        },
+        "TYPE" : "PLAYER_CONNECT"
+      }
+
+      let date = new Date
+      let event = PlayerConnectEvent.fromQl(qlConnectEvent['DATA'])
+
+      await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+  
+      let matchesResult = await Services.get().matchLogic.read({}, tx())
+
+      expect(matchesResult.entities.length).to.equal(1)
+      expect(matchesResult.entities[0].active).to.equal(false)
+    })
+
+    it('should not set an active on a match to false if the match is still active', async function() {
+      await create('match', { active: true, guid: '95d60017-6adb-43bf-a146-c1757194d5fc', serverId: 1 })
+
+      let qlConnectEvent = {
+        "DATA" : {
+           "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
+           "NAME" : "garz",
+           "STEAM_ID" : "76561198170654797",
+           "TIME" : 7,
+           "WARMUP" : false
+        },
+        "TYPE" : "PLAYER_CONNECT"
+      }
+
+      let date = new Date
+      let event = PlayerConnectEvent.fromQl(qlConnectEvent['DATA'])
+
+      await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+  
+      let matchesResult = await Services.get().matchLogic.read({}, tx())
+
+      expect(matchesResult.entities.length).to.equal(1)
+      expect(matchesResult.entities[0].active).to.equal(true)
+    })
+
+    it('should not set an active on a match to false if the match is on a different server', async function() {
+      await create('match', { active: true, guid: '95d60017-6adb-43bf-a146-c1757194d5fc', serverId: 2 })
+
+      let qlConnectEvent = {
+        "DATA" : {
+           "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
+           "NAME" : "garz",
+           "STEAM_ID" : "76561198170654797",
+           "TIME" : 7,
+           "WARMUP" : true
+        },
+        "TYPE" : "PLAYER_CONNECT"
+      }
+
+      let date = new Date
+      let event = PlayerConnectEvent.fromQl(qlConnectEvent['DATA'])
+
+      await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+  
+      let matchesResult = await Services.get().matchLogic.read({}, tx())
+
+      expect(matchesResult.entities.length).to.equal(1)
+      expect(matchesResult.entities[0].active).to.equal(true)
+    })
+
+    it('should set active on all match participation of the connecting player to false', async function() {
+      await create('match_participation', { active: true, playerId: 1, startDate: new Date, team: TeamType.Free })
+      await create('match_participation', { active: true, playerId: 2, startDate: new Date, team: TeamType.Free })
+
+      let qlConnectEvent = {
+        "DATA" : {
+           "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
+           "NAME" : "garz",
+           "STEAM_ID" : "76561198170654797",
+           "TIME" : 7,
+           "WARMUP" : true
+        },
+        "TYPE" : "PLAYER_CONNECT"
+      }
+
+      let date = new Date
+      let event = PlayerConnectEvent.fromQl(qlConnectEvent['DATA'])
+
+      await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
   
       let matchParticipationsResult = await Services.get().matchParticipationLogic.read({}, tx())
 
-      expect(matchParticipationsResult.entities.length).to.equal(1)
-      expect(matchParticipationsResult.entities[0].active).to.equal(false)
+      expect(matchParticipationsResult.entities.length).to.equal(2)
+      expect(matchParticipationsResult.entities[0].id).to.equal(2)
+      expect(matchParticipationsResult.entities[0].active).to.equal(true)
+      expect(matchParticipationsResult.entities[1].id).to.equal(1)
+      expect(matchParticipationsResult.entities[1].active).to.equal(false)
     })
   })
 })

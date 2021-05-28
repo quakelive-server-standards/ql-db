@@ -472,6 +472,7 @@ export default {
       'round_id': 'roundId',
       'server_id': 'serverId',
       'stats_id': 'statsId',
+      'active': 'active',
       'finish_date': 'finishDate',
       'start_date': 'startDate',
       'team': 'team'

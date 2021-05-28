@@ -50,6 +50,11 @@ export class QlStatsIntegrator {
     l.param('event', event)
 
     let serverResult = await this.serverLogic.createOrGet(serverIp, serverPort, eventEmitDate, tx)
+
+    if (serverResult.isMisfits()) {
+      throw new MisfitsError(serverResult.misfits)
+    }
+
     let server = serverResult.entity
 
     if (event instanceof MatchReportEvent) {
@@ -188,13 +193,69 @@ export class QlStatsIntegrator {
       l.dev('Processing PlayerConnectEvent...')
 
       let playerResult = await this.playerLogic.createOrGet(event.steamId, event.name, eventEmitDate, tx)
+      
+      if (playerResult.isMisfits()) {
+        throw new MisfitsError(playerResult.misfits)
+      }
+
       let player = playerResult.entity
+      l.var('player', player)
 
       let activeServerVisitsResult = await this.serverVisitLogic.read({ active: true, playerId: player.id }, tx)
+      l.var('activeServerVisitsResult', activeServerVisitsResult)
 
       for (let serverVisit of activeServerVisitsResult.entities) {
         serverVisit.active = false
-        await this.serverVisitLogic.update(serverVisit, tx)
+        let result = await this.serverVisitLogic.update(serverVisit, tx)
+
+        if (result.isMisfits()) {
+          throw new MisfitsError(result.misfits)
+        }
+      }
+
+      let activeMatchesResult = await this.matchLogic.read({ active: true, serverId: server.id }, tx)
+      l.var('activeMatchesResult', activeMatchesResult)
+      let currentMatchExists = false
+
+      for (let match of activeMatchesResult.entities) {
+        if (match.guid != event.matchGuid) {
+          match.active = false
+          let result = await this.matchLogic.update(match, tx)
+
+          if (result.isMisfits()) {
+            throw new MisfitsError(result.misfits)
+          }
+        }
+        else {
+          currentMatchExists = true
+        }
+      }
+
+      let activeMatchParticipationsResult = await this.matchParticipationLogic.read({ active: true, playerId: player.id }, tx)
+      l.var('activeMatchParticipationsResult', activeMatchParticipationsResult)
+
+      for (let matchParticipation of activeMatchParticipationsResult.entities) {
+        matchParticipation.active = false
+        let result = await this.matchParticipationLogic.update(matchParticipation, tx)
+
+        if (result.isMisfits()) {
+          throw new MisfitsError(result.misfits)
+        }
+      }
+
+      if (! event.warmup && ! currentMatchExists) {
+        let match = new Match
+
+        match.active = true
+        match.guid = event.matchGuid
+        match.startDate = new Date(new Date(eventEmitDate).setSeconds(eventEmitDate.getSeconds() - event.time))
+        match.serverId = server.id
+
+        let result = await this.matchLogic.create(match, tx)
+
+        if (result.isMisfits()) {
+          throw new MisfitsError(result.misfits)
+        }
       }
 
       let serverVisit = new ServerVisit
@@ -205,7 +266,11 @@ export class QlStatsIntegrator {
       serverVisit.active = true
       // event.matchGuid
 
-      await this.serverVisitLogic.create(serverVisit, tx)
+      let serverVisitResult = await this.serverVisitLogic.create(serverVisit, tx)
+
+      if (serverVisitResult.isMisfits()) {
+        throw new MisfitsError(serverVisitResult.misfits)
+      }
     }
     else if (event instanceof PlayerDeathEvent) {
       /**

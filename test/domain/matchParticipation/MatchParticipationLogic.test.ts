@@ -230,7 +230,7 @@ describe('domain/MatchParticipationLogic.ts', function() {
       
       expect(result.isValue()).to.be.true
       expect(result.entity.id).to.equal(1)
-      expect(result.entity.active).to.deep.equal(false)
+      expect(result.entity.active).to.equal(false)
       expect(result.entity.finishDate).to.deep.equal(date2)
       expect(result.entity.matchId).to.equal(2)
       expect(result.entity.playerId).to.equal(2)

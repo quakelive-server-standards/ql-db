@@ -5,9 +5,9 @@ import { MedalType } from '../../../src/domain/enums/MedalType'
 import Services from '../../../src/Services'
 import { create, tx } from '../../tools'
 
-describe.only('service/QlStatsIntegrator.ts', function() {
+describe('service/QlStatsIntegrator.ts', function() {
   describe('PLAYER_MEDAL', function() {
-    it.only('should create a new medal', async function() {
+    it('should create a new medal', async function() {
       let qlConnectEvent1 = {
         "DATA" : {
            "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
