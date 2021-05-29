@@ -149,6 +149,14 @@ export class ServerVisitLogic {
     })
   }
 
+  /**
+   * Returns the active server visit. If there is more than one it determines the last one.
+   * 
+   * @param serverId The server id
+   * @param playerId The player id
+   * @param tx The transaction
+   * @returns The active server visit
+   */
   async getActive(serverId: number, playerId: number, tx: PgTransaction): Promise<EntityOrNullResult<ServerVisit>> {
     let l = log.mt('getActive')
     l.param('serverId', serverId)

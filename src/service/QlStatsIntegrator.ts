@@ -20,6 +20,7 @@ import { MatchParticipation } from '../domain/matchParticipation/MatchParticipat
 import { MatchParticipationLogic } from '../domain/matchParticipation/MatchParticipationLogic'
 import { Medal } from '../domain/medal/Medal'
 import { MedalLogic } from '../domain/medal/MedalLogic'
+import { Player } from '../domain/player/Player'
 import { PlayerLogic } from '../domain/player/PlayerLogic'
 import { RoundLogic } from '../domain/round/RoundLogic'
 import { ServerLogic } from '../domain/server/ServerLogic'
@@ -192,14 +193,7 @@ export class QlStatsIntegrator {
     else if (event instanceof PlayerConnectEvent) {
       l.dev('Processing PlayerConnectEvent...')
 
-      let playerResult = await this.playerLogic.createOrGet(event.steamId, event.name, eventEmitDate, tx)
-      
-      if (playerResult.isMisfits()) {
-        throw new MisfitsError(playerResult.misfits)
-      }
-
-      let player = playerResult.entity
-      l.var('player', player)
+      let player = await this.createOrGetPlayer(event.steamId, event.name, eventEmitDate, tx)
 
       let activeServerVisitsResult = await this.serverVisitLogic.read({ active: true, playerId: player.id }, tx)
       l.var('activeServerVisitsResult', activeServerVisitsResult)
@@ -232,11 +226,17 @@ export class QlStatsIntegrator {
       }
 
       let activeMatchParticipationsResult = await this.matchParticipationLogic.read({ active: true, playerId: player.id }, tx)
-      l.var('activeMatchParticipationsResult', activeMatchParticipationsResult)
+
+      if (activeMatchParticipationsResult.entities.length > 0) {
+        l.dev('Found active match participations. Setting them to inactive...')
+      }
 
       for (let matchParticipation of activeMatchParticipationsResult.entities) {
+        l.dev('Setting match participation to inactive...', matchParticipation)
+        
         matchParticipation.active = false
         let result = await this.matchParticipationLogic.update(matchParticipation, tx)
+        l.dev('Result of updating', result)
 
         if (result.isMisfits()) {
           throw new MisfitsError(result.misfits)
@@ -335,8 +335,7 @@ export class QlStatsIntegrator {
     else if (event instanceof PlayerDisconnectEvent) {
       l.dev('Processing PlayerDisconnectEvent...')
 
-      let playerResult = await this.playerLogic.createOrGet(event.steamId, event.name, eventEmitDate, tx)
-      let player = playerResult.entity
+      let player = await this.createOrGetPlayer(event.steamId, event.name, eventEmitDate, tx)
 
       let activeServerVisitResult = await this.serverVisitLogic.getActive(server.id!, player.id!, tx)
       let activeServerVisit = activeServerVisitResult.entity
@@ -353,7 +352,6 @@ export class QlStatsIntegrator {
         serverVisit.serverId = server.id
         serverVisit.disconnectDate = eventEmitDate
         serverVisit.active = false
-        // event.matchGuid
   
         await this.serverVisitLogic.create(serverVisit, tx)  
       }
@@ -807,6 +805,31 @@ export class QlStatsIntegrator {
       //   }  
       // }
     }
+  }
+
+  async createOrGetPlayer(steamId: string, name: string, eventEmitDate: Date, tx: PgTransaction): Promise<Player> {
+    let l = log.mt('createOrGetPlayer')
+    l.param('steamId', steamId)
+    l.param('name', name)
+    l.param('eventEmitDate', eventEmitDate)
+
+    let playerResult = await this.playerLogic.createOrGet(steamId, name, eventEmitDate, tx)
+    l.var('playerResult', playerResult)
+      
+    if (playerResult.isMisfits()) {
+      throw new MisfitsError(playerResult.misfits)
+    }
+
+    let player = playerResult.entity
+    
+    if (playerResult.created) {
+      l.returning('Returning newly created player...', player)
+    }
+    else {
+      l.returning('Returning existing player...', player)
+    }
+
+    return player
   }
 }
 

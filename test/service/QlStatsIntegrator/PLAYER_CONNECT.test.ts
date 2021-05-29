@@ -237,7 +237,7 @@ describe.only('service/QlStatsIntegrator.ts', function() {
       expect(matchesResult.entities.length).to.equal(0)
     })
 
-    it('should set an active on a match to false if the match is not active anymore', async function() {
+    it('should set active on a match to false if current active match is a different one', async function() {
       await create('match', { active: true, guid: '95d60017-6adb-43bf-a146-c1757194d5fb', serverId: 1 })
 
       let qlConnectEvent = {
@@ -262,7 +262,7 @@ describe.only('service/QlStatsIntegrator.ts', function() {
       expect(matchesResult.entities[0].active).to.equal(false)
     })
 
-    it('should not set an active on a match to false if the match is still active', async function() {
+    it('should not set active on a match to false if the current active match is the same', async function() {
       await create('match', { active: true, guid: '95d60017-6adb-43bf-a146-c1757194d5fc', serverId: 1 })
 
       let qlConnectEvent = {
@@ -287,7 +287,7 @@ describe.only('service/QlStatsIntegrator.ts', function() {
       expect(matchesResult.entities[0].active).to.equal(true)
     })
 
-    it('should not set an active on a match to false if the match is on a different server', async function() {
+    it('should not set active on a match to false if the match is on a different server', async function() {
       await create('match', { active: true, guid: '95d60017-6adb-43bf-a146-c1757194d5fc', serverId: 2 })
 
       let qlConnectEvent = {
@@ -313,8 +313,12 @@ describe.only('service/QlStatsIntegrator.ts', function() {
     })
 
     it('should set active on all match participation of the connecting player to false', async function() {
-      await create('match_participation', { active: true, playerId: 1, startDate: new Date, team: TeamType.Free })
-      await create('match_participation', { active: true, playerId: 2, startDate: new Date, team: TeamType.Free })
+      await create('server', { ip: '127.0.0.1', port: 27960 })
+      await create('server', { ip: '127.0.0.1', port: 27961 })
+      await create('match_participation', { active: true, playerId: 1, serverId: 1, startDate: new Date, team: TeamType.Free })
+      await create('match_participation', { active: true, playerId: 1, serverId: 2, startDate: new Date, team: TeamType.Free })
+      await create('match_participation', { active: true, playerId: 2, serverId: 1, startDate: new Date, team: TeamType.Free })
+      await create('match_participation', { active: true, playerId: 2, serverId: 2, startDate: new Date, team: TeamType.Free })
 
       let qlConnectEvent = {
         "DATA" : {
@@ -332,13 +336,17 @@ describe.only('service/QlStatsIntegrator.ts', function() {
 
       await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
   
-      let matchParticipationsResult = await Services.get().matchParticipationLogic.read({}, tx())
+      let matchParticipationsResult = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
 
-      expect(matchParticipationsResult.entities.length).to.equal(2)
-      expect(matchParticipationsResult.entities[0].id).to.equal(2)
-      expect(matchParticipationsResult.entities[0].active).to.equal(true)
-      expect(matchParticipationsResult.entities[1].id).to.equal(1)
+      expect(matchParticipationsResult.entities.length).to.equal(4)
+      expect(matchParticipationsResult.entities[0].id).to.equal(1)
+      expect(matchParticipationsResult.entities[0].active).to.equal(false)
+      expect(matchParticipationsResult.entities[1].id).to.equal(2)
       expect(matchParticipationsResult.entities[1].active).to.equal(false)
+      expect(matchParticipationsResult.entities[2].id).to.equal(3)
+      expect(matchParticipationsResult.entities[2].active).to.equal(true)
+      expect(matchParticipationsResult.entities[3].id).to.equal(4)
+      expect(matchParticipationsResult.entities[3].active).to.equal(true)
     })
   })
 })
