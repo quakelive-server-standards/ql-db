@@ -9,6 +9,54 @@ import { create, tx } from '../../tools'
 describe('service/QlStatsIntegrator.ts', function() {
   describe('MATCH_STARTED', function() {
     describe('Server', function() {
+      it('should create a new server', async function() {
+        let qlMatchStartedEvent = {
+          "DATA": {
+            "CAPTURE_LIMIT": 8,
+            "FACTORY": "duel",
+            "FACTORY_TITLE": "Duel",
+            "FRAG_LIMIT": 0,
+            "GAME_TYPE": "DUEL",
+            "INFECTED": 0,
+            "INSTAGIB": 0,
+            "MAP": "toxicity",
+            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MERCY_LIMIT": 0,
+            "PLAYERS": [
+              {
+                "NAME": "Play_ua",
+                "STEAM_ID": "76561198157458366",
+                "TEAM": 0
+              },
+              {
+                "NAME": "goromir",
+                "STEAM_ID": "76561198145690430",
+                "TEAM": 0
+              }
+            ],
+            "QUADHOG": 0,
+            "ROUND_LIMIT": 10,
+            "SCORE_LIMIT": 150,
+            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "TIME_LIMIT": 10,
+            "TRAINING": 0
+          },
+          "TYPE": "MATCH_STARTED"
+        }
+  
+        let date = new Date
+        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+    
+        let serversResult = await Services.get().serverLogic.read({}, tx())
+  
+        expect(serversResult.entities.length).to.equal(1)
+        expect(serversResult.entities[0].firstSeen).to.deep.equal(date)
+        expect(serversResult.entities[0].ip).to.equal('127.0.0.1')
+        expect(serversResult.entities[0].port).to.equal(27960)
+        expect(serversResult.entities[0].title).to.equal('.de #topdog.io Ranked Duel #4')
+      })
+
       it('should not create a new server', async function() {
         await create('server', { ip: '127.0.0.1', port: 27960 })
   
@@ -55,6 +103,53 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(serversResult.count).to.equal(1)
       })
 
+      it('should update the first seen date', async function() {
+        await create('server', { ip: '127.0.0.1', port: 27960 })
+  
+        let qlMatchStartedEvent = {
+          "DATA": {
+            "CAPTURE_LIMIT": 8,
+            "FACTORY": "duel",
+            "FACTORY_TITLE": "Duel",
+            "FRAG_LIMIT": 0,
+            "GAME_TYPE": "DUEL",
+            "INFECTED": 0,
+            "INSTAGIB": 0,
+            "MAP": "toxicity",
+            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MERCY_LIMIT": 0,
+            "PLAYERS": [
+              {
+                "NAME": "Play_ua",
+                "STEAM_ID": "76561198157458366",
+                "TEAM": 0
+              },
+              {
+                "NAME": "goromir",
+                "STEAM_ID": "76561198145690430",
+                "TEAM": 0
+              }
+            ],
+            "QUADHOG": 0,
+            "ROUND_LIMIT": 10,
+            "SCORE_LIMIT": 150,
+            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "TIME_LIMIT": 10,
+            "TRAINING": 0
+          },
+          "TYPE": "MATCH_STARTED"
+        }
+  
+        let date = new Date
+        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+    
+        let serversResult = await Services.get().serverLogic.read({}, tx())
+  
+        expect(serversResult.entities.length).to.equal(1)
+        expect(serversResult.entities[0].firstSeen).to.deep.equal(date)
+      })
+
       it('should update the server title', async function() {
         await create('server', { ip: '127.0.0.1', port: 27960, title: '.de #topdog.io Ranked Duel #3' })
   
@@ -99,14 +194,61 @@ describe('service/QlStatsIntegrator.ts', function() {
         let serversResult = await Services.get().serverLogic.read({}, tx())
   
         expect(serversResult.entities.length).to.equal(1)
-        expect(serversResult.entities[0].ip).to.equal('127.0.0.1')
-        expect(serversResult.entities[0].port).to.equal(27960)
         expect(serversResult.entities[0].title).to.equal('.de #topdog.io Ranked Duel #4')
       })  
     })
 
     describe('Factory', function() {
       it('should create a new factory', async function() {
+        let qlMatchStartedEvent = {
+          "DATA": {
+            "CAPTURE_LIMIT": 8,
+            "FACTORY": "duel",
+            "FACTORY_TITLE": "Duel",
+            "FRAG_LIMIT": 0,
+            "GAME_TYPE": "DUEL",
+            "INFECTED": 0,
+            "INSTAGIB": 0,
+            "MAP": "toxicity",
+            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MERCY_LIMIT": 0,
+            "PLAYERS": [
+              {
+                "NAME": "Play_ua",
+                "STEAM_ID": "76561198157458366",
+                "TEAM": 0
+              },
+              {
+                "NAME": "goromir",
+                "STEAM_ID": "76561198145690430",
+                "TEAM": 0
+              }
+            ],
+            "QUADHOG": 0,
+            "ROUND_LIMIT": 10,
+            "SCORE_LIMIT": 150,
+            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "TIME_LIMIT": 10,
+            "TRAINING": 0
+          },
+          "TYPE": "MATCH_STARTED"
+        }
+  
+        let date = new Date
+        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+    
+        let factoriesResult = await Services.get().factoryLogic.read({}, tx())
+    
+        expect(factoriesResult.entities.length).to.equal(1)
+        expect(factoriesResult.entities[0].gameType).to.equal(GameType.Duel)
+        expect(factoriesResult.entities[0].name).to.equal('duel')
+        expect(factoriesResult.entities[0].title).to.equal('Duel')
+      })
+
+      it('should not create a new factory', async function() {
+        await create('factory', { gameType: GameType.Duel, name: 'duel', title: 'Duel' })
+
         let qlMatchStartedEvent = {
           "DATA": {
             "CAPTURE_LIMIT": 8,
@@ -348,7 +490,222 @@ describe('service/QlStatsIntegrator.ts', function() {
     })
 
     describe('Player', function() {
+      it('should create new players', async function() {
+        let qlMatchStartedEvent = {
+          "DATA": {
+            "CAPTURE_LIMIT": 8,
+            "FACTORY": "duel",
+            "FACTORY_TITLE": "Duel",
+            "FRAG_LIMIT": 0,
+            "GAME_TYPE": "DUEL",
+            "INFECTED": 0,
+            "INSTAGIB": 0,
+            "MAP": "toxicity",
+            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MERCY_LIMIT": 0,
+            "PLAYERS": [
+              {
+                "NAME": "Play_ua",
+                "STEAM_ID": "76561198157458366",
+                "TEAM": 0
+              },
+              {
+                "NAME": "goromir",
+                "STEAM_ID": "76561198145690430",
+                "TEAM": 0
+              }
+            ],
+            "QUADHOG": 0,
+            "ROUND_LIMIT": 10,
+            "SCORE_LIMIT": 150,
+            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "TIME_LIMIT": 10,
+            "TRAINING": 0
+          },
+          "TYPE": "MATCH_STARTED"
+        }
+  
+        let date = new Date
+        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+    
+        let playersResult = await Services.get().playerLogic.read({ '@orderBy': 'name' }, tx())
+  
+        expect(playersResult.entities.length).to.equal(2)
+        expect(playersResult.entities[0].firstSeen).to.deep.equal(date)
+        expect(playersResult.entities[0].model).to.be.null
+        expect(playersResult.entities[0].name).to.equal('goromir')
+        expect(playersResult.entities[0].steamId).to.equal('76561198145690430')
+        expect(playersResult.entities[1].firstSeen).to.deep.equal(date)
+        expect(playersResult.entities[1].model).to.be.null
+        expect(playersResult.entities[1].name).to.equal('Play_ua')
+        expect(playersResult.entities[1].steamId).to.equal('76561198157458366')
+      })
 
+      it('should not create new players', async function() {
+        await create('player', { steamId: '76561198157458366' })
+        await create('player', { steamId: '76561198145690430' })
+
+        let qlMatchStartedEvent = {
+          "DATA": {
+            "CAPTURE_LIMIT": 8,
+            "FACTORY": "duel",
+            "FACTORY_TITLE": "Duel",
+            "FRAG_LIMIT": 0,
+            "GAME_TYPE": "DUEL",
+            "INFECTED": 0,
+            "INSTAGIB": 0,
+            "MAP": "toxicity",
+            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MERCY_LIMIT": 0,
+            "PLAYERS": [
+              {
+                "NAME": "Play_ua",
+                "STEAM_ID": "76561198157458366",
+                "TEAM": 0
+              },
+              {
+                "NAME": "goromir",
+                "STEAM_ID": "76561198145690430",
+                "TEAM": 0
+              }
+            ],
+            "QUADHOG": 0,
+            "ROUND_LIMIT": 10,
+            "SCORE_LIMIT": 150,
+            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "TIME_LIMIT": 10,
+            "TRAINING": 0
+          },
+          "TYPE": "MATCH_STARTED"
+        }
+  
+        let date = new Date
+        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+    
+        let playersResult = await Services.get().playerLogic.read({ '@orderBy': 'name' }, tx())
+  
+        expect(playersResult.entities.length).to.equal(2)
+        expect(playersResult.entities[0].firstSeen).to.deep.equal(date)
+        expect(playersResult.entities[0].model).to.be.null
+        expect(playersResult.entities[0].name).to.equal('goromir')
+        expect(playersResult.entities[0].steamId).to.equal('76561198145690430')
+        expect(playersResult.entities[1].firstSeen).to.deep.equal(date)
+        expect(playersResult.entities[1].model).to.be.null
+        expect(playersResult.entities[1].name).to.equal('Play_ua')
+        expect(playersResult.entities[1].steamId).to.equal('76561198157458366')
+      })
+
+      it('should update the player names', async function() {
+        await create('player', { steamId: '76561198157458366', name: 'a' })
+        await create('player', { steamId: '76561198145690430', name: 'b' })
+
+        let qlMatchStartedEvent = {
+          "DATA": {
+            "CAPTURE_LIMIT": 8,
+            "FACTORY": "duel",
+            "FACTORY_TITLE": "Duel",
+            "FRAG_LIMIT": 0,
+            "GAME_TYPE": "DUEL",
+            "INFECTED": 0,
+            "INSTAGIB": 0,
+            "MAP": "toxicity",
+            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MERCY_LIMIT": 0,
+            "PLAYERS": [
+              {
+                "NAME": "Play_ua",
+                "STEAM_ID": "76561198157458366",
+                "TEAM": 0
+              },
+              {
+                "NAME": "goromir",
+                "STEAM_ID": "76561198145690430",
+                "TEAM": 0
+              }
+            ],
+            "QUADHOG": 0,
+            "ROUND_LIMIT": 10,
+            "SCORE_LIMIT": 150,
+            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "TIME_LIMIT": 10,
+            "TRAINING": 0
+          },
+          "TYPE": "MATCH_STARTED"
+        }
+  
+        let date = new Date
+        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+    
+        let playersResult = await Services.get().playerLogic.read({ '@orderBy': 'name' }, tx())
+  
+        expect(playersResult.entities.length).to.equal(2)
+        expect(playersResult.entities[0].firstSeen).to.deep.equal(date)
+        expect(playersResult.entities[0].model).to.be.null
+        expect(playersResult.entities[0].name).to.equal('goromir')
+        expect(playersResult.entities[0].steamId).to.equal('76561198145690430')
+        expect(playersResult.entities[1].firstSeen).to.deep.equal(date)
+        expect(playersResult.entities[1].model).to.be.null
+        expect(playersResult.entities[1].name).to.equal('Play_ua')
+        expect(playersResult.entities[1].steamId).to.equal('76561198157458366')
+      })
+
+      it('should set the first seen dates', async function() {
+        await create('player', { steamId: '76561198157458366' })
+        await create('player', { steamId: '76561198145690430' })
+
+        let qlMatchStartedEvent = {
+          "DATA": {
+            "CAPTURE_LIMIT": 8,
+            "FACTORY": "duel",
+            "FACTORY_TITLE": "Duel",
+            "FRAG_LIMIT": 0,
+            "GAME_TYPE": "DUEL",
+            "INFECTED": 0,
+            "INSTAGIB": 0,
+            "MAP": "toxicity",
+            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MERCY_LIMIT": 0,
+            "PLAYERS": [
+              {
+                "NAME": "Play_ua",
+                "STEAM_ID": "76561198157458366",
+                "TEAM": 0
+              },
+              {
+                "NAME": "goromir",
+                "STEAM_ID": "76561198145690430",
+                "TEAM": 0
+              }
+            ],
+            "QUADHOG": 0,
+            "ROUND_LIMIT": 10,
+            "SCORE_LIMIT": 150,
+            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "TIME_LIMIT": 10,
+            "TRAINING": 0
+          },
+          "TYPE": "MATCH_STARTED"
+        }
+  
+        let date = new Date
+        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+    
+        let playersResult = await Services.get().playerLogic.read({ '@orderBy': 'name' }, tx())
+  
+        expect(playersResult.entities.length).to.equal(2)
+        expect(playersResult.entities[0].firstSeen).to.deep.equal(date)
+        expect(playersResult.entities[0].model).to.be.null
+        expect(playersResult.entities[0].name).to.equal('goromir')
+        expect(playersResult.entities[0].steamId).to.equal('76561198145690430')
+        expect(playersResult.entities[1].firstSeen).to.deep.equal(date)
+        expect(playersResult.entities[1].model).to.be.null
+        expect(playersResult.entities[1].name).to.equal('Play_ua')
+        expect(playersResult.entities[1].steamId).to.equal('76561198157458366')
+      })
     })
 
     describe('ServerVisit', function() {
@@ -477,6 +834,61 @@ describe('service/QlStatsIntegrator.ts', function() {
     
         expect(serverVisitsResult.count).to.equal(2)
       })
+
+      it('should inactivate server visits on different servers', async function() {
+        await create('server', { ip: '127.0.0.1', port: 27960 })
+        await create('server_visit', { active: true, serverId: 1 })
+
+        let qlMatchStartedEvent = {
+          "DATA": {
+            "CAPTURE_LIMIT": 8,
+            "FACTORY": "duel",
+            "FACTORY_TITLE": "Duel",
+            "FRAG_LIMIT": 0,
+            "GAME_TYPE": "DUEL",
+            "INFECTED": 0,
+            "INSTAGIB": 0,
+            "MAP": "toxicity",
+            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MERCY_LIMIT": 0,
+            "PLAYERS": [
+              {
+                "NAME": "Play_ua",
+                "STEAM_ID": "76561198157458366",
+                "TEAM": 0
+              },
+              {
+                "NAME": "goromir",
+                "STEAM_ID": "76561198145690430",
+                "TEAM": 0
+              }
+            ],
+            "QUADHOG": 0,
+            "ROUND_LIMIT": 10,
+            "SCORE_LIMIT": 150,
+            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "TIME_LIMIT": 10,
+            "TRAINING": 0
+          },
+          "TYPE": "MATCH_STARTED"
+        }
+  
+        let date = new Date
+        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27961, event, tx(), date)
+    
+        let serverVisitsResult = await Services.get().serverVisitLogic.read({ '@orderBy': 'id' }, tx())
+    
+        expect(serverVisitsResult.entities.length).to.equal(3)
+        expect(serverVisitsResult.entities[0].active).to.equal(false)
+        expect(serverVisitsResult.entities[0].disconnectDate).to.be.null
+        expect(serverVisitsResult.entities[1].active).to.equal(true)
+        expect(serverVisitsResult.entities[1].connectDate).to.deep.equal(date)
+        expect(serverVisitsResult.entities[1].disconnectDate).to.be.null
+        expect(serverVisitsResult.entities[2].active).to.equal(true)
+        expect(serverVisitsResult.entities[2].connectDate).to.deep.equal(date)
+        expect(serverVisitsResult.entities[2].disconnectDate).to.be.null
+      })
     })
 
     describe('Match', function() {
@@ -523,6 +935,7 @@ describe('service/QlStatsIntegrator.ts', function() {
     
         expect(matchesResult.entities.length).to.equal(1)
         expect(matchesResult.entities[0].aborted).to.be.null
+        expect(matchesResult.entities[0].active).to.equal(true)
         expect(matchesResult.entities[0].cvars).to.be.not.null
         expect(matchesResult.entities[0].cvars.capturelimit).to.equal(8)
         expect(matchesResult.entities[0].cvars.fraglimit).to.equal(0)
@@ -544,11 +957,60 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(matchesResult.entities[0].score2).to.be.null
         expect(matchesResult.entities[0].serverId).to.equal(1)
         expect(matchesResult.entities[0].startDate).to.deep.equal(date)
-      })  
+      })
+
+      it('should inactivate any former matches on the same server', async function() {
+        await create('server', { ip: '127.0.0.1', port: 27960 })
+        await create('match', { serverId: 1, active: true, guid: '66fe025a-63ff-4852-96bd-9102411e9fb1' })
+
+        let qlMatchStartedEvent = {
+          "DATA": {
+            "CAPTURE_LIMIT": 8,
+            "FACTORY": "duel",
+            "FACTORY_TITLE": "Duel",
+            "FRAG_LIMIT": 0,
+            "GAME_TYPE": "DUEL",
+            "INFECTED": 0,
+            "INSTAGIB": 0,
+            "MAP": "toxicity",
+            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MERCY_LIMIT": 0,
+            "PLAYERS": [
+              {
+                "NAME": "Play_ua",
+                "STEAM_ID": "76561198157458366",
+                "TEAM": 0
+              },
+              {
+                "NAME": "goromir",
+                "STEAM_ID": "76561198145690430",
+                "TEAM": 0
+              }
+            ],
+            "QUADHOG": 0,
+            "ROUND_LIMIT": 10,
+            "SCORE_LIMIT": 150,
+            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "TIME_LIMIT": 10,
+            "TRAINING": 0
+          },
+          "TYPE": "MATCH_STARTED"
+        }
+  
+        let date = new Date
+        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+    
+        let matchesResult = await Services.get().matchLogic.read({ '@orderBy': 'id' }, tx())
+    
+        expect(matchesResult.entities.length).to.equal(2)
+        expect(matchesResult.entities[0].active).to.equal(false)
+        expect(matchesResult.entities[1].active).to.equal(true)
+      })
     })
 
     describe('MatchParticipation', function() {
-      it('should new match participations', async function() {
+      it('should create new match participations', async function() {
         let qlMatchStartedEvent = {
           "DATA": {
             "CAPTURE_LIMIT": 8,
@@ -610,7 +1072,115 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(matchParticipationsResult.entities[1].startDate).to.deep.equal(date)
         expect(matchParticipationsResult.entities[1].statsId).to.be.null
         expect(matchParticipationsResult.entities[1].team).to.equal(TeamType.Free)
-      })  
+      })
+
+      it('should inactivate any former match participations on the same server', async function() {
+        await create('server', { ip: '127.0.0.1', port: 27960 })
+        await create('match_participation', { serverId: 1, active: true, startDate: new Date, team: TeamType.Blue })
+        await create('match_participation', { serverId: 1, active: true, startDate: new Date, team: TeamType.Red })
+
+        let qlMatchStartedEvent = {
+          "DATA": {
+            "CAPTURE_LIMIT": 8,
+            "FACTORY": "duel",
+            "FACTORY_TITLE": "Duel",
+            "FRAG_LIMIT": 0,
+            "GAME_TYPE": "DUEL",
+            "INFECTED": 0,
+            "INSTAGIB": 0,
+            "MAP": "toxicity",
+            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MERCY_LIMIT": 0,
+            "PLAYERS": [
+              {
+                "NAME": "Play_ua",
+                "STEAM_ID": "76561198157458366",
+                "TEAM": 0
+              },
+              {
+                "NAME": "goromir",
+                "STEAM_ID": "76561198145690430",
+                "TEAM": 0
+              }
+            ],
+            "QUADHOG": 0,
+            "ROUND_LIMIT": 10,
+            "SCORE_LIMIT": 150,
+            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "TIME_LIMIT": 10,
+            "TRAINING": 0
+          },
+          "TYPE": "MATCH_STARTED"
+        }
+  
+        let date = new Date
+        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+    
+        let matchParticipationsResult = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
+
+        expect(matchParticipationsResult.entities.length).to.equal(4)
+        expect(matchParticipationsResult.entities[0].active).to.equal(false)
+        expect(matchParticipationsResult.entities[1].active).to.equal(false)
+        expect(matchParticipationsResult.entities[2].active).to.equal(true)
+        expect(matchParticipationsResult.entities[3].active).to.equal(true)
+      })
+
+      it('should inactivate any former match participation of the same player on any other server', async function() {
+        await create('server', { ip: '127.0.0.1', port: 27960 })
+        await create('server', { ip: '127.0.0.1', port: 27961 })
+        await create('server', { ip: '127.0.0.1', port: 27962 })
+        await create('player', { steamId: '76561198157458366' })
+        await create('player', { steamId: '76561198145690430' })
+        await create('match_participation', { playerId: 1, serverId: 2, active: true, startDate: new Date, team: TeamType.Red })
+        await create('match_participation', { playerId: 2, serverId: 3, active: true, startDate: new Date, team: TeamType.Blue })
+
+        let qlMatchStartedEvent = {
+          "DATA": {
+            "CAPTURE_LIMIT": 8,
+            "FACTORY": "duel",
+            "FACTORY_TITLE": "Duel",
+            "FRAG_LIMIT": 0,
+            "GAME_TYPE": "DUEL",
+            "INFECTED": 0,
+            "INSTAGIB": 0,
+            "MAP": "toxicity",
+            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MERCY_LIMIT": 0,
+            "PLAYERS": [
+              {
+                "NAME": "Play_ua",
+                "STEAM_ID": "76561198157458366",
+                "TEAM": 0
+              },
+              {
+                "NAME": "goromir",
+                "STEAM_ID": "76561198145690430",
+                "TEAM": 0
+              }
+            ],
+            "QUADHOG": 0,
+            "ROUND_LIMIT": 10,
+            "SCORE_LIMIT": 150,
+            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "TIME_LIMIT": 10,
+            "TRAINING": 0
+          },
+          "TYPE": "MATCH_STARTED"
+        }
+  
+        let date = new Date
+        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+    
+        let matchParticipationsResult = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
+
+        expect(matchParticipationsResult.entities.length).to.equal(4)
+        expect(matchParticipationsResult.entities[0].active).to.equal(false)
+        expect(matchParticipationsResult.entities[1].active).to.equal(false)
+        expect(matchParticipationsResult.entities[2].active).to.equal(true)
+        expect(matchParticipationsResult.entities[3].active).to.equal(true)
+      })
     })
   })
 })

@@ -5,7 +5,7 @@ import { MedalType } from '../../../src/domain/enums/MedalType'
 import Services from '../../../src/Services'
 import { create, tx } from '../../tools'
 
-describe.only('service/QlStatsIntegrator.ts', function() {
+describe('service/QlStatsIntegrator.ts', function() {
   describe('PLAYER_MEDAL', function() {
     describe('Server', function() {
       it('should create a new server', async function() {

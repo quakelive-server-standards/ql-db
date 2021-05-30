@@ -102,6 +102,7 @@ export class QlStatsIntegrator {
     else if (event instanceof MatchStartedEvent) {
       l.dev('Processing MatchStartedEvent...')
 
+      // update server title if its different
       if (server.title != event.serverTitle) {
         l.dev(`Server title stored in the database (${server.title}) is different than the current one (${event.serverTitle}). Updating...`)
         server.title = event.serverTitle
@@ -113,8 +114,19 @@ export class QlStatsIntegrator {
         }
       }
 
+      // create or get the factory while simultaneously updating the factory title 
       let factoryResult = await this.factoryLogic.createOrGet(event.factory, event.factoryTitle, mapGameType(event.gameType), tx)
+
+      if (factoryResult.isMisfits()) {
+        throw new MisfitsError(factoryResult.misfits)
+      }
+
+      // create or get the map
       let mapResult = await this.mapLogic.createOrGet(event.map, tx)
+
+      if (mapResult.isMisfits()) {
+        throw new MisfitsError(mapResult.misfits)
+      }
 
       let factory = factoryResult.entity
       let map = mapResult.entity
@@ -122,6 +134,33 @@ export class QlStatsIntegrator {
       l.dev('factory', factory)
       l.dev('map', map)
 
+      // set any active match on the same server to inactive
+      let activeMatchesResult = await this.matchLogic.read({ serverId: server.id, active: true }, tx)
+
+      for (let activeMatch of activeMatchesResult.entities) {
+        activeMatch.active = false
+
+        let matchUpdateResult = await this.matchLogic.update(activeMatch, tx)
+
+        if (matchUpdateResult.isMisfits()) {
+          throw new MisfitsError(matchUpdateResult.misfits)
+        }
+      }
+
+      // set any active match participation on the same server to inactive
+      let activeMatchParticipationsResult = await this.matchParticipationLogic.read({ serverId: server.id, active: true }, tx)
+
+      for (let activeMatchParticipation of activeMatchParticipationsResult.entities) {
+        activeMatchParticipation.active = false
+
+        let matchParticipationUpdateResult = await this.matchParticipationLogic.update(activeMatchParticipation, tx)
+
+        if (matchParticipationUpdateResult.isMisfits()) {
+          throw new MisfitsError(matchParticipationUpdateResult.misfits)
+        }
+      }
+
+      // create the match
       let match = new Match
 
       match.active = true
@@ -144,15 +183,50 @@ export class QlStatsIntegrator {
 
       l.dev('Creating match...', match)
 
-      let matchResult = await this.matchLogic.create(match, tx)
-      l.var('matchResult', matchResult)
+      let matchCreateResult = await this.matchLogic.create(match, tx)
+      l.var('matchResult', matchCreateResult)
+
+      if (matchCreateResult.isMisfits()) {
+        throw new MisfitsError(matchCreateResult.misfits)
+      }
       
-      let id = matchResult.entity.id
+      let id = matchCreateResult.entity.id
 
       l.dev('Creating match participations...')
       for (let eventPlayer of event.players) {
         let playerResult = await this.playerLogic.createOrGet(eventPlayer.steamId, eventPlayer.name, eventEmitDate, tx)
+
+        if (playerResult.isMisfits()) {
+          throw new MisfitsError(playerResult.misfits)
+        }
+
         let player = playerResult.entity
+
+        // inactivate any server visit on other servers
+        let activeServerVisitsResult = await this.serverVisitLogic.read({ serverId: { operator: '!=', value: server.id }, active: true }, tx)
+
+        for (let activeServerVisit of activeServerVisitsResult.entities) {
+          activeServerVisit.active = false
+
+          let serverVisitUpdateResult = await this.serverVisitLogic.update(activeServerVisit, tx)
+
+          if (serverVisitUpdateResult.isMisfits()) {
+            throw new MisfitsError(serverVisitUpdateResult.misfits)
+          }
+        }
+
+        // inactivate any match participation on other servers
+        let activeMatchParticipationsResult = await this.matchParticipationLogic.read({ serverId: { operator: '!=', value: server.id }, active: true }, tx)
+
+        for (let activeMatchParticipation of activeMatchParticipationsResult.entities) {
+          activeMatchParticipation.active = false
+
+          let matchParticipationUpdateResult = await this.matchParticipationLogic.update(activeMatchParticipation, tx)
+
+          if (matchParticipationUpdateResult.isMisfits()) {
+            throw new MisfitsError(matchParticipationUpdateResult.misfits)
+          }
+        }
 
         l.dev('Creating match participation for player...', player)
 
@@ -227,10 +301,10 @@ export class QlStatsIntegrator {
       serverVisit.active = true
       serverVisit.connectDate = eventEmitDate
 
-      let serverVisitResult = await this.serverVisitLogic.create(serverVisit, tx)
+      let serverVisitCreateResult = await this.serverVisitLogic.create(serverVisit, tx)
 
-      if (serverVisitResult.isMisfits()) {
-        throw new MisfitsError(serverVisitResult.misfits)
+      if (serverVisitCreateResult.isMisfits()) {
+        throw new MisfitsError(serverVisitCreateResult.misfits)
       }
     }
     else if (event instanceof PlayerDeathEvent) {
@@ -309,7 +383,11 @@ export class QlStatsIntegrator {
         // and set it to inactive
         activeServerVisit.disconnectDate = eventEmitDate
         activeServerVisit.active = false
-        await this.serverVisitLogic.update(activeServerVisit, tx)
+        let serverVisitUpdateResult = await this.serverVisitLogic.update(activeServerVisit, tx)
+
+        if (serverVisitUpdateResult.isMisfits()) {
+          throw new MisfitsError(serverVisitUpdateResult.misfits)
+        }
       }
       else {
         // if there is no active server visit then we missed any opportunity to create one before
@@ -325,7 +403,11 @@ export class QlStatsIntegrator {
         serverVisit.connectDate = new Date(new Date(eventEmitDate).setSeconds(eventEmitDate.getSeconds() - event.time))
         serverVisit.disconnectDate = eventEmitDate
   
-        await this.serverVisitLogic.create(serverVisit, tx)
+        let serverVisitCreateResult = await this.serverVisitLogic.create(serverVisit, tx)
+
+        if (serverVisitCreateResult.isMisfits()) {
+          throw new MisfitsError(serverVisitCreateResult.misfits)
+        }
       }
 
       /* Fix any inconsistencies which will occur when we missed events */
@@ -434,7 +516,7 @@ export class QlStatsIntegrator {
       let player = await this.createOrGetPlayer(event.steamId, event.name, eventEmitDate, tx)
 
       /* Fix any inconsistencies which will occur when we missed events */
-      
+
       let match
       if (! event.warmup) {
         let matchResult = await this.matchLogic.createOrGet(event.matchGuid, tx)
