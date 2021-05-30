@@ -60,8 +60,9 @@ describe('server/validators.ts', function() {
       expect(containsMisfit(['ip', 'port'], 'Unique', misfits)).to.be.true
     })
 
-    it('should return a misfit if a server with the same ip and port already exists', async function() {
+    it('should not return a misfit if a server with the same ip and port does not already exist', async function() {
       create('server', { ip: '127.0.0.1', port: 27960 })
+      create('server', { ip: '127.0.0.1', port: 27961 })
 
       let validator = new ServerUpdateValidator(
         Services.get().serverLogic,
@@ -71,7 +72,26 @@ describe('server/validators.ts', function() {
       let server = new Server
       server.id = 1
       server.ip = '127.0.0.1'
-      server.port = 27961
+      server.port = 27962
+
+      let misfits = await validator.validate(server)
+
+      expect(containsMisfit(['ip', 'port'], 'Unique', misfits)).to.be.false
+    })
+
+    it('should not return a misfit if a server with the same ip and port is the server that is being updated', async function() {
+      create('server', { ip: '127.0.0.1', port: 27960 })
+      create('server', { ip: '127.0.0.1', port: 27961 })
+
+      let validator = new ServerUpdateValidator(
+        Services.get().serverLogic,
+        tx()
+      )
+
+      let server = new Server
+      server.id = 1
+      server.ip = '127.0.0.1'
+      server.port = 27960
 
       let misfits = await validator.validate(server)
 
