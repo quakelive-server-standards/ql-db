@@ -9,7 +9,31 @@ import Services from '../../../src/Services'
 import { tx } from '../../tools'
 
 describe('service/QlStatsIntegrator.ts', function() {
-  describe('PLAYER_MEDAL', function() {
+  describe('PLAYER_KILL', function() {
+    describe('Server', function() {
+
+    })
+
+    describe('Player', function() {
+
+    })
+
+    describe('ServerVisit', function() {
+
+    })
+
+    describe('Match', function() {
+
+    })
+
+    describe('MatchParticipation', function() {
+
+    })
+
+    describe('Frag', function() {
+      
+    })
+
     it('should create a new frag', async function() {
       let qlConnectEvent1 = {
         "DATA" : {

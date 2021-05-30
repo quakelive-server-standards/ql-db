@@ -328,6 +328,8 @@ export class QlStatsIntegrator {
         await this.serverVisitLogic.create(serverVisit, tx)
       }
 
+      /* Fix any inconsistencies which will occur when we missed events */
+
       // if we processed the correct server visit we can set all others that are still being
       // active to inactive
       await this.inactivateServerVisits(player.id!, tx)
@@ -425,14 +427,19 @@ export class QlStatsIntegrator {
       }
     }
     else if (event instanceof PlayerMedalEvent) {
+      l.dev('Processing PlayerMedalEvent...')
+
+      // at first we either create or get the player while also updating its name and
+      // setting its first seen date if not present
+      let player = await this.createOrGetPlayer(event.steamId, event.name, eventEmitDate, tx)
+
+      /* Fix any inconsistencies which will occur when we missed events */
+      
       let match
       if (! event.warmup) {
         let matchResult = await this.matchLogic.createOrGet(event.matchGuid, tx)
         match = matchResult.entity
       }
-
-      let playerResult = await this.playerLogic.createOrGet(event.steamId, event.name, eventEmitDate, tx)
-      let player = playerResult.entity
 
       let activeServerVisitResult = await this.serverVisitLogic.getActive(server.id!, player.id!, tx)
       let activeServerVisit = activeServerVisitResult.entity
@@ -442,8 +449,8 @@ export class QlStatsIntegrator {
 
         serverVisit.playerId = player.id
         serverVisit.serverId = server.id
-        serverVisit.connectDate = eventEmitDate
         serverVisit.active = true
+        serverVisit.connectDate = eventEmitDate
   
         await this.serverVisitLogic.create(serverVisit, tx)
       }
