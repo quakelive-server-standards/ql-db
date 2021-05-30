@@ -124,6 +124,7 @@ export class QlStatsIntegrator {
 
       let match = new Match
 
+      match.active = true
       match.cvars = new Cvars
       match.factoryId = factory.id
       match.mapId = map.id
