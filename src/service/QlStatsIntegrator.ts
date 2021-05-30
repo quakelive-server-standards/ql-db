@@ -193,78 +193,38 @@ export class QlStatsIntegrator {
     else if (event instanceof PlayerConnectEvent) {
       l.dev('Processing PlayerConnectEvent...')
 
+      // at first we either create or get the player while also updating its name and
+      // setting its first seen date if not present
       let player = await this.createOrGetPlayer(event.steamId, event.name, eventEmitDate, tx)
 
-      let activeServerVisitsResult = await this.serverVisitLogic.read({ active: true, playerId: player.id }, tx)
-      l.var('activeServerVisitsResult', activeServerVisitsResult)
+      /* Fix any inconsistencies which will occur when we missed events */
 
-      for (let serverVisit of activeServerVisitsResult.entities) {
-        serverVisit.active = false
-        let result = await this.serverVisitLogic.update(serverVisit, tx)
+      // since the player is freshly connecting to the server, all other server visits
+      // that are still active must be thus inactive
+      await this.inactivateServerVisits(player.id!, tx)
 
-        if (result.isMisfits()) {
-          throw new MisfitsError(result.misfits)
-        }
-      }
+      // when the player connects we know that it cannot be participating in any matches
+      // right now, thus we can inactivate any active match participtions.
+      await this.inactivateMatchParticipations(player.id!, tx)
 
-      let activeMatchesResult = await this.matchLogic.read({ active: true, serverId: server.id }, tx)
-      l.var('activeMatchesResult', activeMatchesResult)
-      let currentMatchExists = false
+      // when the player connects we get to know the match guid of the active match.
+      // we can inactivate any active matches on the same server that have a different
+      // match guid.
+      await this.inactivateMatches(server.id!, event.matchGuid, tx)
 
-      for (let match of activeMatchesResult.entities) {
-        if (match.guid != event.matchGuid) {
-          match.active = false
-          let result = await this.matchLogic.update(match, tx)
+      // when the player connects we get to know the match guid of the active match.
+      // we can now check if the active match is present. if it is not and the active
+      // match is not warmup we can create it now.
+      await this.createMissingMatch(server.id!, event.matchGuid, event.warmup, event.time, eventEmitDate, tx)
 
-          if (result.isMisfits()) {
-            throw new MisfitsError(result.misfits)
-          }
-        }
-        else {
-          currentMatchExists = true
-        }
-      }
-
-      let activeMatchParticipationsResult = await this.matchParticipationLogic.read({ active: true, playerId: player.id }, tx)
-
-      if (activeMatchParticipationsResult.entities.length > 0) {
-        l.dev('Found active match participations. Setting them to inactive...')
-      }
-
-      for (let matchParticipation of activeMatchParticipationsResult.entities) {
-        l.dev('Setting match participation to inactive...', matchParticipation)
-        
-        matchParticipation.active = false
-        let result = await this.matchParticipationLogic.update(matchParticipation, tx)
-        l.dev('Result of updating', result)
-
-        if (result.isMisfits()) {
-          throw new MisfitsError(result.misfits)
-        }
-      }
-
-      if (! event.warmup && ! currentMatchExists) {
-        let match = new Match
-
-        match.active = true
-        match.guid = event.matchGuid
-        match.startDate = new Date(new Date(eventEmitDate).setSeconds(eventEmitDate.getSeconds() - event.time))
-        match.serverId = server.id
-
-        let result = await this.matchLogic.create(match, tx)
-
-        if (result.isMisfits()) {
-          throw new MisfitsError(result.misfits)
-        }
-      }
+      /* Now we fixed all inconsistencies and we can create the regular information */
 
       let serverVisit = new ServerVisit
 
       serverVisit.playerId = player.id
       serverVisit.serverId = server.id
-      serverVisit.connectDate = eventEmitDate
       serverVisit.active = true
-      // event.matchGuid
+      serverVisit.connectDate = eventEmitDate
 
       let serverVisitResult = await this.serverVisitLogic.create(serverVisit, tx)
 
@@ -335,33 +295,53 @@ export class QlStatsIntegrator {
     else if (event instanceof PlayerDisconnectEvent) {
       l.dev('Processing PlayerDisconnectEvent...')
 
+      // at first we either create or get the player while also updating its name and
+      // setting its first seen date if not present
       let player = await this.createOrGetPlayer(event.steamId, event.name, eventEmitDate, tx)
 
+      // then, with a good fault tolerance, we determine the last active server visit
       let activeServerVisitResult = await this.serverVisitLogic.getActive(server.id!, player.id!, tx)
       let activeServerVisit = activeServerVisitResult.entity
 
       if (activeServerVisit) {
+        // if there is an active server visit we can update it with the disconnect date
+        // and set it to inactive
         activeServerVisit.disconnectDate = eventEmitDate
         activeServerVisit.active = false
         await this.serverVisitLogic.update(activeServerVisit, tx)
       }
       else {
+        // if there is no active server visit then we missed any opportunity to create one before
+        // in that case we create one now and do what we can
         let serverVisit = new ServerVisit
 
         serverVisit.playerId = player.id
         serverVisit.serverId = server.id
+        serverVisit.active = false
+        // we at least use the length of the current match to determine a start date for the
+        // server visit even if that might be not the truth because there might have been
+        // more matches on the same server before that the player was already participating
+        serverVisit.connectDate = new Date(new Date(eventEmitDate).setSeconds(eventEmitDate.getSeconds() - event.time))
         serverVisit.disconnectDate = eventEmitDate
-        serverVisit.active = false
   
-        await this.serverVisitLogic.create(serverVisit, tx)  
+        await this.serverVisitLogic.create(serverVisit, tx)
       }
 
-      let serverVisitsActive = await this.serverVisitLogic.read({ active: true, playerId: player.id }, tx)
+      // if we processed the correct server visit we can set all others that are still being
+      // active to inactive
+      await this.inactivateServerVisits(player.id!, tx)
 
-      for (let serverVisit of serverVisitsActive.entities) {
-        serverVisit.active = false
-        await this.serverVisitLogic.update(serverVisit, tx)
-      }
+      // since we know that the player now disconnected, we can inactivate any active match
+      // participation on any server
+      await this.inactivateMatchParticipations(player.id!, tx)
+
+      // since we know the current match guid, we can check if there is any match marked as
+      // active and associated to this server but with a different match guid
+      await this.inactivateMatches(server.id!, event.matchGuid, tx)
+
+      // in the disconnect event we get to know the active match and thus we can check if this
+      // match is warmup and if it is not warmup we can create it if it is missing.
+      await this.createMissingMatch(server.id!, event.matchGuid, event.warmup, event.time, eventEmitDate, tx)
     }
     else if (event instanceof PlayerKillEvent) {
       let warmup = event.warmup
@@ -831,7 +811,113 @@ export class QlStatsIntegrator {
 
     return player
   }
+
+  /**
+   * If we know that the player either just started or just ended its visit
+   * we can inactivate any server visit that is still active.
+   * 
+   * @param playerId The player id
+   * @param tx The database transaction
+   */
+  async inactivateServerVisits(playerId: number, tx: PgTransaction) {
+    let l = log.mt('inactivateServerVisits')
+    l.param('playerId', playerId)
+
+    let activeServerVisitsResult = await this.serverVisitLogic.read({ active: true, playerId: playerId }, tx)
+    l.var('activeServerVisitsResult', activeServerVisitsResult)
+
+    for (let serverVisit of activeServerVisitsResult.entities) {
+      serverVisit.active = false
+      let result = await this.serverVisitLogic.update(serverVisit, tx)
+
+      if (result.isMisfits()) {
+        throw new MisfitsError(result.misfits)
+      }
+    }  
+  }
+
+  /**
+   * If we have a match guid and a server, we can check if there are any active
+   * matches with a different match guid. If so, this cannot be correct and we can
+   * inactivate them.
+   * 
+   * @param serverId The id of the server
+   * @param matchGuid The match guid
+   * @param tx The database transaction
+   */
+  async inactivateMatches(serverId: number, matchGuid: string, tx: PgTransaction) {
+    let l = log.mt('inactivateMatches')
+    l.param('serverId', serverId)
+    l.param('matchGuid', matchGuid)
+
+    let activeMatchesResult = await this.matchLogic.read({ active: true, serverId: serverId }, tx)
+    l.var('activeMatchesResult', activeMatchesResult)
+
+    for (let match of activeMatchesResult.entities) {
+      if (match.guid != matchGuid) {
+        match.active = false
+        let result = await this.matchLogic.update(match, tx)
+
+        if (result.isMisfits()) {
+          throw new MisfitsError(result.misfits)
+        }
+      }
+    }
+  }
+
+  async createMissingMatch(serverId: number, matchGuid: string, warmup: boolean, matchTime: number, eventEmitDate: Date, tx: PgTransaction) {
+    if (warmup) {
+      return
+    }
+
+    let matchResult = await this.matchLogic.read({ guid: matchGuid }, tx)
+
+    if (matchResult.entities.length == 0) {
+      let match = new Match
+
+      match.active = true
+      match.guid = matchGuid
+      match.startDate = new Date(new Date(eventEmitDate).setSeconds(eventEmitDate.getSeconds() - matchTime))
+      match.serverId = serverId
+
+      let result = await this.matchLogic.create(match, tx)
+
+      if (result.isMisfits()) {
+        throw new MisfitsError(result.misfits)
+      }
+    }
+  }
+
+  /**
+   * If it is clear that a player is not participating in any matches we can set all
+   * of the active match participations to inactive.
+   * 
+   * @param playerId The id of the player we want to inactivate its match participations
+   * @param tx The database transaction
+   */
+  async inactivateMatchParticipations(playerId: number, tx: PgTransaction) {
+    let l = log.mt('inactivateMatchParticipations')
+
+    let activeMatchParticipationsResult = await this.matchParticipationLogic.read({ active: true, playerId: playerId }, tx)
+
+    if (activeMatchParticipationsResult.entities.length > 0) {
+      l.dev('Found active match participations. Setting them to inactive...')
+    }
+
+    for (let matchParticipation of activeMatchParticipationsResult.entities) {
+      l.dev('Setting match participation to inactive...', matchParticipation)
+      
+      matchParticipation.active = false
+      let result = await this.matchParticipationLogic.update(matchParticipation, tx)
+      l.dev('Result of updating', result)
+
+      if (result.isMisfits()) {
+        throw new MisfitsError(result.misfits)
+      }
+    }
+  }
 }
+
 
 function utc(date: Date = new Date): Date {
   let utc = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds(), date.getUTCMilliseconds())
