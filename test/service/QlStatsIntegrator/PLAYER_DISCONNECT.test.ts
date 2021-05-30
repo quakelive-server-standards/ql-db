@@ -5,7 +5,7 @@ import { TeamType } from '../../../src/domain/enums/TeamType'
 import Services from '../../../src/Services'
 import { create, tx } from '../../tools'
 
-describe.only('service/QlStatsIntegrator.ts', function() {
+describe('service/QlStatsIntegrator.ts', function() {
   describe('PLAYER_DISCONNECT', function() {
     describe('Server', function() {
       it('should create a new server', async function() {

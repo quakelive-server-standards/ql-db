@@ -1,5 +1,5 @@
 import { PgTransaction } from 'knight-pg-transaction'
-import { Absent, Exists, Required, TypeOf, Validator } from 'knight-validation'
+import { Absent, Exists, Required, TypeOf, Unique, Validator } from 'knight-validation'
 import { FactoryLogic } from '../factory/FactoryLogic'
 import { MapLogic } from '../map/MapLogic'
 import { ServerLogic } from '../server/ServerLogic'
@@ -70,11 +70,16 @@ export class MatchIdValidator extends Validator {
 
 export class MatchCreateValidator extends Validator {
 
-  constructor(factoryLogic: FactoryLogic, mapLogic: MapLogic, serverLogic: ServerLogic, tx: PgTransaction) {
+  constructor(factoryLogic: FactoryLogic, mapLogic: MapLogic, matchLogic: MatchLogic, serverLogic: ServerLogic, tx: PgTransaction) {
     super()
 
     this.add('id', new Absent)
     this.add(new MatchValidator(factoryLogic, mapLogic, serverLogic, tx))
+
+    this.add('guid', new Unique(async (match: Match) => {
+      let result = await matchLogic.count({ guid: match.guid }, tx)
+      return result.count == 0
+    }))
   }
 }
 
@@ -85,6 +90,26 @@ export class MatchUpdateValidator extends Validator {
     
     this.add(new MatchIdValidator(matchLogic, tx))
     this.add(new MatchValidator(factoryLogic, mapLogic, serverLogic, tx))
+
+    this.add('guid', new Unique(async (match: Match) => {
+      let result = await matchLogic.read({ guid: match.guid }, tx)
+
+      if (result.entities.length == 0) {
+        return true
+      }
+
+      if (result.entities.length > 1) {
+        return false
+      }
+
+      let existingMatch = result.entities[0]
+
+      if (existingMatch.id == match.id) {
+        return true
+      }
+
+      return false
+    }))
   }
 }
 

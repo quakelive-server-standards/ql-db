@@ -29,7 +29,7 @@ export class MatchLogic {
     l.param('match', match)
 
     return tx.runInTransaction(async () => {
-      let validator = new MatchCreateValidator(this.factoryLogic, this.mapLogic, this.serverLogic, tx)
+      let validator = new MatchCreateValidator(this.factoryLogic, this.mapLogic, this, this.serverLogic, tx)
       let misfits = await validator.validate(match)
       l.var('Validation resulted in the following misfits', misfits)
 

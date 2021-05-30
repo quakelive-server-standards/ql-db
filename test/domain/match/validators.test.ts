@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import 'mocha'
 import { Match } from '../../../src/domain/match/Match'
-import { MatchValidator } from '../../../src/domain/match/validators'
+import { MatchCreateValidator, MatchUpdateValidator, MatchValidator } from '../../../src/domain/match/validators'
 import Services from '../../../src/Services'
 import { containsMisfit, create, tx } from '../../tools'
 
@@ -73,6 +73,111 @@ describe('match/validators.ts', function() {
       expect(containsMisfit('factoryId', 'Exists', misfits)).to.be.false
       expect(containsMisfit('mapId', 'Exists', misfits)).to.be.false
       expect(containsMisfit('serverId', 'Exists', misfits)).to.be.false
+    })
+  })
+
+  describe('MatchCreateValidator', function() {
+    it('should return a misfit if the guid is not unique', async function() {
+      create('match', { guid: '95d60017-6adb-43bf-a146-c1757194d5fc' })
+
+      let validator = new MatchCreateValidator(
+        Services.get().factoryLogic, 
+        Services.get().mapLogic, 
+        Services.get().matchLogic, 
+        Services.get().serverLogic, 
+        tx()
+      )
+
+      let match = new Match
+      match.guid = '95d60017-6adb-43bf-a146-c1757194d5fc'
+
+      let misfits = await validator.validate(match)
+
+      expect(containsMisfit('guid', 'Unique', misfits)).to.be.true
+    })
+
+    it('should not return a misfit if the guid is unique', async function() {
+      create('match', { guid: '95d60017-6adb-43bf-a146-c1757194d5fb' })
+
+      let validator = new MatchCreateValidator(
+        Services.get().factoryLogic, 
+        Services.get().mapLogic, 
+        Services.get().matchLogic, 
+        Services.get().serverLogic, 
+        tx()
+      )
+
+      let match = new Match
+      match.guid = '95d60017-6adb-43bf-a146-c1757194d5fc'
+
+      let misfits = await validator.validate(match)
+
+      expect(containsMisfit('guid', 'Unique', misfits)).to.be.false
+    })
+  })
+
+  describe('MatchUpdateValidator', function() {
+    it('should return a misfit if the guid is not unique', async function() {
+      create('match', { guid: '95d60017-6adb-43bf-a146-c1757194d5fb' })
+      create('match', { guid: '95d60017-6adb-43bf-a146-c1757194d5fc' })
+
+      let validator = new MatchUpdateValidator(
+        Services.get().factoryLogic, 
+        Services.get().mapLogic, 
+        Services.get().matchLogic, 
+        Services.get().serverLogic, 
+        tx()
+      )
+
+      let match = new Match
+      match.id = 1
+      match.guid = '95d60017-6adb-43bf-a146-c1757194d5fc'
+
+      let misfits = await validator.validate(match)
+
+      expect(containsMisfit('guid', 'Unique', misfits)).to.be.true
+    })
+
+    it('should not return a misfit if the guid is unique', async function() {
+      create('match', { guid: '95d60017-6adb-43bf-a146-c1757194d5fb' })
+      create('match', { guid: '95d60017-6adb-43bf-a146-c1757194d5fc' })
+
+      let validator = new MatchUpdateValidator(
+        Services.get().factoryLogic, 
+        Services.get().mapLogic, 
+        Services.get().matchLogic, 
+        Services.get().serverLogic, 
+        tx()
+      )
+
+      let match = new Match
+      match.id = 1
+      match.guid = '95d60017-6adb-43bf-a146-c1757194d5fd'
+
+      let misfits = await validator.validate(match)
+
+      expect(containsMisfit('guid', 'Unique', misfits)).to.be.false
+    })
+
+    it('should not return a misfit if the only match with the same guid is the same', async function() {
+      create('match', { guid: '95d60017-6adb-43bf-a146-c1757194d5fb' })
+      create('match', { guid: '95d60017-6adb-43bf-a146-c1757194d5fc' })
+
+      let validator = new MatchUpdateValidator(
+        Services.get().factoryLogic, 
+        Services.get().mapLogic, 
+        Services.get().matchLogic, 
+        Services.get().serverLogic, 
+        tx()
+      )
+
+      let match = new Match
+      match.id = 1
+      match.guid = '95d60017-6adb-43bf-a146-c1757194d5fb'
+
+      let misfits = await validator.validate(match)
+
+      expect(containsMisfit('guid', 'Unique', misfits)).to.be.false
     })
   })
 })
