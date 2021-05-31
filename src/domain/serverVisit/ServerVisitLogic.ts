@@ -150,7 +150,8 @@ export class ServerVisitLogic {
   }
 
   /**
-   * Returns the active server visit. If there is more than one it determines the last one.
+   * Returns the active server visit. If there is more than one it determines the most current one
+   * jugded by the connect date.
    * 
    * @param serverId The server id
    * @param playerId The player id

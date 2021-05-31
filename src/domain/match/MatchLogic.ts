@@ -49,7 +49,7 @@ export class MatchLogic {
     })
   }
 
-  createOrGet(guid: string, tx: PgTransaction): Promise<CreateOrGetResult<Match>> {
+  createOrGet(guid: string, length: number, eventEmitDate: Date, tx: PgTransaction): Promise<CreateOrGetResult<Match>> {
     let l = log.mt('createOrGet')
     l.param('guid', guid)
 
@@ -61,7 +61,9 @@ export class MatchLogic {
       }
 
       let match = new Match
+      match.active = true
       match.guid = guid
+      match.startDate = new Date(new Date(eventEmitDate).setSeconds(eventEmitDate.getSeconds() - length))
 
       let createResult = await this.create(match, tx)
 

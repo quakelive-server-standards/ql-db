@@ -22,7 +22,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         let date = new Date
         let event = PlayerConnectEvent.fromQl(qlConnectEvent['DATA'])
-  
+        
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
         let serversResult = await Services.get().serverLogic.read({ '@orderBy': 'id' }, tx())
@@ -36,7 +36,8 @@ describe('service/QlStatsIntegrator.ts', function() {
       })
 
       it('should not create a new server', async function() {
-        await create('server', { ip: '127.0.0.1', port: 27960 })
+        let firstSeen = new Date
+        await create('server', { ip: '127.0.0.1', port: 27960, firstSeen: firstSeen })
   
         let qlConnectEvent = {
           "DATA" : {
@@ -49,15 +50,18 @@ describe('service/QlStatsIntegrator.ts', function() {
           "TYPE" : "PLAYER_CONNECT"
         }
   
-        let date = new Date
+        let date = new Date(new Date(firstSeen).setSeconds(firstSeen.getSeconds() + 1))
         let event = PlayerConnectEvent.fromQl(qlConnectEvent['DATA'])
-  
+
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let result = await Services.get().serverLogic.count({}, tx())
-    
-        expect(result.isValue()).to.be.true
-        expect(result.count).to.equal(1)
+        let serversResult = await Services.get().serverLogic.read({}, tx())
+  
+        expect(serversResult.entities.length).to.equal(1)
+        expect(serversResult.entities[0].firstSeen).to.deep.equal(firstSeen)
+        expect(serversResult.entities[0].ip).to.equal('127.0.0.1')
+        expect(serversResult.entities[0].port).to.equal(27960)
+        expect(serversResult.entities[0].title).to.be.null
       })  
 
       it('should update the fist seen date', async function() {

@@ -166,10 +166,6 @@ export class MatchParticipationLogic {
         serverId: serverId,
         playerId: playerId,
         active: true,
-        startDate: {
-          operator: '!=',
-          value: null
-        },
         finishDate: null
       }, tx)
 

@@ -58,7 +58,6 @@ export class MatchParticipationValidator extends Validator {
     this.add('startDate', new Required)
     this.add('startDate', new TypeOf(Date))
 
-    this.add('team', new Required)
     // this.add('team', new Enum(TeamType))
   }
 }

@@ -25,7 +25,9 @@ export class ServerVisitValidator extends Validator {
     this.add('active', new Required)
     this.add('active', new TypeOf('boolean'))
 
+    this.add('connectDate', new Required)
     this.add('connectDate', new TypeOf(Date))
+
     this.add('disconnectDate', new TypeOf(Date))
   }
 }
