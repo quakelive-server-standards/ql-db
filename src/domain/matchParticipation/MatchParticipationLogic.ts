@@ -12,6 +12,7 @@ import { MatchLogic } from '../match/MatchLogic'
 import { PlayerLogic } from '../player/PlayerLogic'
 import { RoundLogic } from '../round/RoundLogic'
 import { ServerLogic } from '../server/ServerLogic'
+import { ServerVisitLogic } from '../serverVisit/ServerVisitLogic'
 import { StatsLogic } from '../stats/StatsLogic'
 import { txQuery } from '../txQuery'
 import { MatchParticipation } from './MatchParticipation'
@@ -26,15 +27,15 @@ export class MatchParticipationLogic {
   playerLogic!: PlayerLogic
   roundLogic!: RoundLogic
   serverLogic!: ServerLogic
+  serverVisitLogic!: ServerVisitLogic
   statsLogic!: StatsLogic
-
 
   create(matchParticipation: MatchParticipation, tx: PgTransaction): Promise<EntityResult<MatchParticipation>> {
     let l = log.mt('create')
     l.param('matchParticipation', matchParticipation)
 
     return tx.runInTransaction(async () => {
-      let validator = new MatchParticipationCreateValidator(this.matchLogic, this.playerLogic, this.roundLogic, this.serverLogic, this.statsLogic, tx)
+      let validator = new MatchParticipationCreateValidator(this.matchLogic, this.playerLogic, this.roundLogic, this.serverLogic, this.serverVisitLogic, this.statsLogic, tx)
       let misfits = await validator.validate(matchParticipation)
       l.var('Validation resulted in the following misfits', misfits)
 
@@ -91,7 +92,7 @@ export class MatchParticipationLogic {
     l.param('matchParticipation', matchParticipation)
 
     return tx.runInTransaction(async () => {
-      let validator = new MatchParticipationUpdateValidator(this, this.matchLogic, this.playerLogic, this.roundLogic, this.serverLogic, this.statsLogic, tx)
+      let validator = new MatchParticipationUpdateValidator(this, this.matchLogic, this.playerLogic, this.roundLogic, this.serverLogic, this.serverVisitLogic, this.statsLogic, tx)
       let misfits = await validator.validate(matchParticipation)
 
       if (misfits.length > 0) {

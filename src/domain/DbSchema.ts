@@ -489,6 +489,7 @@ export default {
       'player_id': 'playerId',
       'round_id': 'roundId',
       'server_id': 'serverId',
+      'server_visit_id': 'serverVisitId',
       'stats_id': 'statsId',
       'active': 'active',
       'finish_date': 'finishDate',
@@ -538,6 +539,12 @@ export default {
         otherTable: 'server',
         otherId: 'id'
       },
+      'serverVisit': {
+        manyToOne: true,
+        thisId: 'server_visit_id',
+        otherTable: 'server_visit',
+        otherId: 'id'
+      },
       'stats': {
         manyToOne: true,
         thisId: 'stats_id',
@@ -555,6 +562,7 @@ export default {
       matchParticipation.playerId = row['player_id']
       matchParticipation.roundId = row['round_id']
       matchParticipation.serverId = row['server_id']
+      matchParticipation.serverVisitId = row['server_visit_id']
       matchParticipation.startDate = row['start_date']
       matchParticipation.statsId = row['stats_id']
       matchParticipation.team = row['team']
@@ -570,6 +578,7 @@ export default {
         'player_id': matchParticipation.playerId,
         'round_id': matchParticipation.roundId,
         'server_id': matchParticipation.serverId,
+        'server_visit_id': matchParticipation.serverVisitId,
         'start_date': matchParticipation.startDate,
         'stats_id': matchParticipation.statsId,
         'team': matchParticipation.team
@@ -888,6 +897,12 @@ export default {
         thisId: 'id',
         otherTable: 'frag',
         otherId: 'killer_server_visit_id'
+      },
+      'matchParticipations': {
+        oneToMany: true,
+        thisId: 'id',
+        otherTable: 'match_participation',
+        otherId: 'server_visit_id'
       },
       'medals': {
         oneToMany: true,

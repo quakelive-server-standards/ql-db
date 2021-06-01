@@ -96,6 +96,7 @@ export default class Services {
     this.matchParticipationLogic.playerLogic = this.playerLogic
     this.matchParticipationLogic.roundLogic = this.roundLogic
     this.matchParticipationLogic.serverLogic = this.serverLogic
+    this.matchParticipationLogic.serverVisitLogic = this.serverVisitLogic
     this.matchParticipationLogic.statsLogic = this.statsLogic
 
     this.medalLogic.changeLogic = this.changeLogic

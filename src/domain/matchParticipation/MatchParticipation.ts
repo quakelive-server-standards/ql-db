@@ -5,6 +5,7 @@ import { Medal } from '../medal/Medal'
 import { Player } from '../player/Player'
 import { Round } from '../round/Round'
 import { Server } from '../server/Server'
+import { ServerVisit } from '../serverVisit/ServerVisit'
 import { Stats } from '../stats/Stats'
 
 export class MatchParticipation {
@@ -14,6 +15,7 @@ export class MatchParticipation {
   playerId?: number
   roundId?: number | null
   serverId?: number
+  serverVisitId?: number
   statsId?: number | null
   
   active?: boolean
@@ -28,6 +30,7 @@ export class MatchParticipation {
   player?: Player
   round?: Round
   server?: Server
+  serverVisit?: ServerVisit
   stats?: Stats
 
 }

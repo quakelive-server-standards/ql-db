@@ -1,4 +1,5 @@
 import { Frag } from '../frag/Frag'
+import { MatchParticipation } from '../matchParticipation/MatchParticipation'
 import { Medal } from '../medal/Medal'
 import { Player } from '../player/Player'
 import { Server } from '../server/Server'
@@ -22,6 +23,7 @@ export class ServerVisit {
 
   deaths?: Frag[]
   kills?: Frag[]
+  matchParticipations?: MatchParticipation[]
   medals?: Medal[]
   player?: Player
   server?: Server

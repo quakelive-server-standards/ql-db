@@ -12,6 +12,7 @@ describe('domain/matchParticipation/MatchParticipationLogic.ts', function() {
       await create('player')
       await create('round')
       await create('server')
+      await create('server_visit')
       await create('stats')
 
       let date1 = new Date
@@ -25,6 +26,7 @@ describe('domain/matchParticipation/MatchParticipationLogic.ts', function() {
       matchParticipation.playerId = 1
       matchParticipation.roundId = 1
       matchParticipation.serverId = 1
+      matchParticipation.serverVisitId = 1
       matchParticipation.startDate = date2
       matchParticipation.statsId = 1
       matchParticipation.team = TeamType.Blue
@@ -39,6 +41,7 @@ describe('domain/matchParticipation/MatchParticipationLogic.ts', function() {
       expect(matchParticipation.playerId).to.equal(1)
       expect(matchParticipation.roundId).to.equal(1)
       expect(matchParticipation.serverId).to.equal(1)
+      expect(matchParticipation.serverVisitId).to.equal(1)
       expect(matchParticipation.startDate).to.deep.equal(date2)
       expect(matchParticipation.statsId).to.equal(1)
       expect(matchParticipation.team).to.equal(TeamType.Blue)
@@ -57,6 +60,7 @@ describe('domain/matchParticipation/MatchParticipationLogic.ts', function() {
         playerId: 1,
         roundId: 1,
         serverId: 1,
+        serverVisitId: 1,
         startDate: date2,
         statsId: 1,
         team: TeamType.Blue,
@@ -74,6 +78,7 @@ describe('domain/matchParticipation/MatchParticipationLogic.ts', function() {
       expect(result.entities[0].playerId).to.equal(1)
       expect(result.entities[0].roundId).to.equal(1)
       expect(result.entities[0].serverId).to.equal(1)
+      expect(result.entities[0].serverVisitId).to.equal(1)
       expect(result.entities[0].startDate).to.deep.equal(date2)
       expect(result.entities[0].statsId).to.equal(1)
       expect(result.entities[0].team).to.equal(TeamType.Blue)
@@ -172,6 +177,18 @@ describe('domain/matchParticipation/MatchParticipationLogic.ts', function() {
       expect(result.entities[0].server.id).to.equal(1)
     })
 
+    it('should load the server visit', async function() {
+      await create('match_participation', { serverVisitId: 1 })
+      await create('server_visit')
+      await create('server_visit')
+
+      let result = await Services.get().matchParticipationLogic.read({ serverVisit: {} }, tx())
+
+      expect(result.isValue()).to.be.true
+      expect(result.entities[0].serverVisit).to.be.not.undefined
+      expect(result.entities[0].serverVisit.id).to.equal(1)
+    })
+
     it('should load the stats', async function() {
       await create('match_participation', { statsId: 1 })
       await create('stats')
@@ -195,6 +212,8 @@ describe('domain/matchParticipation/MatchParticipationLogic.ts', function() {
       await create('round')
       await create('server')
       await create('server')
+      await create('server_visit')
+      await create('server_visit')
       await create('stats')
       await create('stats')
 
@@ -208,6 +227,7 @@ describe('domain/matchParticipation/MatchParticipationLogic.ts', function() {
         playerId: 1,
         roundId: 1,
         serverId: 1,
+        serverVisitId: 1,
         startDate: date2,
         statsId: 1,
         team: TeamType.Blue,
@@ -222,6 +242,7 @@ describe('domain/matchParticipation/MatchParticipationLogic.ts', function() {
       matchParticipation.playerId = 2
       matchParticipation.roundId = 2
       matchParticipation.serverId = 2
+      matchParticipation.serverVisitId = 2
       matchParticipation.startDate = date1
       matchParticipation.statsId = 2
       matchParticipation.team = TeamType.Red
@@ -236,6 +257,7 @@ describe('domain/matchParticipation/MatchParticipationLogic.ts', function() {
       expect(result.entity.playerId).to.equal(2)
       expect(result.entity.roundId).to.equal(2)
       expect(result.entity.serverId).to.equal(2)
+      expect(result.entity.serverVisitId).to.equal(2)
       expect(result.entity.startDate).to.deep.equal(date1)
       expect(result.entity.statsId).to.equal(2)
       expect(result.entity.team).to.equal(TeamType.Red)
@@ -254,6 +276,7 @@ describe('domain/matchParticipation/MatchParticipationLogic.ts', function() {
         playerId: 1,
         roundId: 1,
         serverId: 1,
+        serverVisitId: 1,
         startDate: date2,
         statsId: 1,
         team: TeamType.Blue,
@@ -273,6 +296,7 @@ describe('domain/matchParticipation/MatchParticipationLogic.ts', function() {
       expect(result.entity.playerId).to.equal(1)
       expect(result.entity.roundId).to.equal(1)
       expect(result.entity.serverId).to.equal(1)
+      expect(result.entity.serverVisitId).to.equal(1)
       expect(result.entity.startDate).to.deep.equal(date2)
       expect(result.entity.statsId).to.equal(1)
       expect(result.entity.team).to.equal(TeamType.Blue)

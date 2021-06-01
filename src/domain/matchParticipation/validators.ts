@@ -4,6 +4,7 @@ import { MatchLogic } from '../match/MatchLogic'
 import { PlayerLogic } from '../player/PlayerLogic'
 import { RoundLogic } from '../round/RoundLogic'
 import { ServerLogic } from '../server/ServerLogic'
+import { ServerVisitLogic } from '../serverVisit/ServerVisitLogic'
 import { StatsLogic } from '../stats/StatsLogic'
 import { MatchParticipation } from './MatchParticipation'
 import { MatchParticipationLogic } from './MatchParticipationLogic'
@@ -15,6 +16,7 @@ export class MatchParticipationValidator extends Validator {
     playerLogic: PlayerLogic, 
     roundLogic: RoundLogic, 
     serverLogic: ServerLogic, 
+    serverVisitLogic: ServerVisitLogic, 
     statsLogic: StatsLogic,
     tx: PgTransaction) {
 
@@ -44,6 +46,13 @@ export class MatchParticipationValidator extends Validator {
     this.add('serverId', new TypeOf('number'))
     this.add('serverId', new Exists(async (matchParticipation: MatchParticipation) => {
       let result = await serverLogic.count({ id: matchParticipation.serverId }, tx)
+      return result.count == 1
+    }))
+
+    this.add('serverVisitId', new Required)
+    this.add('serverVisitId', new TypeOf('number'))
+    this.add('serverVisitId', new Exists(async (matchParticipation: MatchParticipation) => {
+      let result = await serverVisitLogic.count({ id: matchParticipation.serverVisitId }, tx)
       return result.count == 1
     }))
 
@@ -90,13 +99,14 @@ export class MatchParticipationCreateValidator extends Validator {
     playerLogic: PlayerLogic, 
     roundLogic: RoundLogic, 
     serverLogic: ServerLogic, 
+    serverVisitLogic: ServerVisitLogic, 
     statsLogic: StatsLogic,
     tx: PgTransaction) {
 
     super()
 
     this.add('id', new Absent)
-    this.add(new MatchParticipationValidator(matchLogic, playerLogic, roundLogic, serverLogic, statsLogic, tx))
+    this.add(new MatchParticipationValidator(matchLogic, playerLogic, roundLogic, serverLogic, serverVisitLogic, statsLogic, tx))
   }
 }
 
@@ -108,13 +118,14 @@ export class MatchParticipationUpdateValidator extends Validator {
     playerLogic: PlayerLogic, 
     roundLogic: RoundLogic, 
     serverLogic: ServerLogic, 
+    serverVisitLogic: ServerVisitLogic, 
     statsLogic: StatsLogic,
     tx: PgTransaction) {
 
     super()
     
     this.add(new MatchParticipationIdValidator(matchParticipationLogic, tx))
-    this.add(new MatchParticipationValidator(matchLogic, playerLogic, roundLogic, serverLogic, statsLogic, tx))
+    this.add(new MatchParticipationValidator(matchLogic, playerLogic, roundLogic, serverLogic, serverVisitLogic, statsLogic, tx))
   }
 }
 

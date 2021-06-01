@@ -87,6 +87,21 @@ describe('domain/serverVisit/ServerVisitLogic.ts', function() {
       expect(result.entities[0].kills[1].id).to.equal(1)
     })
 
+    it('should load all match participations', async function() {
+      await create('server_visit')
+      await create('match_participation', { serverVisitId: 1 })
+      await create('match_participation', { serverVisitId: 1 })
+      await create('match_participation', { serverVisitId: 2 })
+
+      let result = await Services.get().serverVisitLogic.read({ matchParticipations: {} }, tx())
+
+      expect(result.isValue()).to.be.true
+      expect(result.entities[0].matchParticipations).to.be.not.undefined
+      expect(result.entities[0].matchParticipations.length).to.equal(2)
+      expect(result.entities[0].matchParticipations[0].id).to.equal(1)
+      expect(result.entities[0].matchParticipations[1].id).to.equal(2)
+    })
+
     it('should load all medals', async function() {
       await create('server_visit')
       await create('medal', { serverVisitId: 1 })
