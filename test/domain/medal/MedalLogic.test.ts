@@ -13,6 +13,7 @@ describe('domain/MedalLogic.ts', function() {
       await create('player')
       await create('round')
       await create('server')
+      await create('server_visit')
 
       let now = new Date
       let medal = new Medal
@@ -24,6 +25,7 @@ describe('domain/MedalLogic.ts', function() {
       medal.playerId = 1
       medal.roundId = 1
       medal.serverId = 1
+      medal.serverVisitId = 1
       medal.warmup = true
 
       let result = await Services.get().medalLogic.create(medal, tx())
@@ -37,6 +39,7 @@ describe('domain/MedalLogic.ts', function() {
       expect(result.entity.playerId).to.equal(1)
       expect(result.entity.roundId).to.equal(1)
       expect(result.entity.serverId).to.equal(1)
+      expect(result.entity.serverVisitId).to.equal(1)
       expect(result.entity.warmup).to.equal(true)
     })
   })
@@ -53,6 +56,7 @@ describe('domain/MedalLogic.ts', function() {
         playerId: 1,
         roundId: 1,
         serverId: 1,
+        serverVisitId: 1,
         warmup: true,
       })
       
@@ -68,6 +72,7 @@ describe('domain/MedalLogic.ts', function() {
       expect(result.entities[0].playerId).to.equal(1)
       expect(result.entities[0].roundId).to.equal(1)
       expect(result.entities[0].serverId).to.equal(1)
+      expect(result.entities[0].serverVisitId).to.equal(1)
       expect(result.entities[0].warmup).to.equal(true)
     })
 
@@ -83,7 +88,7 @@ describe('domain/MedalLogic.ts', function() {
       expect(result.entities[0].match.id).to.equal(1)
     })
 
-    it('should load the match', async function() {
+    it('should load the match participation', async function() {
       await create('medal', { matchParticipationId: 1 })
       await create('match_participation')
       await create('match_participation')
@@ -130,6 +135,18 @@ describe('domain/MedalLogic.ts', function() {
       expect(result.entities[0].server).to.be.not.undefined
       expect(result.entities[0].server.id).to.equal(1)
     })
+
+    it('should load the server visit', async function() {
+      await create('medal', { serverVisitId: 1 })
+      await create('server_visit')
+      await create('server_visit')
+
+      let result = await Services.get().medalLogic.read({ serverVisit: {} }, tx())
+
+      expect(result.isValue()).to.be.true
+      expect(result.entities[0].serverVisit).to.be.not.undefined
+      expect(result.entities[0].serverVisit.id).to.equal(1)
+    })
   })
 
   describe('update', function() {
@@ -144,6 +161,8 @@ describe('domain/MedalLogic.ts', function() {
       await create('round')
       await create('server')
       await create('server')
+      await create('server_visit')
+      await create('server_visit')
 
       let date1 = new Date
       let date2 = new Date(date1.setSeconds(date1.getSeconds() + 1))
@@ -156,6 +175,7 @@ describe('domain/MedalLogic.ts', function() {
         playerId: 1,
         roundId: 1,
         serverId: 1,
+        serverVisitId: 1,
         warmup: true,
       })
 
@@ -168,6 +188,7 @@ describe('domain/MedalLogic.ts', function() {
       medal.playerId = 2
       medal.roundId = 2
       medal.serverId = 2
+      medal.serverVisitId = 2
       medal.warmup = false
 
       let result = await Services.get().medalLogic.update(medal, tx())
@@ -181,6 +202,7 @@ describe('domain/MedalLogic.ts', function() {
       expect(result.entity.playerId).to.equal(2)
       expect(result.entity.roundId).to.equal(2)
       expect(result.entity.serverId).to.equal(2)
+      expect(result.entity.serverVisitId).to.equal(2)
       expect(result.entity.warmup).to.equal(false)
     })
   })
@@ -197,6 +219,7 @@ describe('domain/MedalLogic.ts', function() {
         playerId: 1,
         roundId: 1,
         serverId: 1,
+        serverVisitId: 1,
         warmup: true,
       })
 
@@ -214,6 +237,7 @@ describe('domain/MedalLogic.ts', function() {
       expect(result.entity.playerId).to.equal(1)
       expect(result.entity.roundId).to.equal(1)
       expect(result.entity.serverId).to.equal(1)
+      expect(result.entity.serverVisitId).to.equal(1)
       expect(result.entity.warmup).to.equal(true)
     })
   })

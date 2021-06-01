@@ -5,6 +5,7 @@ import { MatchParticipationLogic } from '../matchParticipation/MatchParticipatio
 import { PlayerLogic } from '../player/PlayerLogic'
 import { RoundLogic } from '../round/RoundLogic'
 import { ServerLogic } from '../server/ServerLogic'
+import { ServerVisitLogic } from '../serverVisit/ServerVisitLogic'
 import { Medal } from './Medal'
 import { MedalLogic } from './MedalLogic'
 
@@ -16,6 +17,7 @@ export class MedalValidator extends Validator {
     playerLogic: PlayerLogic, 
     roundLogic: RoundLogic, 
     serverLogic: ServerLogic,
+    serverVisitLogic: ServerVisitLogic,
     tx: PgTransaction) {
 
     super()
@@ -47,6 +49,12 @@ export class MedalValidator extends Validator {
     this.add('serverId', new TypeOf('number'))
     this.add('serverId', new Exists(async (medal: Medal) => {
       let result = await serverLogic.count({ id: medal.serverId }, tx)
+      return result.count == 1
+    }))
+
+    this.add('serverVisitId', new TypeOf('number'))
+    this.add('serverVisitId', new Exists(async (medal: Medal) => {
+      let result = await serverVisitLogic.count({ id: medal.serverVisitId }, tx)
       return result.count == 1
     }))
 
@@ -87,12 +95,13 @@ export class MedalCreateValidator extends Validator {
     playerLogic: PlayerLogic, 
     roundLogic: RoundLogic, 
     serverLogic: ServerLogic,
+    serverVisitLogic: ServerVisitLogic,
     tx: PgTransaction) {
 
     super()
 
     this.add('id', new Absent)
-    this.add(new MedalValidator(matchLogic, matchParticipationLogic, playerLogic, roundLogic, serverLogic, tx))
+    this.add(new MedalValidator(matchLogic, matchParticipationLogic, playerLogic, roundLogic, serverLogic, serverVisitLogic, tx))
   }
 }
 
@@ -105,11 +114,12 @@ export class MedalUpdateValidator extends Validator {
     playerLogic: PlayerLogic, 
     roundLogic: RoundLogic, 
     serverLogic: ServerLogic,
+    serverVisitLogic: ServerVisitLogic,
     tx: PgTransaction) {
     super()
     
     this.add(new MedalIdValidator(medalLogic, tx))
-    this.add(new MedalValidator(matchLogic, matchParticipationLogic, playerLogic, roundLogic, serverLogic, tx))
+    this.add(new MedalValidator(matchLogic, matchParticipationLogic, playerLogic, roundLogic, serverLogic, serverVisitLogic, tx))
   }
 }
 

@@ -13,6 +13,7 @@ import { MatchParticipationLogic } from '../matchParticipation/MatchParticipatio
 import { PlayerLogic } from '../player/PlayerLogic'
 import { RoundLogic } from '../round/RoundLogic'
 import { ServerLogic } from '../server/ServerLogic'
+import { ServerVisitLogic } from '../serverVisit/ServerVisitLogic'
 import { txQuery } from '../txQuery'
 import { Medal } from './Medal'
 import { MedalCreateValidator, MedalDeleteValidator, MedalUpdateValidator } from './validators'
@@ -27,13 +28,14 @@ export class MedalLogic {
   playerLogic!: PlayerLogic
   roundLogic!: RoundLogic
   serverLogic!: ServerLogic
+  serverVisitLogic!: ServerVisitLogic
 
   create(medal: Medal, tx: PgTransaction): Promise<EntityResult<Medal>> {
     let l = log.mt('create')
     l.param('medal', medal)
 
     return tx.runInTransaction(async () => {
-      let validator = new MedalCreateValidator(this.matchLogic, this.matchParticipationLogic, this.playerLogic, this.roundLogic, this.serverLogic, tx)
+      let validator = new MedalCreateValidator(this.matchLogic, this.matchParticipationLogic, this.playerLogic, this.roundLogic, this.serverLogic, this.serverVisitLogic, tx)
       let misfits = await validator.validate(medal)
       l.var('Validation resulted in the following misfits', misfits)
 
@@ -90,7 +92,7 @@ export class MedalLogic {
     l.param('medal', medal)
 
     return tx.runInTransaction(async () => {
-      let validator = new MedalUpdateValidator(this, this.matchLogic, this.matchParticipationLogic, this.playerLogic, this.roundLogic, this.serverLogic, tx)
+      let validator = new MedalUpdateValidator(this, this.matchLogic, this.matchParticipationLogic, this.playerLogic, this.roundLogic, this.serverLogic, this.serverVisitLogic, tx)
       let misfits = await validator.validate(medal)
 
       if (misfits.length > 0) {

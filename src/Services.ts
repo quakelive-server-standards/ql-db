@@ -104,6 +104,7 @@ export default class Services {
     this.medalLogic.playerLogic = this.playerLogic
     this.medalLogic.roundLogic = this.roundLogic
     this.medalLogic.serverLogic = this.serverLogic
+    this.medalLogic.serverVisitLogic = this.serverVisitLogic
 
     this.playerLogic.changeLogic = this.changeLogic
 

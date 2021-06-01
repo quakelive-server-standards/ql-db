@@ -4,6 +4,7 @@ import { MatchParticipation } from '../matchParticipation/MatchParticipation'
 import { Player } from '../player/Player'
 import { Round } from '../round/Round'
 import { Server } from '../server/Server'
+import { ServerVisit } from '../serverVisit/ServerVisit'
 
 export class Medal {
   
@@ -13,6 +14,7 @@ export class Medal {
   playerId?: number
   roundId?: number | null
   serverId?: number
+  serverVisitId?: number
 
   date?: Date
   medal?: MedalType
@@ -23,5 +25,6 @@ export class Medal {
   player?: Player
   round?: Round
   server?: Server
+  serverVisit?: ServerVisit
   
 }

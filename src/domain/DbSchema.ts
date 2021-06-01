@@ -585,6 +585,7 @@ export default {
       'player_id': 'playerId',
       'round_id': 'roundId',
       'server_id': 'serverId',
+      'server_visit_id': 'serverVisitId',
       'date': 'date',
       'medal': 'medal',
       'warmup': 'warmup'
@@ -619,6 +620,12 @@ export default {
         thisId: 'server_id',
         otherTable: 'server',
         otherId: 'id'
+      },
+      'serverVisit': {
+        manyToOne: true,
+        thisId: 'server_visit_id',
+        otherTable: 'server_visit',
+        otherId: 'id'
       }
     },
     rowToInstance: (row: any) => {
@@ -632,6 +639,7 @@ export default {
       medal.playerId = row['player_id']
       medal.roundId = row['round_id']
       medal.serverId = row['server_id']
+      medal.serverVisitId = row['server_visit_id']
       medal.warmup = row['warmup']
 
       return medal
@@ -646,6 +654,7 @@ export default {
         'player_id': medal.playerId,
         'round_id': medal.roundId,
         'server_id': medal.serverId,
+        'server_visit_id': medal.serverVisitId,
         'warmup': medal.warmup,
       }
     }
@@ -879,6 +888,12 @@ export default {
         thisId: 'id',
         otherTable: 'frag',
         otherId: 'killer_server_visit_id'
+      },
+      'medals': {
+        oneToMany: true,
+        thisId: 'id',
+        otherTable: 'medal',
+        otherId: 'server_visit_id'
       },
       'player': {
         manyToOne: true,

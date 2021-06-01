@@ -26,6 +26,7 @@ describe('medal/validators.ts', function() {
         Services.get().playerLogic,
         Services.get().roundLogic,
         Services.get().serverLogic,
+        Services.get().serverVisitLogic,
         tx()
       )
 
@@ -35,6 +36,7 @@ describe('medal/validators.ts', function() {
       medal.playerId = 2
       medal.roundId = 2
       medal.serverId = 2
+      medal.serverVisitId = 2
 
       let misfits = await validator.validate(medal)
 
@@ -43,6 +45,7 @@ describe('medal/validators.ts', function() {
       expect(containsMisfit('playerId', 'Exists', misfits)).to.be.true
       expect(containsMisfit('roundId', 'Exists', misfits)).to.be.true
       expect(containsMisfit('serverId', 'Exists', misfits)).to.be.true
+      expect(containsMisfit('serverVisitId', 'Exists', misfits)).to.be.true
     })
 
     it('should not return misfits for valid relationship ids', async function() {
@@ -63,6 +66,7 @@ describe('medal/validators.ts', function() {
       await create('player')
       await create('round')
       await create('server')
+      await create('server_visit')
 
       let validator = new MedalValidator(
         Services.get().matchLogic,
@@ -70,6 +74,7 @@ describe('medal/validators.ts', function() {
         Services.get().playerLogic,
         Services.get().roundLogic,
         Services.get().serverLogic,
+        Services.get().serverVisitLogic,
         tx()
       )
 
@@ -79,6 +84,7 @@ describe('medal/validators.ts', function() {
       medal.playerId = 2
       medal.roundId = 2
       medal.serverId = 2
+      medal.serverVisitId = 2
 
       let misfits = await validator.validate(medal)
 
@@ -87,6 +93,7 @@ describe('medal/validators.ts', function() {
       expect(containsMisfit('playerId', 'Exists', misfits)).to.be.false
       expect(containsMisfit('roundId', 'Exists', misfits)).to.be.false
       expect(containsMisfit('serverId', 'Exists', misfits)).to.be.false
+      expect(containsMisfit('serverVisitId', 'Exists', misfits)).to.be.false
     })
   })
 })
