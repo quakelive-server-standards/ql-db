@@ -5,7 +5,7 @@ import { FragParticipantValidator, FragValidator } from '../../../src/domain/fra
 import Services from '../../../src/Services'
 import { containsMisfit, create, tx } from '../../tools'
 
-describe('frag/validators.ts', function() {
+describe('domain/frag/validators.ts', function() {
   describe('FragValidator', function() {
     it('should return misfits for invalid relationship ids', async function() {
       await create('factory')

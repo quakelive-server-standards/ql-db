@@ -5,7 +5,7 @@ import { MedalValidator } from '../../../src/domain/medal/validators'
 import Services from '../../../src/Services'
 import { containsMisfit, create, tx } from '../../tools'
 
-describe('medal/validators.ts', function() {
+describe('domain/medal/validators.ts', function() {
   describe('MedalValidator', function() {
     it('should return misfits for invalid relationship ids', async function() {
       await create('factory')

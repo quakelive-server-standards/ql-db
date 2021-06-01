@@ -4,7 +4,7 @@ import { MedalStats, PickupStats, Stats, WeaponStats } from '../../../src/domain
 import Services from '../../../src/Services'
 import { create, tx } from '../../tools'
 
-describe('domain/StatsLogic.ts', function() {
+describe('domain/stats/StatsLogic.ts', function() {
   describe('create', function() {
     it('should create a stats with all its rows', async function() {
       await create('match')

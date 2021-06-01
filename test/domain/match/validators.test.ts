@@ -5,7 +5,7 @@ import { MatchCreateValidator, MatchUpdateValidator, MatchValidator } from '../.
 import Services from '../../../src/Services'
 import { containsMisfit, create, tx } from '../../tools'
 
-describe('match/validators.ts', function() {
+describe('domain/match/validators.ts', function() {
   describe('MatchValidator', function() {
     it('should return misfits for invalid relationship ids', async function() {
       await create('factory')

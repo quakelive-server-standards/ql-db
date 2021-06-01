@@ -6,7 +6,7 @@ import { StatsValidator } from '../../../src/domain/stats/validators'
 import Services from '../../../src/Services'
 import { containsMisfit, create, tx } from '../../tools'
 
-describe('stats/validators.ts', function() {
+describe('domain/stats/validators.ts', function() {
   describe('StatsValidator', function() {
     it('should return misfits for invalid relationship ids', async function() {
       await create('factory')

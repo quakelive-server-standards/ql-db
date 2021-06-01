@@ -5,7 +5,7 @@ import { MatchParticipation } from '../../../src/domain/matchParticipation/Match
 import Services from '../../../src/Services'
 import { create, tx } from '../../tools'
 
-describe('domain/MatchParticipationLogic.ts', function() {
+describe('domain/matchParticipation/MatchParticipationLogic.ts', function() {
   describe('create', function() {
     it('should create a matchParticipation with all its rows', async function() {
       await create('match')

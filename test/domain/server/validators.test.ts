@@ -5,7 +5,7 @@ import { ServerCreateValidator, ServerUpdateValidator } from '../../../src/domai
 import Services from '../../../src/Services'
 import { containsMisfit, create, tx } from '../../tools'
 
-describe('server/validators.ts', function() {
+describe('domain/server/validators.ts', function() {
   describe('ServerCreateValidator', function() {
     it('should return a misfit if a server with the same ip and port already exists', async function() {
       await create('server', { ip: '127.0.0.1', port: 27960 })

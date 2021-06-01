@@ -5,7 +5,7 @@ import { MatchParticipationValidator } from '../../../src/domain/matchParticipat
 import Services from '../../../src/Services'
 import { containsMisfit, create, tx } from '../../tools'
 
-describe('matchParticipation/validators.ts', function() {
+describe('domain/matchParticipation/validators.ts', function() {
   describe('MatchParticipationValidator', function() {
     it('should return misfits for invalid relationship ids', async function() {
       await create('factory')

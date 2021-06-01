@@ -5,7 +5,7 @@ import { Factory } from '../../../src/domain/factory/Factory'
 import Services from '../../../src/Services'
 import { create, tx } from '../../tools'
 
-describe('domain/FactoryLogic.ts', function() {
+describe('domain/factory/FactoryLogic.ts', function() {
   describe('create', function() {
     it('should create a factory with all its rows', async function() {
       let factory = new Factory

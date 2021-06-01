@@ -4,7 +4,7 @@ import { Map } from '../../../src/domain/map/Map'
 import Services from '../../../src/Services'
 import { create, tx } from '../../tools'
 
-describe('domain/MapLogic.ts', function() {
+describe('domain/map/MapLogic.ts', function() {
   describe('create', function() {
     it('should create a map with all its rows', async function() {
       let map = new Map

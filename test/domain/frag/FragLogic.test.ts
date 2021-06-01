@@ -9,7 +9,7 @@ import { Frag, FragParticipant } from '../../../src/domain/frag/Frag'
 import Services from '../../../src/Services'
 import { create, tx } from '../../tools'
 
-describe('domain/FragLogic.ts', function() {
+describe('domain/frag/FragLogic.ts', function() {
   describe('create', function() {
     it('should create a frag with all its rows', async function() {
       await create('server')

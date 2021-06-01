@@ -4,7 +4,7 @@ import { Server } from '../../../src/domain/server/Server'
 import Services from '../../../src/Services'
 import { create, tx } from '../../tools'
 
-describe('domain/ServerLogic.ts', function() {
+describe('domain/server/ServerLogic.ts', function() {
   describe('create', function() {
     it('should create a server with all its rows', async function() {
       let now = new Date

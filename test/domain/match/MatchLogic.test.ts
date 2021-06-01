@@ -5,7 +5,7 @@ import { Match } from '../../../src/domain/match/Match'
 import Services from '../../../src/Services'
 import { create, tx } from '../../tools'
 
-describe('domain/MatchLogic.ts', function() {
+describe('domain/match/MatchLogic.ts', function() {
   describe('create', function() {
     it('should create a match with all its rows', async function() {
       await create('server')

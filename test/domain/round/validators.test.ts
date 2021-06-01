@@ -5,7 +5,7 @@ import { RoundValidator } from '../../../src/domain/round/validators'
 import Services from '../../../src/Services'
 import { containsMisfit, create, tx } from '../../tools'
 
-describe('round/validators.ts', function() {
+describe('domain/round/validators.ts', function() {
   describe('RoundValidator', function() {
     it('should return misfits for invalid relationship ids', async function() {
       await create('factory')

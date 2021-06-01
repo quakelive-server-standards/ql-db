@@ -5,7 +5,7 @@ import { Round } from '../../../src/domain/round/Round'
 import Services from '../../../src/Services'
 import { create, tx } from '../../tools'
 
-describe('domain/RoundLogic.ts', function() {
+describe('domain/round/RoundLogic.ts', function() {
   describe('create', function() {
     it('should create a round with all its rows', async function() {
       await create('match')

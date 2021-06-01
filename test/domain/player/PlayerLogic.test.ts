@@ -4,7 +4,7 @@ import { Player } from '../../../src/domain/player/Player'
 import Services from '../../../src/Services'
 import { create, tx } from '../../tools'
 
-describe('domain/PlayerLogic.ts', function() {
+describe('domain/player/PlayerLogic.ts', function() {
   describe('create', function() {
     it('should create a player with all its rows', async function() {
       let now = new Date

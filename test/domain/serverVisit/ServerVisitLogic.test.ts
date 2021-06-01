@@ -4,7 +4,7 @@ import { ServerVisit } from '../../../src/domain/serverVisit/ServerVisit'
 import Services from '../../../src/Services'
 import { create, tx } from '../../tools'
 
-describe('domain/ServerVisitLogic.ts', function() {
+describe('domain/serverVisit/ServerVisitLogic.ts', function() {
   describe('create', function() {
     it('should create a serverVisit with all its rows', async function() {
       await create('player')

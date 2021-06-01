@@ -5,7 +5,7 @@ import { Medal } from '../../../src/domain/medal/Medal'
 import Services from '../../../src/Services'
 import { create, tx } from '../../tools'
 
-describe('domain/MedalLogic.ts', function() {
+describe('domain/medal/MedalLogic.ts', function() {
   describe('create', function() {
     it('should create a medal with all its rows', async function() {
       await create('match')

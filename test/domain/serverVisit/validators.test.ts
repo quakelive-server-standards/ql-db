@@ -5,7 +5,7 @@ import { ServerVisitValidator } from '../../../src/domain/serverVisit/validators
 import Services from '../../../src/Services'
 import { containsMisfit, create, tx } from '../../tools'
 
-describe('serverVisit/validators.ts', function() {
+describe('domain/serverVisit/validators.ts', function() {
   describe('ServerVisitValidator', function() {
     it('should return misfits for invalid relationship ids', async function() {
       await create('factory')
