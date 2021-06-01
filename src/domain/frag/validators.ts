@@ -1,26 +1,23 @@
 import { PgTransaction } from 'knight-pg-transaction'
 import { Absent, Exists, Required, TypeOf, Validator } from 'knight-validation'
-import { Match } from '../match/Match'
 import { MatchLogic } from '../match/MatchLogic'
-import { MatchParticipation } from '../matchParticipation/MatchParticipation'
 import { MatchParticipationLogic } from '../matchParticipation/MatchParticipationLogic'
-import { Player } from '../player/Player'
 import { PlayerLogic } from '../player/PlayerLogic'
-import { Round } from '../round/Round'
 import { RoundLogic } from '../round/RoundLogic'
-import { Server } from '../server/Server'
 import { ServerLogic } from '../server/ServerLogic'
+import { ServerVisitLogic } from '../serverVisit/ServerVisitLogic'
 import { Frag, FragParticipant } from './Frag'
 import { FragLogic } from './FragLogic'
 
 export class FragValidator extends Validator {
 
   constructor(
-      serverLogic: ServerLogic,
-      playerLogic: PlayerLogic,
       matchLogic: MatchLogic,
       matchParticipationLogic: MatchParticipationLogic,
+      playerLogic: PlayerLogic,
       roundLogic: RoundLogic,
+      serverLogic: ServerLogic,
+      serverVisitLogic: ServerVisitLogic,
       tx: PgTransaction) {
 
     super()
@@ -46,21 +43,21 @@ export class FragValidator extends Validator {
     this.add('date', new Required)
     this.add('date', new TypeOf(Date))
 
-    this.add('killer', new FragParticipantValidator(playerLogic, matchParticipationLogic, tx))
+    this.add('killer', new FragParticipantValidator(playerLogic, matchParticipationLogic, serverVisitLogic, tx))
     this.add('otherTeamAlive', new TypeOf('number'))
     this.add('otherTeamDead', new TypeOf('number'))
     this.add('suicide', new TypeOf('boolean'))
     this.add('teamAlive', new TypeOf('number'))
     this.add('teamDead', new TypeOf('number'))
     this.add('time', new TypeOf('number'))
-    this.add('victim', new FragParticipantValidator(playerLogic, matchParticipationLogic, tx))
+    this.add('victim', new FragParticipantValidator(playerLogic, matchParticipationLogic, serverVisitLogic, tx))
     this.add('warmup', new TypeOf('boolean'))
   }
 }
 
 export class FragParticipantValidator extends Validator {
 
-  constructor(playerLogic: PlayerLogic, matchParticipationLogic: MatchParticipationLogic, tx: PgTransaction) {
+  constructor(playerLogic: PlayerLogic, matchParticipationLogic: MatchParticipationLogic, serverVisitLogic: ServerVisitLogic, tx: PgTransaction) {
     super()
 
     this.add('playerId', new TypeOf('number'))
@@ -74,6 +71,13 @@ export class FragParticipantValidator extends Validator {
       let result = await matchParticipationLogic.count({ id: fragParticipant.playerId }, tx)
       return result.count == 1
     }))
+
+    this.add('serverVisitId', new TypeOf('number'))
+    this.add('serverVisitId', new Exists(async (fragParticipant: FragParticipant) => {
+      let result = await serverVisitLogic.count({ id: fragParticipant.serverVisitId }, tx)
+      return result.count == 1
+    }))
+
 
     this.add('airborn', new TypeOf('boolean'))
     this.add('ammo', new TypeOf('number'))
@@ -116,17 +120,18 @@ export class FragIdValidator extends Validator {
 export class FragCreateValidator extends Validator {
 
   constructor(
-    serverLogic: ServerLogic,
-    playerLogic: PlayerLogic,
     matchLogic: MatchLogic,
     matchParticipationLogic: MatchParticipationLogic,
+    playerLogic: PlayerLogic,
     roundLogic: RoundLogic,
+    serverLogic: ServerLogic,
+    serverVisitLogic: ServerVisitLogic,
     tx: PgTransaction) {
 
     super()
 
     this.add('id', new Absent)
-    this.add(new FragValidator(serverLogic, playerLogic, matchLogic, matchParticipationLogic, roundLogic, tx))
+    this.add(new FragValidator(matchLogic, matchParticipationLogic, playerLogic, roundLogic, serverLogic, serverVisitLogic, tx))
   }
 }
 
@@ -134,17 +139,18 @@ export class FragUpdateValidator extends Validator {
 
   constructor(
     fragLogic: FragLogic,
-    serverLogic: ServerLogic,
-    playerLogic: PlayerLogic,
     matchLogic: MatchLogic,
     matchParticipationLogic: MatchParticipationLogic,
+    playerLogic: PlayerLogic,
     roundLogic: RoundLogic,
+    serverLogic: ServerLogic,
+    serverVisitLogic: ServerVisitLogic,
     tx: PgTransaction) {
 
     super()
     
     this.add(new FragIdValidator(fragLogic, tx))
-    this.add(new FragValidator(serverLogic, playerLogic, matchLogic, matchParticipationLogic, roundLogic, tx))
+    this.add(new FragValidator(matchLogic, matchParticipationLogic, playerLogic, roundLogic, serverLogic, serverVisitLogic, tx))
   }
 }
 

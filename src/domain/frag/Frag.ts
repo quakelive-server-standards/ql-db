@@ -8,6 +8,7 @@ import { MatchParticipation } from '../matchParticipation/MatchParticipation'
 import { Player } from '../player/Player'
 import { Round } from '../round/Round'
 import { Server } from '../server/Server'
+import { ServerVisit } from '../serverVisit/ServerVisit'
 
 /**
  * Quake Live stats event property 'teamkill' is left out because it can be determined.
@@ -47,6 +48,7 @@ export class FragParticipant {
 
   playerId?: number
   matchParticipationId?: number
+  serverVisitId?: number
 
   airborne?: boolean
   ammo?: number
@@ -72,5 +74,6 @@ export class FragParticipant {
 
   player?: Player
   matchParticipation?: MatchParticipation
+  serverVisit?: ServerVisit
 
 }

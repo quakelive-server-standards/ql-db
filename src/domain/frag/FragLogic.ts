@@ -13,6 +13,7 @@ import { MatchParticipationLogic } from '../matchParticipation/MatchParticipatio
 import { PlayerLogic } from '../player/PlayerLogic'
 import { RoundLogic } from '../round/RoundLogic'
 import { ServerLogic } from '../server/ServerLogic'
+import { ServerVisitLogic } from '../serverVisit/ServerVisitLogic'
 import { txQuery } from '../txQuery'
 import { Frag } from './Frag'
 import { FragCreateValidator, FragDeleteValidator, FragUpdateValidator } from './validators'
@@ -22,18 +23,19 @@ let log = new Log('FragLogic.ts')
 export class FragLogic {
 
   changeLogic!: ChangeLogic
-  serverLogic!: ServerLogic
-  playerLogic!: PlayerLogic
   matchLogic!: MatchLogic
   matchParticipationLogic!: MatchParticipationLogic
+  playerLogic!: PlayerLogic
   roundLogic!: RoundLogic
+  serverLogic!: ServerLogic
+  serverVisitLogic!: ServerVisitLogic
 
   create(frag: Frag, tx: PgTransaction): Promise<EntityResult<Frag>> {
     let l = log.mt('create')
     l.param('frag', frag)
 
     return tx.runInTransaction(async () => {
-      let validator = new FragCreateValidator(this.serverLogic, this.playerLogic, this.matchLogic, this.matchParticipationLogic, this.roundLogic, tx)
+      let validator = new FragCreateValidator(this.matchLogic, this.matchParticipationLogic, this.playerLogic, this.roundLogic, this.serverLogic, this.serverVisitLogic, tx)
       let misfits = await validator.validate(frag)
       l.var('Validation resulted in the following misfits', misfits)
 
@@ -90,7 +92,7 @@ export class FragLogic {
     l.param('frag', frag)
 
     return tx.runInTransaction(async () => {
-      let validator = new FragUpdateValidator(this, this.serverLogic, this.playerLogic, this.matchLogic, this.matchParticipationLogic, this.roundLogic, tx)
+      let validator = new FragUpdateValidator(this, this.matchLogic, this.matchParticipationLogic, this.playerLogic, this.roundLogic, this.serverLogic, this.serverVisitLogic, tx)
       let misfits = await validator.validate(frag)
 
       if (misfits.length > 0) {

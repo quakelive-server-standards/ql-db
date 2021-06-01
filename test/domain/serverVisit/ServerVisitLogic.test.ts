@@ -57,6 +57,36 @@ describe('domain/ServerVisitLogic.ts', function() {
       expect(result.entities[0].serverId).to.equal(1)
     })
 
+    it('should load all deaths', async function() {
+      await create('server_visit')
+      await create('frag', { victim: { serverVisitId: 1 }})
+      await create('frag', { victim: { serverVisitId: 1 }})
+      await create('frag', { victim: { serverVisitId: 2 }})
+
+      let result = await Services.get().serverVisitLogic.read({ deaths: {} }, tx())
+
+      expect(result.isValue()).to.be.true
+      expect(result.entities[0].deaths).to.be.not.undefined
+      expect(result.entities[0].deaths.length).to.equal(2)
+      expect(result.entities[0].deaths[0].id).to.equal(2)
+      expect(result.entities[0].deaths[1].id).to.equal(1)
+    })
+
+    it('should load all kills', async function() {
+      await create('server_visit')
+      await create('frag', { killer: { serverVisitId: 1 }})
+      await create('frag', { killer: { serverVisitId: 1 }})
+      await create('frag', { killer: { serverVisitId: 2 }})
+
+      let result = await Services.get().serverVisitLogic.read({ kills: {} }, tx())
+
+      expect(result.isValue()).to.be.true
+      expect(result.entities[0].kills).to.be.not.undefined
+      expect(result.entities[0].kills.length).to.equal(2)
+      expect(result.entities[0].kills[0].id).to.equal(2)
+      expect(result.entities[0].kills[1].id).to.equal(1)
+    })
+
     it('should load the player', async function() {
       await create('server_visit', { playerId: 1 })
       await create('player')

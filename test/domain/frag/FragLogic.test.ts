@@ -13,6 +13,7 @@ describe('domain/FragLogic.ts', function() {
   describe('create', function() {
     it('should create a frag with all its rows', async function() {
       await create('server')
+      await create('server_visit')
       await create('player')
       await create('player')
       await create('match')
@@ -52,6 +53,7 @@ describe('domain/FragLogic.ts', function() {
         z: 12
       }
       frag.killer.powerUps = [ PowerUpType.ArmorRegeneration, PowerUpType.BattleSuit, PowerUpType.Doubler ]
+      frag.killer.serverVisitId = 1
       frag.killer.speed = 13
       frag.killer.team = TeamType.Blue
       frag.killer.view = {
@@ -77,6 +79,7 @@ describe('domain/FragLogic.ts', function() {
         z: 23
       }
       frag.victim.powerUps = [ ]
+      frag.victim.serverVisitId = 1
       frag.victim.speed = 24
       frag.victim.team = TeamType.Spectator
       frag.victim.view = {
@@ -116,6 +119,7 @@ describe('domain/FragLogic.ts', function() {
       expect(result.entity.killer.position.y).to.equal(11)
       expect(result.entity.killer.position.z).to.equal(12)
       expect(result.entity.killer.powerUps).to.deep.equal([ PowerUpType.ArmorRegeneration, PowerUpType.BattleSuit, PowerUpType.Doubler ])
+      expect(result.entity.killer.serverVisitId).to.equal(1)
       expect(result.entity.killer.speed).to.equal(13)
       expect(result.entity.killer.team).to.equal(TeamType.Blue)
       expect(result.entity.killer.view.x).to.equal(14)
@@ -136,6 +140,7 @@ describe('domain/FragLogic.ts', function() {
       expect(result.entity.victim.position.y).to.equal(22)
       expect(result.entity.victim.position.z).to.equal(23)
       expect(result.entity.victim.powerUps).to.deep.equal([ ])
+      expect(result.entity.victim.serverVisitId).to.equal(1)
       expect(result.entity.victim.speed).to.equal(24)
       expect(result.entity.victim.team).to.equal(TeamType.Spectator)
       expect(result.entity.victim.view.x).to.equal(25)
@@ -179,6 +184,7 @@ describe('domain/FragLogic.ts', function() {
             z: 12
           },
           powerUps: [ PowerUpType.ArmorRegeneration, PowerUpType.BattleSuit, PowerUpType.Doubler ],
+          serverVisitId: 1,
           speed: 13,
           team: TeamType.Blue,
           view: {
@@ -205,6 +211,7 @@ describe('domain/FragLogic.ts', function() {
             z: 23
           },
           powerUps: [ ],
+          serverVisitId: 1,
           speed: 24,
           team: TeamType.Spectator,
           view: {
@@ -247,6 +254,7 @@ describe('domain/FragLogic.ts', function() {
       expect(result.entities[0].killer.position.y).to.equal(11)
       expect(result.entities[0].killer.position.z).to.equal(12)
       expect(result.entities[0].killer.powerUps).to.deep.equal([ PowerUpType.ArmorRegeneration, PowerUpType.BattleSuit, PowerUpType.Doubler ])
+      expect(result.entities[0].killer.serverVisitId).to.equal(1)
       expect(result.entities[0].killer.speed).to.equal(13)
       expect(result.entities[0].killer.team).to.equal(TeamType.Blue)
       expect(result.entities[0].killer.view.x).to.equal(14)
@@ -267,6 +275,7 @@ describe('domain/FragLogic.ts', function() {
       expect(result.entities[0].victim.position.y).to.equal(22)
       expect(result.entities[0].victim.position.z).to.equal(23)
       expect(result.entities[0].victim.powerUps).to.deep.equal([ ])
+      expect(result.entities[0].victim.serverVisitId).to.equal(1)
       expect(result.entities[0].victim.speed).to.equal(24)
       expect(result.entities[0].victim.team).to.equal(TeamType.Spectator)
       expect(result.entities[0].victim.view.x).to.equal(25)
@@ -275,7 +284,7 @@ describe('domain/FragLogic.ts', function() {
       expect(result.entities[0].victim.weapon).to.equal(WeaponType.HeavyMachineGun)
     })
 
-    it('should load the killer', async function() {
+    it('should load the killer player', async function() {
       await create('frag', { killer: { playerId: 1 }})
       await create('player')
       await create('player')
@@ -299,6 +308,19 @@ describe('domain/FragLogic.ts', function() {
       expect(result.entities[0].killer).to.be.not.undefined
       expect(result.entities[0].killer.matchParticipation).to.be.not.undefined
       expect(result.entities[0].killer.matchParticipation.id).to.equal(1)
+    })
+
+    it('should load the killer server visit', async function() {
+      await create('frag', { killer: { serverVisitId: 1 }})
+      await create('server_visit')
+      await create('server_visit')
+
+      let result = await Services.get().fragLogic.read({ 'killer.serverVisit': {}}, tx())
+
+      expect(result.isValue()).to.be.true
+      expect(result.entities[0].killer).to.be.not.undefined
+      expect(result.entities[0].killer.serverVisit).to.be.not.undefined
+      expect(result.entities[0].killer.serverVisit.id).to.equal(1)
     })
 
     it('should load the match', async function() {
@@ -337,7 +359,7 @@ describe('domain/FragLogic.ts', function() {
       expect(result.entities[0].server.id).to.equal(1)
     })
 
-    it('should load the victim', async function() {
+    it('should load the victim player', async function() {
       await create('frag', { victim: { playerId: 1 }})
       await create('player')
       await create('player')
@@ -350,7 +372,7 @@ describe('domain/FragLogic.ts', function() {
       expect(result.entities[0].victim.player.id).to.equal(1)
     })
 
-    it('should load the killer match participation', async function() {
+    it('should load the victim match participation', async function() {
       await create('frag', { victim: { matchParticipationId: 1 }})
       await create('match_participation')
       await create('match_participation')
@@ -362,12 +384,28 @@ describe('domain/FragLogic.ts', function() {
       expect(result.entities[0].victim.matchParticipation).to.be.not.undefined
       expect(result.entities[0].victim.matchParticipation.id).to.equal(1)
     })
+
+    it('should load the victim server visit', async function() {
+      await create('frag', { victim: { serverVisitId: 1 }})
+      await create('server_visit')
+      await create('server_visit')
+
+      let result = await Services.get().fragLogic.read({ 'victim.serverVisit': {}}, tx())
+
+      expect(result.isValue()).to.be.true
+      expect(result.entities[0].victim).to.be.not.undefined
+      expect(result.entities[0].victim.serverVisit).to.be.not.undefined
+      expect(result.entities[0].victim.serverVisit.id).to.equal(1)
+    })
   })
 
   describe('update', function() {
     it('should update a frag with all its rows', async function() {
       await create('server')
       await create('server')
+      await create('server_visit')
+      await create('server_visit')
+      await create('server_visit')
       await create('player')
       await create('player')
       await create('player')
@@ -412,6 +450,7 @@ describe('domain/FragLogic.ts', function() {
             z: 12
           },
           powerUps: [ PowerUpType.ArmorRegeneration, PowerUpType.BattleSuit, PowerUpType.Doubler ],
+          serverVisitId: 1,
           speed: 13,
           team: TeamType.Blue,
           view: {
@@ -438,6 +477,7 @@ describe('domain/FragLogic.ts', function() {
             z: 23
           },
           powerUps: [ ],
+          serverVisitId: 2,
           speed: 24,
           team: TeamType.Spectator,
           view: {
@@ -480,6 +520,7 @@ describe('domain/FragLogic.ts', function() {
         z: 13
       }
       frag.killer.powerUps = [ PowerUpType.Flight, PowerUpType.Guard, PowerUpType.Haste ]
+      frag.killer.serverVisitId = 2
       frag.killer.speed = 14
       frag.killer.team = TeamType.Red
       frag.killer.view = {
@@ -505,6 +546,7 @@ describe('domain/FragLogic.ts', function() {
         z: 24
       }
       frag.victim.powerUps = [ ]
+      frag.victim.serverVisitId = 3
       frag.victim.speed = 25
       frag.victim.team = TeamType.Free
       frag.victim.view = {
@@ -544,6 +586,7 @@ describe('domain/FragLogic.ts', function() {
       expect(result.entity.killer.position.y).to.equal(12)
       expect(result.entity.killer.position.z).to.equal(13)
       expect(result.entity.killer.powerUps).to.deep.equal([ PowerUpType.Flight, PowerUpType.Guard, PowerUpType.Haste ])
+      expect(result.entity.killer.serverVisitId).to.equal(2)
       expect(result.entity.killer.speed).to.equal(14)
       expect(result.entity.killer.team).to.equal(TeamType.Red)
       expect(result.entity.killer.view.x).to.equal(15)
@@ -564,6 +607,7 @@ describe('domain/FragLogic.ts', function() {
       expect(result.entity.victim.position.y).to.equal(23)
       expect(result.entity.victim.position.z).to.equal(24)
       expect(result.entity.victim.powerUps).to.deep.equal([ ])
+      expect(result.entity.victim.serverVisitId).to.equal(3)
       expect(result.entity.victim.speed).to.equal(25)
       expect(result.entity.victim.team).to.equal(TeamType.Free)
       expect(result.entity.victim.view.x).to.equal(26)
@@ -607,6 +651,7 @@ describe('domain/FragLogic.ts', function() {
             z: 12
           },
           powerUps: [ PowerUpType.ArmorRegeneration, PowerUpType.BattleSuit, PowerUpType.Doubler ],
+          serverVisitId: 1,
           speed: 13,
           team: TeamType.Blue,
           view: {
@@ -633,6 +678,7 @@ describe('domain/FragLogic.ts', function() {
             z: 23
           },
           powerUps: [ ],
+          serverVisitId: 2,
           speed: 24,
           team: TeamType.Spectator,
           view: {
@@ -677,6 +723,7 @@ describe('domain/FragLogic.ts', function() {
       expect(result.entity.killer.position.y).to.equal(11)
       expect(result.entity.killer.position.z).to.equal(12)
       expect(result.entity.killer.powerUps).to.deep.equal([ PowerUpType.ArmorRegeneration, PowerUpType.BattleSuit, PowerUpType.Doubler ])
+      expect(result.entity.killer.serverVisitId).to.equal(1)
       expect(result.entity.killer.speed).to.equal(13)
       expect(result.entity.killer.team).to.equal(TeamType.Blue)
       expect(result.entity.killer.view.x).to.equal(14)
@@ -697,6 +744,7 @@ describe('domain/FragLogic.ts', function() {
       expect(result.entity.victim.position.y).to.equal(22)
       expect(result.entity.victim.position.z).to.equal(23)
       expect(result.entity.victim.powerUps).to.deep.equal([ ])
+      expect(result.entity.victim.serverVisitId).to.equal(2)
       expect(result.entity.victim.speed).to.equal(24)
       expect(result.entity.victim.team).to.equal(TeamType.Spectator)
       expect(result.entity.victim.view.x).to.equal(25)

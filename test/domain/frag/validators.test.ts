@@ -21,11 +21,12 @@ describe('frag/validators.ts', function() {
       await create('stats')
 
       let validator = new FragValidator(
-        Services.get().serverLogic, 
-        Services.get().playerLogic, 
         Services.get().matchLogic, 
         Services.get().matchParticipationLogic, 
+        Services.get().playerLogic, 
         Services.get().roundLogic, 
+        Services.get().serverLogic, 
+        Services.get().serverVisitLogic, 
         tx()
       )
 
@@ -59,11 +60,12 @@ describe('frag/validators.ts', function() {
       await create('server')
 
       let validator = new FragValidator(
-        Services.get().serverLogic, 
-        Services.get().playerLogic, 
         Services.get().matchLogic, 
         Services.get().matchParticipationLogic, 
+        Services.get().playerLogic, 
         Services.get().roundLogic, 
+        Services.get().serverLogic, 
+        Services.get().serverVisitLogic, 
         tx()
       )
 
@@ -97,17 +99,20 @@ describe('frag/validators.ts', function() {
       let validator = new FragParticipantValidator(
         Services.get().playerLogic, 
         Services.get().matchParticipationLogic, 
+        Services.get().serverVisitLogic, 
         tx()
       )
 
       let fragParticipant = new FragParticipant
       fragParticipant.playerId = 2
       fragParticipant.matchParticipationId = 2
+      fragParticipant.serverVisitId = 2
 
       let misfits = await validator.validate(fragParticipant)
 
       expect(containsMisfit('playerId', 'Exists', misfits)).to.be.true
       expect(containsMisfit('matchParticipationId', 'Exists', misfits)).to.be.true
+      expect(containsMisfit('serverVisitId', 'Exists', misfits)).to.be.true
     })
 
     it('should not return misfits for valid relationship ids', async function() {
@@ -125,21 +130,25 @@ describe('frag/validators.ts', function() {
 
       await create('player')
       await create('match_participation')
+      await create('server_visit')
       
       let validator = new FragParticipantValidator(
         Services.get().playerLogic, 
         Services.get().matchParticipationLogic, 
+        Services.get().serverVisitLogic, 
         tx()
       )
 
       let fragParticipant = new FragParticipant
       fragParticipant.playerId = 2
       fragParticipant.matchParticipationId = 2
+      fragParticipant.serverVisitId = 2
 
       let misfits = await validator.validate(fragParticipant)
 
       expect(containsMisfit('playerId', 'Exists', misfits)).to.be.false
       expect(containsMisfit('matchParticipationId', 'Exists', misfits)).to.be.false
+      expect(containsMisfit('serverVisitId', 'Exists', misfits)).to.be.false
     })
   })
 })

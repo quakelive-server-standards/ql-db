@@ -82,6 +82,7 @@ export default class Services {
     this.fragLogic.playerLogic = this.playerLogic
     this.fragLogic.roundLogic = this.roundLogic
     this.fragLogic.serverLogic = this.serverLogic
+    this.fragLogic.serverVisitLogic = this.serverVisitLogic
 
     this.mapLogic.changeLogic = this.changeLogic
 

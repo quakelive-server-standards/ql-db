@@ -1,3 +1,4 @@
+import { Frag } from '../frag/Frag'
 import { Player } from '../player/Player'
 import { Server } from '../server/Server'
 
@@ -17,6 +18,8 @@ export class ServerVisit {
   connectDate?: Date
   disconnectDate?: Date
 
+  deaths?: Frag[]
+  kills?: Frag[]
   player?: Player
   server?: Server
 

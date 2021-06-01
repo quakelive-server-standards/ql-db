@@ -84,12 +84,7 @@ export default {
   'frag': {
     columns: {
       'id': { property: 'id', id: true},
-      'match_id': 'matchId',
-      'round_id': 'roundId',
-      'server_id': 'serverId',
       'date': 'date',
-      'killer_player_id': 'killer.playerId',
-      'killer_match_participation_id': 'killer.matchParticipationId',
       'killer_airborne': 'killer.airborne',
       'killer_ammo': 'killer.ammo',
       'killer_armor': 'killer.armor',
@@ -97,25 +92,29 @@ export default {
       'killer_bot_skill': 'killer.botSkill',
       'killer_health': 'killer.health',
       'killer_holdable': 'killer.holdable',
+      'killer_match_participation_id': 'killer.matchParticipationId',
+      'killer_player_id': 'killer.playerId',
       'killer_power_ups': 'killer.powerUps',
       'killer_position_x': 'killer.position.x',
       'killer_position_y': 'killer.position.y',
       'killer_position_z': 'killer.position.z',
+      'killer_server_visit_id': 'killer.serverVisitId',
       'killer_speed': 'killer.speed',
       'killer_team': 'killer.team',
       'killer_view_x': 'killer.view.x',
       'killer_view_y': 'killer.view.y',
       'killer_view_z': 'killer.view.z',
       'killer_weapon': 'killer.weapon',
+      'match_id': 'matchId',
       'other_team_alive': 'otherTeamAlive',
       'other_team_dead': 'otherTeamDead',
       'reason': 'reason',
+      'round_id': 'roundId',
+      'server_id': 'serverId',
       'suicide': 'suicide',
       'team_alive': 'teamAlive',
       'team_dead': 'teamDead',
       'time': 'time',
-      'victim_player_id': 'victim.playerId',
-      'victim_match_participation_id': 'victim.matchParticipationId',
       'victim_airborne': 'victim.airborne',
       'victim_ammo': 'victim.ammo',
       'victim_armor': 'victim.armor',
@@ -123,10 +122,13 @@ export default {
       'victim_bot_skill': 'victim.botSkill',
       'victim_health': 'victim.health',
       'victim_holdable': 'victim.holdable',
+      'victim_match_participation_id': 'victim.matchParticipationId',
+      'victim_player_id': 'victim.playerId',
       'victim_power_ups': 'victim.powerUps',
       'victim_position_x': 'victim.position.x',
       'victim_position_y': 'victim.position.y',
       'victim_position_z': 'victim.position.z',
+      'victim_server_visit_id': 'victim.serverVisitId',
       'victim_speed': 'victim.speed',
       'victim_team': 'victim.team',
       'victim_view_x': 'victim.view.x',
@@ -146,6 +148,12 @@ export default {
         manyToOne: true,
         thisId: 'killer_match_participation_id',
         otherTable: 'match_participation',
+        otherId: 'id'
+      },
+      'killer.serverVisit': {
+        manyToOne: true,
+        thisId: 'killer_server_visit_id',
+        otherTable: 'server_visit',
         otherId: 'id'
       },
       'match': {
@@ -177,6 +185,12 @@ export default {
         thisId: 'victim_match_participation_id',
         otherTable: 'match_participation',
         otherId: 'id'
+      },
+      'victim.serverVisit': {
+        manyToOne: true,
+        thisId: 'victim_server_visit_id',
+        otherTable: 'server_visit',
+        otherId: 'id'
       }
     },
     rowToInstance: (row: any) => {
@@ -200,6 +214,7 @@ export default {
         z: row['killer_position_z']
       }
       frag.killer.powerUps = row['killer_power_ups'] ? JSON.parse(row['killer_power_ups']) : row['killer_power_ups'],
+      frag.killer.serverVisitId = row['killer_server_visit_id']
       frag.killer.speed = row['killer_speed'],
       frag.killer.team = row['killer_team'],
       frag.killer.view = {
@@ -213,7 +228,7 @@ export default {
       frag.otherTeamDead = row['other_team_dead']
       frag.reason = row['reason']
       frag.roundId = row['round_id']
-      frag.serverId = row['server_id']
+      frag.serverId = row['server_id']      
       frag.suicide = row['suicide']
       frag.teamAlive = row['team_alive']
       frag.teamDead = row['team_dead']
@@ -234,6 +249,7 @@ export default {
         z: row['victim_position_z']
       }
       frag.victim.powerUps = row['victim_power_ups'] ? JSON.parse(row['victim_power_ups']) : row['victim_power_ups'],
+      frag.victim.serverVisitId = row['victim_server_visit_id']
       frag.victim.speed = row['victim_speed'],
       frag.victim.team = row['victim_team'],
       frag.victim.view = {
@@ -255,6 +271,7 @@ export default {
         'date': frag.date,
         'killer_player_id': frag.killer?.playerId,
         'killer_match_participation_id': frag.killer?.matchParticipationId,
+        'killer_server_visit_id': frag.killer?.serverVisitId,
         'killer_airborne': frag.killer?.airborne,
         'killer_ammo': frag.killer?.ammo,
         'killer_armor': frag.killer?.armor,
@@ -281,6 +298,7 @@ export default {
         'time': frag.time,
         'victim_player_id': frag.victim?.playerId,
         'victim_match_participation_id': frag.victim?.matchParticipationId,
+        'victim_server_visit_id': frag.victim?.serverVisitId,
         'victim_airborne': frag.victim?.airborne,
         'victim_ammo': frag.victim?.ammo,
         'victim_armor': frag.victim?.armor,
@@ -850,6 +868,18 @@ export default {
       'active': 'active'
     },
     relationships: {
+      'deaths': {
+        oneToMany: true,
+        thisId: 'id',
+        otherTable: 'frag',
+        otherId: 'victim_server_visit_id'
+      },
+      'kills': {
+        oneToMany: true,
+        thisId: 'id',
+        otherTable: 'frag',
+        otherId: 'killer_server_visit_id'
+      },
       'player': {
         manyToOne: true,
         thisId: 'player_id',
