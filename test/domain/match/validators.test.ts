@@ -78,7 +78,7 @@ describe('match/validators.ts', function() {
 
   describe('MatchCreateValidator', function() {
     it('should return a misfit if the guid is not unique', async function() {
-      create('match', { guid: '95d60017-6adb-43bf-a146-c1757194d5fc' })
+      await create('match', { guid: '95d60017-6adb-43bf-a146-c1757194d5fc' })
 
       let validator = new MatchCreateValidator(
         Services.get().factoryLogic, 
@@ -97,7 +97,7 @@ describe('match/validators.ts', function() {
     })
 
     it('should not return a misfit if the guid is unique', async function() {
-      create('match', { guid: '95d60017-6adb-43bf-a146-c1757194d5fb' })
+      await create('match', { guid: '95d60017-6adb-43bf-a146-c1757194d5fb' })
 
       let validator = new MatchCreateValidator(
         Services.get().factoryLogic, 
@@ -118,8 +118,8 @@ describe('match/validators.ts', function() {
 
   describe('MatchUpdateValidator', function() {
     it('should return a misfit if the guid is not unique', async function() {
-      create('match', { guid: '95d60017-6adb-43bf-a146-c1757194d5fb' })
-      create('match', { guid: '95d60017-6adb-43bf-a146-c1757194d5fc' })
+      await create('match', { guid: '95d60017-6adb-43bf-a146-c1757194d5fb' })
+      await create('match', { guid: '95d60017-6adb-43bf-a146-c1757194d5fc' })
 
       let validator = new MatchUpdateValidator(
         Services.get().factoryLogic, 
@@ -139,8 +139,8 @@ describe('match/validators.ts', function() {
     })
 
     it('should not return a misfit if the guid is unique', async function() {
-      create('match', { guid: '95d60017-6adb-43bf-a146-c1757194d5fb' })
-      create('match', { guid: '95d60017-6adb-43bf-a146-c1757194d5fc' })
+      await create('match', { guid: '95d60017-6adb-43bf-a146-c1757194d5fb' })
+      await create('match', { guid: '95d60017-6adb-43bf-a146-c1757194d5fc' })
 
       let validator = new MatchUpdateValidator(
         Services.get().factoryLogic, 
@@ -160,8 +160,8 @@ describe('match/validators.ts', function() {
     })
 
     it('should not return a misfit if the only match with the same guid is the same', async function() {
-      create('match', { guid: '95d60017-6adb-43bf-a146-c1757194d5fb' })
-      create('match', { guid: '95d60017-6adb-43bf-a146-c1757194d5fc' })
+      await create('match', { guid: '95d60017-6adb-43bf-a146-c1757194d5fb' })
+      await create('match', { guid: '95d60017-6adb-43bf-a146-c1757194d5fc' })
 
       let validator = new MatchUpdateValidator(
         Services.get().factoryLogic, 

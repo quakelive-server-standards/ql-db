@@ -42,8 +42,8 @@ describe('server/validators.ts', function() {
 
   describe('ServerUpdateValidator', function() {
     it('should return a misfit if a server with the same ip and port already exists', async function() {
-      create('server', { ip: '127.0.0.1', port: 27960 })
-      create('server', { ip: '127.0.0.1', port: 27961 })
+      await create('server', { ip: '127.0.0.1', port: 27960 })
+      await create('server', { ip: '127.0.0.1', port: 27961 })
 
       let validator = new ServerUpdateValidator(
         Services.get().serverLogic,
@@ -61,8 +61,8 @@ describe('server/validators.ts', function() {
     })
 
     it('should not return a misfit if a server with the same ip and port does not already exist', async function() {
-      create('server', { ip: '127.0.0.1', port: 27960 })
-      create('server', { ip: '127.0.0.1', port: 27961 })
+      await create('server', { ip: '127.0.0.1', port: 27960 })
+      await create('server', { ip: '127.0.0.1', port: 27961 })
 
       let validator = new ServerUpdateValidator(
         Services.get().serverLogic,
@@ -80,8 +80,8 @@ describe('server/validators.ts', function() {
     })
 
     it('should not return a misfit if a server with the same ip and port is the server that is being updated', async function() {
-      create('server', { ip: '127.0.0.1', port: 27960 })
-      create('server', { ip: '127.0.0.1', port: 27961 })
+      await create('server', { ip: '127.0.0.1', port: 27960 })
+      await create('server', { ip: '127.0.0.1', port: 27961 })
 
       let validator = new ServerUpdateValidator(
         Services.get().serverLogic,
