@@ -22,18 +22,21 @@ export class StatsValidator extends Validator {
 
     super()
 
+    this.add('matchId', new Required)
     this.add('matchId', new TypeOf('number'))
     this.add('matchId', new Exists(async (stats: Stats) => {
       let result = await matchLogic.count({ id: stats.matchId }, tx)
       return result.count == 1
     }))
 
+    this.add('matchParticipationId', new Required)
     this.add('matchParticipationId', new TypeOf('number'))
     this.add('matchParticipationId', new Exists(async (stats: Stats) => {
       let result = await matchParticipationLogic.count({ id: stats.matchParticipationId }, tx)
       return result.count == 1
     }))
 
+    this.add('playerId', new Required)
     this.add('playerId', new TypeOf('number'))
     this.add('playerId', new Exists(async (stats: Stats) => {
       let result = await playerLogic.count({ id: stats.playerId }, tx)
@@ -46,12 +49,14 @@ export class StatsValidator extends Validator {
       return result.count == 1
     }))
 
+    this.add('serverId', new Required)
     this.add('serverId', new TypeOf('number'))
     this.add('serverId', new Exists(async (stats: Stats) => {
       let result = await serverLogic.count({ id: stats.serverId }, tx)
       return result.count == 1
     }))
 
+    this.add('serverVisitId', new Required)
     this.add('serverVisitId', new TypeOf('number'))
     this.add('serverVisitId', new Exists(async (stats: Stats) => {
       let result = await serverVisitLogic.count({ id: stats.serverVisitId }, tx)

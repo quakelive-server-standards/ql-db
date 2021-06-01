@@ -12,9 +12,9 @@ export class MatchParticipation {
   id?: number
   matchId?: number
   playerId?: number
-  roundId?: number
+  roundId?: number | null
   serverId?: number
-  statsId?: number
+  statsId?: number | null
   
   active?: boolean
   finishDate?: Date

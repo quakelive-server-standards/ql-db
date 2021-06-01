@@ -22,18 +22,21 @@ export class MedalValidator extends Validator {
 
     super()
 
+    this.add('matchId', new Required)
     this.add('matchId', new TypeOf('number'))
     this.add('matchId', new Exists(async (medal: Medal) => {
       let result = await matchLogic.count({ id: medal.matchId }, tx)
       return result.count == 1
     }))
 
+    this.add('matchParticipationId', new Required)
     this.add('matchParticipationId', new TypeOf('number'))
     this.add('matchParticipationId', new Exists(async (medal: Medal) => {
       let result = await matchParticipationLogic.count({ id: medal.matchParticipationId }, tx)
       return result.count == 1
     }))
 
+    this.add('playerId', new Required)
     this.add('playerId', new TypeOf('number'))
     this.add('playerId', new Exists(async (medal: Medal) => {
       let result = await playerLogic.count({ id: medal.playerId }, tx)
@@ -46,12 +49,14 @@ export class MedalValidator extends Validator {
       return result.count == 1
     }))
 
+    this.add('serverId', new Required)
     this.add('serverId', new TypeOf('number'))
     this.add('serverId', new Exists(async (medal: Medal) => {
       let result = await serverLogic.count({ id: medal.serverId }, tx)
       return result.count == 1
     }))
 
+    this.add('serverVisitId', new Required)
     this.add('serverVisitId', new TypeOf('number'))
     this.add('serverVisitId', new Exists(async (medal: Medal) => {
       let result = await serverVisitLogic.count({ id: medal.serverVisitId }, tx)

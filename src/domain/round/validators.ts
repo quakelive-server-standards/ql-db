@@ -10,21 +10,28 @@ export class RoundValidator extends Validator {
   constructor(matchLogic: MatchLogic, serverLogic: ServerLogic, tx: PgTransaction) {
     super()
 
+    this.add('matchId', new Required)
     this.add('matchId', new TypeOf('number'))
     this.add('matchId', new Exists(async (round: Round) => {
       let result = await matchLogic.count({ id: round.matchId }, tx)
       return result.count == 1
     }))
 
-    this.add('serverId', new TypeOf('number'))
+    this.add('serverId', new Required)
     this.add('serverId', new Exists(async (round: Round) => {
       let result = await serverLogic.count({ id: round.serverId }, tx)
       return result.count == 1
     }))
-
+    
+    this.add('finishDate', new Required)
     this.add('finishDate', new TypeOf(Date))
+
+    this.add('round', new Required)
     this.add('round', new TypeOf('number'))
+
     // this.add('teamWon', new Enum(TeamType))
+    
+    this.add('time', new Required)
     this.add('time', new TypeOf('number'))
 
     this.add('startDate', new Required)

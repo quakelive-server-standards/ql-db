@@ -10,12 +10,14 @@ export class ServerVisitValidator extends Validator {
   constructor(playerLogic: PlayerLogic, serverLogic: ServerLogic, tx: PgTransaction) {
     super()
 
+    this.add('playerId', new Required)
     this.add('playerId', new TypeOf('number'))
     this.add('playerId', new Exists(async (serverVisit: ServerVisit) => {
       let result = await playerLogic.count({ id: serverVisit.playerId }, tx)
       return result.count == 1
     }))
 
+    this.add('serverId', new Required)
     this.add('serverId', new TypeOf('number'))
     this.add('serverId', new Exists(async (serverVisit: ServerVisit) => {
       let result = await serverLogic.count({ id: serverVisit.serverId }, tx)

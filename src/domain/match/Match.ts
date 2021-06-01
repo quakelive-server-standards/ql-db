@@ -17,8 +17,8 @@ import { Cvars } from './Cvars'
 export class Match {
 
   id?: number
-  factoryId?: number
-  mapId?: number
+  factoryId?: number | null
+  mapId?: number | null
   serverId?: number
 
   aborted?: boolean

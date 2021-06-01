@@ -23,6 +23,7 @@ export class MatchValidator extends Validator {
       return result.count == 1
     }))
 
+    this.add('serverId', new Required)
     this.add('serverId', new TypeOf('number'))
     this.add('serverId', new Exists(async (match: Match) => {
       let result = await serverLogic.count({ id: match.serverId }, tx)

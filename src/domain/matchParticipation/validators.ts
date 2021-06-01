@@ -20,12 +20,14 @@ export class MatchParticipationValidator extends Validator {
 
     super()
 
+    this.add('matchId', new Required)
     this.add('matchId', new TypeOf('number'))
     this.add('matchId', new Exists(async (matchParticipation: MatchParticipation) => {
       let result = await matchLogic.count({ id: matchParticipation.matchId }, tx)
       return result.count == 1
     }))
 
+    this.add('playerId', new Required)
     this.add('playerId', new TypeOf('number'))
     this.add('playerId', new Exists(async (matchParticipation: MatchParticipation) => {
       let result = await playerLogic.count({ id: matchParticipation.playerId }, tx)
@@ -38,6 +40,7 @@ export class MatchParticipationValidator extends Validator {
       return result.count == 1
     }))
 
+    this.add('serverId', new Required)
     this.add('serverId', new TypeOf('number'))
     this.add('serverId', new Exists(async (matchParticipation: MatchParticipation) => {
       let result = await serverLogic.count({ id: matchParticipation.serverId }, tx)

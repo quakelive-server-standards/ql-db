@@ -8,8 +8,8 @@ import { ServerVisit } from '../serverVisit/ServerVisit'
 export class Stats {
   
   id?: number
-  matchId?: number | null
-  matchParticipationId?: number | null
+  matchId?: number
+  matchParticipationId?: number
   playerId?: number
   roundId?: number | null
   serverId?: number

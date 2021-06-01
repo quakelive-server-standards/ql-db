@@ -22,6 +22,7 @@ export class FragValidator extends Validator {
 
     super()
 
+    this.add('matchId', new Required)
     this.add('matchId', new TypeOf('number'))
     this.add('matchId', new Exists(async (frag: Frag) => {
       let result = await matchLogic.count({ id: frag.matchId }, tx)
@@ -34,6 +35,7 @@ export class FragValidator extends Validator {
       return result.count == 1
     }))
 
+    this.add('serverId', new Required)
     this.add('serverId', new TypeOf('number'))
     this.add('serverId', new Exists(async (frag: Frag) => {
       let result = await serverLogic.count({ id: frag.serverId }, tx)
@@ -60,18 +62,21 @@ export class FragParticipantValidator extends Validator {
   constructor(playerLogic: PlayerLogic, matchParticipationLogic: MatchParticipationLogic, serverVisitLogic: ServerVisitLogic, tx: PgTransaction) {
     super()
 
+    this.add('playerId', new Required)
     this.add('playerId', new TypeOf('number'))
     this.add('playerId', new Exists(async (fragParticipant: FragParticipant) => {
       let result = await playerLogic.count({ id: fragParticipant.playerId }, tx)
       return result.count == 1
     }))
 
+    this.add('matchParticipationId', new Required)
     this.add('matchParticipationId', new TypeOf('number'))
     this.add('matchParticipationId', new Exists(async (fragParticipant: FragParticipant) => {
       let result = await matchParticipationLogic.count({ id: fragParticipant.playerId }, tx)
       return result.count == 1
     }))
 
+    this.add('serverVisitId', new Required)
     this.add('serverVisitId', new TypeOf('number'))
     this.add('serverVisitId', new Exists(async (fragParticipant: FragParticipant) => {
       let result = await serverVisitLogic.count({ id: fragParticipant.serverVisitId }, tx)
