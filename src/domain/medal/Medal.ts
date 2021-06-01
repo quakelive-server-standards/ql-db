@@ -9,8 +9,8 @@ import { ServerVisit } from '../serverVisit/ServerVisit'
 export class Medal {
   
   id?: number
-  matchId?: number
-  matchParticipationId?: number
+  matchId?: number | null
+  matchParticipationId?: number | null
   playerId?: number
   roundId?: number | null
   serverId?: number

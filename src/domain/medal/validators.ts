@@ -22,14 +22,14 @@ export class MedalValidator extends Validator {
 
     super()
 
-    this.add('matchId', new Required)
+    this.add('matchId', new Required, async (medal: Medal) => ! medal.warmup)
     this.add('matchId', new TypeOf('number'))
     this.add('matchId', new Exists(async (medal: Medal) => {
       let result = await matchLogic.count({ id: medal.matchId }, tx)
       return result.count == 1
     }))
 
-    this.add('matchParticipationId', new Required)
+    this.add('matchParticipationId', new Required, async (medal: Medal) => ! medal.warmup)
     this.add('matchParticipationId', new TypeOf('number'))
     this.add('matchParticipationId', new Exists(async (medal: Medal) => {
       let result = await matchParticipationLogic.count({ id: medal.matchParticipationId }, tx)

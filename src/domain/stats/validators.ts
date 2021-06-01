@@ -22,14 +22,14 @@ export class StatsValidator extends Validator {
 
     super()
 
-    this.add('matchId', new Required)
+    this.add('matchId', new Required, async (stats: Stats) => ! stats.warmup)
     this.add('matchId', new TypeOf('number'))
     this.add('matchId', new Exists(async (stats: Stats) => {
       let result = await matchLogic.count({ id: stats.matchId }, tx)
       return result.count == 1
     }))
 
-    this.add('matchParticipationId', new Required)
+    this.add('matchParticipationId', new Required, async (stats: Stats) => ! stats.warmup)
     this.add('matchParticipationId', new TypeOf('number'))
     this.add('matchParticipationId', new Exists(async (stats: Stats) => {
       let result = await matchParticipationLogic.count({ id: stats.matchParticipationId }, tx)
@@ -67,7 +67,10 @@ export class StatsValidator extends Validator {
     this.add('blueFlagPickups', new TypeOf('number'))
     this.add('damageDealt', new TypeOf('number'))
     this.add('damageTaken', new TypeOf('number'))
+    
+    this.add('date', new Required)
     this.add('date', new TypeOf(Date))
+    
     this.add('deaths', new TypeOf('number'))
     this.add('holyShits', new TypeOf('number'))
     this.add('kills', new TypeOf('number'))
@@ -83,6 +86,8 @@ export class StatsValidator extends Validator {
     this.add('teamRank', new TypeOf('number'))
     this.add('tiedRank', new TypeOf('number'))
     this.add('tiedTeamRank', new TypeOf('number'))
+    
+    this.add('warmup', new Required)
     this.add('warmup', new TypeOf('boolean'))
     
     this.add('bfg', new WeaponStatsValidator)

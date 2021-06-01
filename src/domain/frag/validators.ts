@@ -22,7 +22,7 @@ export class FragValidator extends Validator {
 
     super()
 
-    this.add('matchId', new Required)
+    this.add('matchId', new Required, async (frag: Frag) => ! frag.warmup)
     this.add('matchId', new TypeOf('number'))
     this.add('matchId', new Exists(async (frag: Frag) => {
       let result = await matchLogic.count({ id: frag.matchId }, tx)
@@ -48,11 +48,20 @@ export class FragValidator extends Validator {
     this.add('killer', new FragParticipantValidator(playerLogic, matchParticipationLogic, serverVisitLogic, tx))
     this.add('otherTeamAlive', new TypeOf('number'))
     this.add('otherTeamDead', new TypeOf('number'))
+    
+    this.add('suicide', new Required)
     this.add('suicide', new TypeOf('boolean'))
+    
     this.add('teamAlive', new TypeOf('number'))
     this.add('teamDead', new TypeOf('number'))
+    
+    this.add('time', new Required)
     this.add('time', new TypeOf('number'))
+
+    this.add('victim', new Required)
     this.add('victim', new FragParticipantValidator(playerLogic, matchParticipationLogic, serverVisitLogic, tx))
+    
+    this.add('warmup', new Required)
     this.add('warmup', new TypeOf('boolean'))
   }
 }
@@ -69,7 +78,6 @@ export class FragParticipantValidator extends Validator {
       return result.count == 1
     }))
 
-    this.add('matchParticipationId', new Required)
     this.add('matchParticipationId', new TypeOf('number'))
     this.add('matchParticipationId', new Exists(async (fragParticipant: FragParticipant) => {
       let result = await matchParticipationLogic.count({ id: fragParticipant.playerId }, tx)

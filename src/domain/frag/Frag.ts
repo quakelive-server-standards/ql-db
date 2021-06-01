@@ -47,7 +47,7 @@ export class Frag {
 export class FragParticipant {
 
   playerId?: number
-  matchParticipationId?: number
+  matchParticipationId?: number | null
   serverVisitId?: number
 
   airborne?: boolean
