@@ -13,6 +13,7 @@ import { MatchParticipationLogic } from '../matchParticipation/MatchParticipatio
 import { PlayerLogic } from '../player/PlayerLogic'
 import { RoundLogic } from '../round/RoundLogic'
 import { ServerLogic } from '../server/ServerLogic'
+import { ServerVisitLogic } from '../serverVisit/ServerVisitLogic'
 import { txQuery } from '../txQuery'
 import { Stats } from './Stats'
 import { StatsCreateValidator, StatsDeleteValidator, StatsUpdateValidator } from './validators'
@@ -27,13 +28,14 @@ export class StatsLogic {
   playerLogic!: PlayerLogic
   roundLogic!: RoundLogic
   serverLogic!: ServerLogic
+  serverVisitLogic!: ServerVisitLogic
 
   create(stats: Stats, tx: PgTransaction): Promise<EntityResult<Stats>> {
     let l = log.mt('create')
     l.param('stats', stats)
 
     return tx.runInTransaction(async () => {
-      let validator = new StatsCreateValidator(this.matchLogic, this.matchParticipationLogic, this.playerLogic, this.roundLogic, this.serverLogic, tx)
+      let validator = new StatsCreateValidator(this.matchLogic, this.matchParticipationLogic, this.playerLogic, this.roundLogic, this.serverLogic, this.serverVisitLogic, tx)
       let misfits = await validator.validate(stats)
       l.var('Validation resulted in the following misfits', misfits)
 
@@ -90,7 +92,7 @@ export class StatsLogic {
     l.param('stats', stats)
 
     return tx.runInTransaction(async () => {
-      let validator = new StatsUpdateValidator(this, this.matchLogic, this.matchParticipationLogic, this.playerLogic, this.roundLogic, this.serverLogic, tx)
+      let validator = new StatsUpdateValidator(this, this.matchLogic, this.matchParticipationLogic, this.playerLogic, this.roundLogic, this.serverLogic, this.serverVisitLogic, tx)
       let misfits = await validator.validate(stats)
 
       if (misfits.length > 0) {

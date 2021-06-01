@@ -12,6 +12,7 @@ describe('domain/StatsLogic.ts', function() {
       await create('player')
       await create('round')
       await create('server')
+      await create('server_visit')
 
       let now = new Date
       let stats = new Stats
@@ -77,6 +78,7 @@ describe('domain/StatsLogic.ts', function() {
       stats.roundId = 1
       stats.score = 52
       stats.serverId = 1
+      stats.serverVisitId = 1
       stats.teamJoinTime = 53
       stats.teamRank = 54
       stats.tiedRank = 55
@@ -272,6 +274,7 @@ describe('domain/StatsLogic.ts', function() {
       expect(result.entity.roundId).to.equal(1)
       expect(result.entity.score).to.equal(52)
       expect(result.entity.serverId).to.equal(1)
+      expect(result.entity.serverVisitId).to.equal(1)
       expect(result.entity.teamJoinTime).to.equal(53)
       expect(result.entity.teamRank).to.equal(54)
       expect(result.entity.tiedRank).to.equal(55)
@@ -460,6 +463,7 @@ describe('domain/StatsLogic.ts', function() {
         roundId: 1,
         score: 52,
         serverId: 1,
+        serverVisitId: 1,
         teamJoinTime: 53,
         teamRank: 54,
         tiedRank: 55,
@@ -671,6 +675,7 @@ describe('domain/StatsLogic.ts', function() {
       expect(result.entities[0].roundId).to.equal(1)
       expect(result.entities[0].score).to.equal(52)
       expect(result.entities[0].serverId).to.equal(1)
+      expect(result.entities[0].serverVisitId).to.equal(1)
       expect(result.entities[0].teamJoinTime).to.equal(53)
       expect(result.entities[0].teamRank).to.equal(54)
       expect(result.entities[0].tiedRank).to.equal(55)
@@ -802,18 +807,6 @@ describe('domain/StatsLogic.ts', function() {
       expect(result.entities[0].match.id).to.equal(1)
     })
 
-    it('should load the match', async function() {
-      await create('stats', { matchId: 1 })
-      await create('match')
-      await create('match')
-
-      let result = await Services.get().statsLogic.read({ match: {} }, tx())
-
-      expect(result.isValue()).to.be.true
-      expect(result.entities[0].match).to.be.not.undefined
-      expect(result.entities[0].match.id).to.equal(1)
-    })
-
     it('should load the match participation', async function() {
       await create('stats', { matchParticipationId: 1 })
       await create('match_participation')
@@ -849,6 +842,30 @@ describe('domain/StatsLogic.ts', function() {
       expect(result.entities[0].round).to.be.not.undefined
       expect(result.entities[0].round.id).to.equal(1)
     })
+
+    it('should load the server', async function() {
+      await create('stats', { serverId: 1 })
+      await create('server')
+      await create('server')
+
+      let result = await Services.get().statsLogic.read({ server: {} }, tx())
+
+      expect(result.isValue()).to.be.true
+      expect(result.entities[0].server).to.be.not.undefined
+      expect(result.entities[0].server.id).to.equal(1)
+    })
+
+    it('should load the server visit', async function() {
+      await create('stats', { serverVisitId: 1 })
+      await create('server_visit')
+      await create('server_visit')
+
+      let result = await Services.get().statsLogic.read({ serverVisit: {} }, tx())
+
+      expect(result.isValue()).to.be.true
+      expect(result.entities[0].serverVisit).to.be.not.undefined
+      expect(result.entities[0].serverVisit.id).to.equal(1)
+    })
   })
 
   describe('update', function() {
@@ -863,6 +880,8 @@ describe('domain/StatsLogic.ts', function() {
       await create('round')
       await create('server')
       await create('server')
+      await create('server_visit')
+      await create('server_visit')
 
       let date1 = new Date
       let date2 = new Date(date1.setSeconds(date1.getSeconds() + 1))
@@ -931,6 +950,7 @@ describe('domain/StatsLogic.ts', function() {
         roundId: 1,
         score: 52,
         serverId: 1,
+        serverVisitId: 1,
         teamJoinTime: 53,
         teamRank: 54,
         tiedRank: 55,
@@ -1141,6 +1161,7 @@ describe('domain/StatsLogic.ts', function() {
       stats.roundId = 2
       stats.score = 53
       stats.serverId = 2
+      stats.serverVisitId = 2
       stats.teamJoinTime = 54
       stats.teamRank = 55
       stats.tiedRank = 56
@@ -1336,6 +1357,7 @@ describe('domain/StatsLogic.ts', function() {
       expect(result.entity.roundId).to.equal(2)
       expect(result.entity.score).to.equal(53)
       expect(result.entity.serverId).to.equal(2)
+      expect(result.entity.serverVisitId).to.equal(2)
       expect(result.entity.teamJoinTime).to.equal(54)
       expect(result.entity.teamRank).to.equal(55)
       expect(result.entity.tiedRank).to.equal(56)
@@ -1524,6 +1546,7 @@ describe('domain/StatsLogic.ts', function() {
         roundId: 1,
         score: 52,
         serverId: 1,
+        serverVisitId: 1,
         teamJoinTime: 53,
         teamRank: 54,
         tiedRank: 55,
@@ -1737,6 +1760,7 @@ describe('domain/StatsLogic.ts', function() {
       expect(result.entity.roundId).to.equal(1)
       expect(result.entity.score).to.equal(52)
       expect(result.entity.serverId).to.equal(1)
+      expect(result.entity.serverVisitId).to.equal(1)
       expect(result.entity.teamJoinTime).to.equal(53)
       expect(result.entity.teamRank).to.equal(54)
       expect(result.entity.tiedRank).to.equal(55)

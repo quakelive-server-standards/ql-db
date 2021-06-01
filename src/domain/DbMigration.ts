@@ -216,6 +216,7 @@ export default class DbMigration extends PostgresMigration {
         player_id INTEGER,
         round_id INTEGER,
         server_id INTEGER,
+        server_visit_id INTEGER,
         aborted BOOLEAN,
         blue_flag_pickups INTEGER,
         damage_dealt INTEGER,

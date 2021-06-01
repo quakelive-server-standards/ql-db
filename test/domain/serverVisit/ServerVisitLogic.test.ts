@@ -125,6 +125,21 @@ describe('domain/ServerVisitLogic.ts', function() {
       expect(result.entities[0].server).to.be.not.undefined
       expect(result.entities[0].server.id).to.equal(1)
     })    
+
+    it('should load all stats', async function() {
+      await create('server_visit')
+      await create('stats', { serverVisitId: 1 })
+      await create('stats', { serverVisitId: 1 })
+      await create('stats', { serverVisitId: 2 })
+
+      let result = await Services.get().serverVisitLogic.read({ stats: {} }, tx())
+
+      expect(result.isValue()).to.be.true
+      expect(result.entities[0].stats).to.be.not.undefined
+      expect(result.entities[0].stats.length).to.equal(2)
+      expect(result.entities[0].stats[0].id).to.equal(2)
+      expect(result.entities[0].stats[1].id).to.equal(1)
+    })
   })
 
   describe('update', function() {

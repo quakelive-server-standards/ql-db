@@ -124,6 +124,7 @@ export default class Services {
     this.statsLogic.playerLogic = this.playerLogic
     this.statsLogic.roundLogic = this.roundLogic
     this.statsLogic.serverLogic = this.serverLogic
+    this.statsLogic.serverVisitLogic = this.serverVisitLogic
 
     this.qlStatsIntegrator.factoryLogic = this.factoryLogic
     this.qlStatsIntegrator.fragLogic = this.fragLogic

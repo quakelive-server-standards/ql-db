@@ -3,6 +3,7 @@ import { MatchParticipation } from '../matchParticipation/MatchParticipation'
 import { Player } from '../player/Player'
 import { Round } from '../round/Round'
 import { Server } from '../server/Server'
+import { ServerVisit } from '../serverVisit/ServerVisit'
 
 export class Stats {
   
@@ -12,6 +13,7 @@ export class Stats {
   playerId?: number
   roundId?: number | null
   serverId?: number
+  serverVisitId?: number
 
   aborted?: boolean
   blueFlagPickups?: number
@@ -54,6 +56,7 @@ export class Stats {
   matchParticipation?: MatchParticipation
   player?: Player
   server?: Server
+  serverVisit?: ServerVisit
   round?: Round
 }
 

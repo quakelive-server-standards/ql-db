@@ -5,6 +5,7 @@ import { MatchParticipationLogic } from '../matchParticipation/MatchParticipatio
 import { PlayerLogic } from '../player/PlayerLogic'
 import { RoundLogic } from '../round/RoundLogic'
 import { ServerLogic } from '../server/ServerLogic'
+import { ServerVisitLogic } from '../serverVisit/ServerVisitLogic'
 import { Stats } from './Stats'
 import { StatsLogic } from './StatsLogic'
 
@@ -16,6 +17,7 @@ export class StatsValidator extends Validator {
     playerLogic: PlayerLogic, 
     roundLogic: RoundLogic, 
     serverLogic: ServerLogic,
+    serverVisitLogic: ServerVisitLogic,
     tx: PgTransaction) {
 
     super()
@@ -47,6 +49,12 @@ export class StatsValidator extends Validator {
     this.add('serverId', new TypeOf('number'))
     this.add('serverId', new Exists(async (stats: Stats) => {
       let result = await serverLogic.count({ id: stats.serverId }, tx)
+      return result.count == 1
+    }))
+
+    this.add('serverVisitId', new TypeOf('number'))
+    this.add('serverVisitId', new Exists(async (stats: Stats) => {
+      let result = await serverVisitLogic.count({ id: stats.serverVisitId }, tx)
       return result.count == 1
     }))
 
@@ -187,12 +195,13 @@ export class StatsCreateValidator extends Validator {
     playerLogic: PlayerLogic, 
     roundLogic: RoundLogic, 
     serverLogic: ServerLogic,
+    serverVisitLogic: ServerVisitLogic,
     tx: PgTransaction) {
 
     super()
 
     this.add('id', new Absent)
-    this.add(new StatsValidator(matchLogic, matchParticipationLogic, playerLogic, roundLogic, serverLogic, tx))
+    this.add(new StatsValidator(matchLogic, matchParticipationLogic, playerLogic, roundLogic, serverLogic, serverVisitLogic, tx))
   }
 }
 
@@ -205,11 +214,12 @@ export class StatsUpdateValidator extends Validator {
     playerLogic: PlayerLogic, 
     roundLogic: RoundLogic, 
     serverLogic: ServerLogic,
+    serverVisitLogic: ServerVisitLogic,
     tx: PgTransaction) {
     super()
     
     this.add(new StatsIdValidator(statsLogic, tx))
-    this.add(new StatsValidator(matchLogic, matchParticipationLogic, playerLogic, roundLogic, serverLogic, tx))
+    this.add(new StatsValidator(matchLogic, matchParticipationLogic, playerLogic, roundLogic, serverLogic, serverVisitLogic, tx))
   }
 }
 

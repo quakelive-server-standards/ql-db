@@ -906,6 +906,12 @@ export default {
         thisId: 'server_id',
         otherTable: 'server',
         otherId: 'id'
+      },
+      'stats': {
+        oneToMany: true,
+        thisId: 'id',
+        otherTable: 'stats',
+        otherId: 'server_visit_id'
       }
     },
     rowToInstance: (row: any) => {
@@ -940,6 +946,7 @@ export default {
       'player_id': 'playerId',
       'round_id': 'roundId',
       'server_id': 'serverId',
+      'server_visit_id': 'serverId',
       'aborted': 'aborted',
       'blue_flag_pickups': 'blueFlagPickups',
       'damage_dealt': 'damageDealt',
@@ -1142,6 +1149,12 @@ export default {
         thisId: 'server_id',
         otherTable: 'server',
         otherId: 'id'
+      },
+      'serverVisit': {
+        manyToOne: true,
+        thisId: 'server_visit_id',
+        otherTable: 'server_visit',
+        otherId: 'id'
       }
     },
     rowToInstance: (row: any) => {
@@ -1167,6 +1180,7 @@ export default {
       stats.roundId = row['round_id']
       stats.score = row['score']
       stats.serverId = row['server_id']
+      stats.serverVisitId = row['server_visit_id']
       stats.teamJoinTime = row['team_join_time']
       stats.teamRank = row['team_rank']
       stats.tiedRank = row['tied_rank']
@@ -1398,6 +1412,7 @@ export default {
         'round_id': stats.roundId,
         'score': stats.score,
         'server_id': stats.serverId,
+        'server_visit_id': stats.serverVisitId,
         'team_join_time': stats.teamJoinTime,
         'team_rank': stats.teamRank,
         'tied_rank': stats.tiedRank,
