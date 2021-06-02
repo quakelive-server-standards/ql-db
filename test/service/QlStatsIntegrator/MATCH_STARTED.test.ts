@@ -10,7 +10,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   describe('MATCH_STARTED', function() {
     describe('Server', function() {
       it('should create a new server', async function() {
-        let qlMatchStartedEvent = {
+        let qlEvent = {
           "DATA": {
             "CAPTURE_LIMIT": 8,
             "FACTORY": "duel",
@@ -45,23 +45,23 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        let event = MatchStartedEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let serversResult = await Services.get().serverLogic.read({}, tx())
+        let result = await Services.get().serverLogic.read({}, tx())
   
-        expect(serversResult.entities.length).to.equal(1)
-        expect(serversResult.entities[0].firstSeen).to.deep.equal(date)
-        expect(serversResult.entities[0].ip).to.equal('127.0.0.1')
-        expect(serversResult.entities[0].port).to.equal(27960)
-        expect(serversResult.entities[0].title).to.equal('.de #topdog.io Ranked Duel #4')
+        expect(result.entities.length).to.equal(1)
+        expect(result.entities[0].firstSeen).to.deep.equal(date)
+        expect(result.entities[0].ip).to.equal('127.0.0.1')
+        expect(result.entities[0].port).to.equal(27960)
+        expect(result.entities[0].title).to.equal('.de #topdog.io Ranked Duel #4')
       })
 
       it('should not create a new server', async function() {
         let firstSeen = new Date
         await create('server', { ip: '127.0.0.1', port: 27960, firstSeen: firstSeen })
   
-        let qlMatchStartedEvent = {
+        let qlEvent = {
           "DATA": {
             "CAPTURE_LIMIT": 8,
             "FACTORY": "duel",
@@ -96,22 +96,22 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date(new Date(firstSeen).setSeconds(firstSeen.getSeconds() + 1))
-        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        let event = MatchStartedEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let serversResult = await Services.get().serverLogic.read({}, tx())
+        let result = await Services.get().serverLogic.read({}, tx())
   
-        expect(serversResult.entities.length).to.equal(1)
-        expect(serversResult.entities[0].firstSeen).to.deep.equal(firstSeen)
-        expect(serversResult.entities[0].ip).to.equal('127.0.0.1')
-        expect(serversResult.entities[0].port).to.equal(27960)
-        expect(serversResult.entities[0].title).to.be.null
+        expect(result.entities.length).to.equal(1)
+        expect(result.entities[0].firstSeen).to.deep.equal(firstSeen)
+        expect(result.entities[0].ip).to.equal('127.0.0.1')
+        expect(result.entities[0].port).to.equal(27960)
+        expect(result.entities[0].title).to.equal('.de #topdog.io Ranked Duel #4')
       })
 
       it('should update the first seen date', async function() {
         await create('server', { ip: '127.0.0.1', port: 27960 })
   
-        let qlMatchStartedEvent = {
+        let qlEvent = {
           "DATA": {
             "CAPTURE_LIMIT": 8,
             "FACTORY": "duel",
@@ -146,19 +146,23 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        let event = MatchStartedEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let serversResult = await Services.get().serverLogic.read({}, tx())
+        let result = await Services.get().serverLogic.read({}, tx())
   
-        expect(serversResult.entities.length).to.equal(1)
-        expect(serversResult.entities[0].firstSeen).to.deep.equal(date)
+        expect(result.entities.length).to.equal(1)
+        expect(result.entities[0].firstSeen).to.deep.equal(date)
+        expect(result.entities[0].ip).to.equal('127.0.0.1')
+        expect(result.entities[0].port).to.equal(27960)
+        expect(result.entities[0].title).to.equal('.de #topdog.io Ranked Duel #4')
       })
 
       it('should update the server title', async function() {
-        await create('server', { ip: '127.0.0.1', port: 27960, title: '.de #topdog.io Ranked Duel #3' })
+        let firstSeen = new Date
+        await create('server', { ip: '127.0.0.1', port: 27960, title: '.de #topdog.io Ranked Duel #3', firstSeen: firstSeen })
   
-        let qlMatchStartedEvent = {
+        let qlEvent = {
           "DATA": {
             "CAPTURE_LIMIT": 8,
             "FACTORY": "duel",
@@ -192,20 +196,23 @@ describe('service/QlStatsIntegrator.ts', function() {
           "TYPE": "MATCH_STARTED"
         }
   
-        let date = new Date
-        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        let date = new Date(new Date(firstSeen).setSeconds(firstSeen.getSeconds() + 1))
+        let event = MatchStartedEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let serversResult = await Services.get().serverLogic.read({}, tx())
+        let result = await Services.get().serverLogic.read({}, tx())
   
-        expect(serversResult.entities.length).to.equal(1)
-        expect(serversResult.entities[0].title).to.equal('.de #topdog.io Ranked Duel #4')
-      })  
+        expect(result.entities.length).to.equal(1)
+        expect(result.entities[0].firstSeen).to.deep.equal(firstSeen)
+        expect(result.entities[0].ip).to.equal('127.0.0.1')
+        expect(result.entities[0].port).to.equal(27960)
+        expect(result.entities[0].title).to.equal('.de #topdog.io Ranked Duel #4')
+      })
     })
 
     describe('Factory', function() {
       it('should create a new factory', async function() {
-        let qlMatchStartedEvent = {
+        let qlEvent = {
           "DATA": {
             "CAPTURE_LIMIT": 8,
             "FACTORY": "duel",
@@ -240,7 +247,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        let event = MatchStartedEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
         let factoriesResult = await Services.get().factoryLogic.read({}, tx())
@@ -254,7 +261,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       it('should not create a new factory', async function() {
         await create('factory', { gameType: GameType.Duel, name: 'duel', title: 'Duel' })
 
-        let qlMatchStartedEvent = {
+        let qlEvent = {
           "DATA": {
             "CAPTURE_LIMIT": 8,
             "FACTORY": "duel",
@@ -289,7 +296,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        let event = MatchStartedEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
         let factoriesResult = await Services.get().factoryLogic.read({}, tx())
@@ -303,7 +310,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       it('should update the factory title', async function() {
         await create('factory', { gameType: GameType.Duel, name: 'duel', title: 'Duel' })
   
-        let qlMatchStartedEvent = {
+        let qlEvent = {
           "DATA": {
             "CAPTURE_LIMIT": 8,
             "FACTORY": "duel",
@@ -338,7 +345,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        let event = MatchStartedEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
         let factoriesResult = await Services.get().factoryLogic.read({}, tx())
@@ -351,7 +358,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       it('should not update the factory title if the game type is different', async function() {
         await create('factory', { gameType: GameType.Domination, name: 'duel', title: 'Duel' })
   
-        let qlMatchStartedEvent = {
+        let qlEvent = {
           "DATA": {
             "CAPTURE_LIMIT": 8,
             "FACTORY": "duel",
@@ -386,7 +393,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        let event = MatchStartedEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
         let factoriesResult = await Services.get().factoryLogic.read({}, tx())
@@ -403,7 +410,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
     describe('Map', function() {
       it('should create a new map', async function() {
-        let qlMatchStartedEvent = {
+        let qlEvent = {
           "DATA": {
             "CAPTURE_LIMIT": 8,
             "FACTORY": "duel",
@@ -438,7 +445,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        let event = MatchStartedEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
         let mapsResult = await Services.get().mapLogic.read({}, tx())
@@ -450,7 +457,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       it('should not create a new map', async function() {
         await create('map', { name: 'toxicity' })
   
-        let qlMatchStartedEvent = {
+        let qlEvent = {
           "DATA": {
             "CAPTURE_LIMIT": 8,
             "FACTORY": "duel",
@@ -485,7 +492,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        let event = MatchStartedEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
         let mapsResult = await Services.get().mapLogic.count({}, tx())
@@ -496,7 +503,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
     describe('Player', function() {
       it('should create new players', async function() {
-        let qlMatchStartedEvent = {
+        let qlEvent = {
           "DATA": {
             "CAPTURE_LIMIT": 8,
             "FACTORY": "duel",
@@ -531,7 +538,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        let event = MatchStartedEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
         let playersResult = await Services.get().playerLogic.read({ '@orderBy': 'name' }, tx())
@@ -551,7 +558,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('player', { steamId: '76561198157458366' })
         await create('player', { steamId: '76561198145690430' })
 
-        let qlMatchStartedEvent = {
+        let qlEvent = {
           "DATA": {
             "CAPTURE_LIMIT": 8,
             "FACTORY": "duel",
@@ -586,7 +593,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        let event = MatchStartedEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
         let playersResult = await Services.get().playerLogic.read({ '@orderBy': 'name' }, tx())
@@ -606,7 +613,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('player', { steamId: '76561198157458366', name: 'a' })
         await create('player', { steamId: '76561198145690430', name: 'b' })
 
-        let qlMatchStartedEvent = {
+        let qlEvent = {
           "DATA": {
             "CAPTURE_LIMIT": 8,
             "FACTORY": "duel",
@@ -641,7 +648,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        let event = MatchStartedEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
         let playersResult = await Services.get().playerLogic.read({ '@orderBy': 'name' }, tx())
@@ -661,7 +668,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('player', { steamId: '76561198157458366' })
         await create('player', { steamId: '76561198145690430' })
 
-        let qlMatchStartedEvent = {
+        let qlEvent = {
           "DATA": {
             "CAPTURE_LIMIT": 8,
             "FACTORY": "duel",
@@ -696,7 +703,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        let event = MatchStartedEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
         let playersResult = await Services.get().playerLogic.read({ '@orderBy': 'name' }, tx())
@@ -715,7 +722,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
     describe('ServerVisit', function() {
       it('should create new server visits', async function() {
-        let qlMatchStartedEvent = {
+        let qlEvent = {
           "DATA": {
             "CAPTURE_LIMIT": 8,
             "FACTORY": "duel",
@@ -750,7 +757,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        let event = MatchStartedEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
         let serverVisitsResult = await Services.get().serverVisitLogic.read({}, tx())
@@ -797,7 +804,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         let event2 = PlayerConnectEvent.fromQl(qlConnectEvent2['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event2, tx())
   
-        let qlMatchStartedEvent = {
+        let qlEvent = {
           "DATA": {
             "CAPTURE_LIMIT": 8,
             "FACTORY": "duel",
@@ -832,7 +839,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        let event = MatchStartedEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
         let serverVisitsResult = await Services.get().serverVisitLogic.count({}, tx())
@@ -844,7 +851,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('server', { ip: '127.0.0.1', port: 27960 })
         await create('server_visit', { active: true, serverId: 1 })
 
-        let qlMatchStartedEvent = {
+        let qlEvent = {
           "DATA": {
             "CAPTURE_LIMIT": 8,
             "FACTORY": "duel",
@@ -879,7 +886,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        let event = MatchStartedEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27961, event, tx(), date)
     
         let serverVisitsResult = await Services.get().serverVisitLogic.read({ '@orderBy': 'id' }, tx())
@@ -898,7 +905,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
     describe('Match', function() {
       it('should create a new match', async function() {
-        let qlMatchStartedEvent = {
+        let qlEvent = {
           "DATA": {
             "CAPTURE_LIMIT": 8,
             "FACTORY": "duel",
@@ -933,7 +940,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        let event = MatchStartedEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
         let matchesResult = await Services.get().matchLogic.read({}, tx())
@@ -968,7 +975,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('server', { ip: '127.0.0.1', port: 27960 })
         await create('match', { serverId: 1, active: true, guid: '66fe025a-63ff-4852-96bd-9102411e9fb1' })
 
-        let qlMatchStartedEvent = {
+        let qlEvent = {
           "DATA": {
             "CAPTURE_LIMIT": 8,
             "FACTORY": "duel",
@@ -1003,7 +1010,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        let event = MatchStartedEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
         let matchesResult = await Services.get().matchLogic.read({ '@orderBy': 'id' }, tx())
@@ -1016,7 +1023,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
     describe('MatchParticipation', function() {
       it('should create new match participations', async function() {
-        let qlMatchStartedEvent = {
+        let qlEvent = {
           "DATA": {
             "CAPTURE_LIMIT": 8,
             "FACTORY": "duel",
@@ -1051,7 +1058,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        let event = MatchStartedEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
         let matchParticipationsResult = await Services.get().matchParticipationLogic.read({}, tx())
@@ -1084,7 +1091,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('match_participation', { serverId: 1, active: true, startDate: new Date, team: TeamType.Blue })
         await create('match_participation', { serverId: 1, active: true, startDate: new Date, team: TeamType.Red })
 
-        let qlMatchStartedEvent = {
+        let qlEvent = {
           "DATA": {
             "CAPTURE_LIMIT": 8,
             "FACTORY": "duel",
@@ -1119,7 +1126,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        let event = MatchStartedEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
         let matchParticipationsResult = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
@@ -1140,7 +1147,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('match_participation', { playerId: 1, serverId: 2, active: true, startDate: new Date, team: TeamType.Red })
         await create('match_participation', { playerId: 2, serverId: 3, active: true, startDate: new Date, team: TeamType.Blue })
 
-        let qlMatchStartedEvent = {
+        let qlEvent = {
           "DATA": {
             "CAPTURE_LIMIT": 8,
             "FACTORY": "duel",
@@ -1175,7 +1182,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = MatchStartedEvent.fromQl(qlMatchStartedEvent['DATA'])
+        let event = MatchStartedEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
         let matchParticipationsResult = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())

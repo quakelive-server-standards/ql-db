@@ -10,7 +10,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   describe('PLAYER_MEDAL', function() {
     describe('Server', function() {
       it('should create a new server', async function() {
-        let qlPlayerMedalEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
@@ -24,23 +24,23 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let date = new Date
-        let event = PlayerMedalEvent.fromQl(qlPlayerMedalEvent['DATA'])
+        let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
   
-        let serversResult = await Services.get().serverLogic.read({}, tx())
+        let result = await Services.get().serverLogic.read({}, tx())
   
-        expect(serversResult.entities.length).to.equal(1)
-        expect(serversResult.entities[0].firstSeen).to.deep.equal(date)
-        expect(serversResult.entities[0].ip).to.equal('127.0.0.1')
-        expect(serversResult.entities[0].port).to.equal(27960)
-        expect(serversResult.entities[0].title).to.be.null
+        expect(result.entities.length).to.equal(1)
+        expect(result.entities[0].firstSeen).to.deep.equal(date)
+        expect(result.entities[0].ip).to.equal('127.0.0.1')
+        expect(result.entities[0].port).to.equal(27960)
+        expect(result.entities[0].title).to.be.null
       })
 
       it('should not create a new server', async function() {
         let firstSeen = new Date
         await create('server', { ip: '127.0.0.1', port: 27960, firstSeen: firstSeen })
 
-        let qlPlayerMedalEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
@@ -54,22 +54,22 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let date = new Date(new Date(firstSeen).setSeconds(firstSeen.getSeconds() + 1))
-        let event = PlayerMedalEvent.fromQl(qlPlayerMedalEvent['DATA'])
+        let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
   
-        let serversResult = await Services.get().serverLogic.read({}, tx())
+        let result = await Services.get().serverLogic.read({}, tx())
   
-        expect(serversResult.entities.length).to.equal(1)
-        expect(serversResult.entities[0].firstSeen).to.deep.equal(firstSeen)
-        expect(serversResult.entities[0].ip).to.equal('127.0.0.1')
-        expect(serversResult.entities[0].port).to.equal(27960)
-        expect(serversResult.entities[0].title).to.be.null
+        expect(result.entities.length).to.equal(1)
+        expect(result.entities[0].firstSeen).to.deep.equal(firstSeen)
+        expect(result.entities[0].ip).to.equal('127.0.0.1')
+        expect(result.entities[0].port).to.equal(27960)
+        expect(result.entities[0].title).to.be.null
       })
 
       it('should set the first seen date', async function() {
         await create('server', { ip: '127.0.0.1', port: 27960 })
 
-        let qlPlayerMedalEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
@@ -83,19 +83,22 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let date = new Date
-        let event = PlayerMedalEvent.fromQl(qlPlayerMedalEvent['DATA'])
+        let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
   
-        let serversResult = await Services.get().serverLogic.read({}, tx())
+        let result = await Services.get().serverLogic.read({}, tx())
   
-        expect(serversResult.entities.length).to.equal(1)
-        expect(serversResult.entities[0].firstSeen).to.deep.equal(date)
+        expect(result.entities.length).to.equal(1)
+        expect(result.entities[0].firstSeen).to.deep.equal(date)
+        expect(result.entities[0].ip).to.equal('127.0.0.1')
+        expect(result.entities[0].port).to.equal(27960)
+        expect(result.entities[0].title).to.be.null
       })
     })
 
     describe('Player', function() {
       it('should create a new player', async function() {
-        let qlPlayerMedalEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
@@ -109,7 +112,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let date = new Date
-        let event = PlayerMedalEvent.fromQl(qlPlayerMedalEvent['DATA'])
+        let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
   
         let playersResult = await Services.get().playerLogic.read({}, tx())
@@ -125,7 +128,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         let firstSeen = new Date
         await create('player', { steamId: '77777777777777777', name: 'UnnamedPlayer', firstSeen: firstSeen })
 
-        let qlPlayerMedalEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
@@ -139,7 +142,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let date = new Date
-        let event = PlayerMedalEvent.fromQl(qlPlayerMedalEvent['DATA'])
+        let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
   
         let playersResult = await Services.get().playerLogic.read({}, tx())
@@ -155,7 +158,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         let firstSeen = new Date
         await create('player', { steamId: '77777777777777777', name: 'UnnamedPlayer', firstSeen: firstSeen })
 
-        let qlPlayerMedalEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
@@ -169,7 +172,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let date = new Date
-        let event = PlayerMedalEvent.fromQl(qlPlayerMedalEvent['DATA'])
+        let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
   
         let playersResult = await Services.get().playerLogic.read({}, tx())
@@ -184,7 +187,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       it('should set the first seen date', async function() {
         await create('player', { steamId: '77777777777777777', name: 'UnnamedPlayer' })
 
-        let qlPlayerMedalEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
@@ -198,7 +201,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let date = new Date
-        let event = PlayerMedalEvent.fromQl(qlPlayerMedalEvent['DATA'])
+        let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
   
         let playersResult = await Services.get().playerLogic.read({}, tx())
@@ -217,7 +220,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('player', { steamId: '77777777777777777' })
         await create('server_visit', { serverId: 1, playerId: 1, active: false })
 
-        let qlPlayerMedalEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
@@ -231,7 +234,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let date = new Date
-        let event = PlayerMedalEvent.fromQl(qlPlayerMedalEvent['DATA'])
+        let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
   
         let serverVisitsResult = await Services.get().serverVisitLogic.read({ '@orderBy': 'id' }, tx())
@@ -255,7 +258,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('player', { steamId: '77777777777777777' })
         await create('server_visit', { serverId: 1, playerId: 1, active: true, connectDate: connectDate })
 
-        let qlPlayerMedalEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
@@ -269,7 +272,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let date = new Date
-        let event = PlayerMedalEvent.fromQl(qlPlayerMedalEvent['DATA'])
+        let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
   
         let serverVisitsResult = await Services.get().serverVisitLogic.read({}, tx())
@@ -293,7 +296,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('server_visit', { serverId: 1, playerId: 2, active: true, connectDate: connectDate })
         await create('server_visit', { serverId: 2, playerId: 2, active: true, connectDate: connectDate })
 
-        let qlPlayerMedalEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
@@ -307,7 +310,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let date = new Date
-        let event = PlayerMedalEvent.fromQl(qlPlayerMedalEvent['DATA'])
+        let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
   
         let serverVisitsResult = await Services.get().serverVisitLogic.read({ '@orderBy': 'id' }, tx())
@@ -338,7 +341,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
     describe('Match', function() {
       it('should create a new match', async function() {
-        let qlPlayerMedalEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
@@ -352,7 +355,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let date = new Date
-        let event = PlayerMedalEvent.fromQl(qlPlayerMedalEvent['DATA'])
+        let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
   
         let matchesResult = await Services.get().matchLogic.read({}, tx())
@@ -388,7 +391,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('server', { ip: '127.0.0.1', port: 27960 })
         await create('match', { serverId: 1, guid: '66fe025a-63ff-4852-96bd-9102411e9fb0', active: true })
 
-        let qlPlayerMedalEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
@@ -402,7 +405,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let date = new Date
-        let event = PlayerMedalEvent.fromQl(qlPlayerMedalEvent['DATA'])
+        let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
   
         let matchesResult = await Services.get().matchLogic.count({}, tx())
@@ -411,7 +414,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       })
 
       it('should not create a new match if the current match is warmup', async function() {
-        let qlPlayerMedalEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
@@ -425,7 +428,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let date = new Date
-        let event = PlayerMedalEvent.fromQl(qlPlayerMedalEvent['DATA'])
+        let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
   
         let matchesResult = await Services.get().matchLogic.count({}, tx())
@@ -437,7 +440,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('match', { active: true, guid: '66fe025a-63ff-4852-96bd-9102411e9fa0', serverId: 1 })
         await create('match', { active: true, guid: '66fe025a-63ff-4852-96bd-9102411e9fb0', serverId: 2 })
         
-        let qlPlayerMedalEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fc0",
              "MEDAL" : "FIRSTFRAG",
@@ -451,7 +454,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let date = new Date
-        let event = PlayerMedalEvent.fromQl(qlPlayerMedalEvent['DATA'])
+        let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
   
         let matchesResult = await Services.get().matchLogic.read({ '@orderBy': 'id' }, tx())
@@ -464,7 +467,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
     describe('MatchParticipation', function() {
       it('should create a new new match participation', async function() {
-        let qlPlayerMedalEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
@@ -478,7 +481,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let date = new Date
-        let event = PlayerMedalEvent.fromQl(qlPlayerMedalEvent['DATA'])
+        let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
   
         let matchParticipationsResult = await Services.get().matchParticipationLogic.read({}, tx())
@@ -500,7 +503,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('match', { serverId: 1, guid: '66fe025a-63ff-4852-96bd-9102411e9fb0', active: true })
         await create('match_participation', { serverId: 1, playerId: 1, matchId: 1, active: true, team: TeamType.Blue })
   
-        let qlPlayerMedalEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
@@ -514,7 +517,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let date = new Date
-        let event = PlayerMedalEvent.fromQl(qlPlayerMedalEvent['DATA'])
+        let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
   
         let matchParticipationsResult = await Services.get().matchParticipationLogic.count({}, tx())
@@ -530,7 +533,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('match_participation', { serverId: 1, playerId: 1, matchId: 1, active: true, startDate: new Date, team: TeamType.Blue })
         await create('match_participation', { serverId: 1, playerId: 2, matchId: 1, active: true, startDate: new Date, team: TeamType.Red })
   
-        let qlPlayerMedalEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
@@ -544,7 +547,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let date = new Date
-        let event = PlayerMedalEvent.fromQl(qlPlayerMedalEvent['DATA'])
+        let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
   
         let matchParticipationsResult = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
@@ -562,7 +565,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('match', { serverId: 2, guid: '66fe025a-63ff-4852-96bd-9102411e9fa0', active: true })
         await create('match_participation', { serverId: 2, playerId: 1, matchId: 1, active: true, startDate: new Date, team: TeamType.Blue })
   
-        let qlPlayerMedalEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
@@ -576,7 +579,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let date = new Date
-        let event = PlayerMedalEvent.fromQl(qlPlayerMedalEvent['DATA'])
+        let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
   
         let matchParticipationsResult = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
@@ -589,7 +592,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
     describe('Medal', function() {
       it('should create a new medal', async function() {
-        let qlPlayerMedalEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
@@ -603,7 +606,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let date = new Date
-        let event = PlayerMedalEvent.fromQl(qlPlayerMedalEvent['DATA'])
+        let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
   
         let medalsResult = await Services.get().medalLogic.read({}, tx())
@@ -620,7 +623,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       })
 
       it('should create a new medal for warmup', async function() {
-        let qlPlayerMedalEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
@@ -634,7 +637,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let date = new Date
-        let event = PlayerMedalEvent.fromQl(qlPlayerMedalEvent['DATA'])
+        let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
   
         let medalsResult = await Services.get().medalLogic.read({}, tx())

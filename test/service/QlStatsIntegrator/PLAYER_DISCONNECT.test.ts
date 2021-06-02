@@ -9,7 +9,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   describe('PLAYER_DISCONNECT', function() {
     describe('Server', function() {
       it('should create a new server', async function() {
-        let qlDisconnectEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
              "NAME" : "garz",
@@ -20,24 +20,26 @@ describe('service/QlStatsIntegrator.ts', function() {
           "TYPE" : "PLAYER_DISCONNECT"
         }
     
-        let disconnectDate = new Date
-        let disconnectEvent = PlayerDisconnectEvent.fromQl(qlDisconnectEvent['DATA'])
+        let date = new Date
+        let event = PlayerDisconnectEvent.fromQl(qlEvent['DATA'])
   
-        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, disconnectEvent, tx(), disconnectDate)
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let serversResult = await Services.get().serverLogic.read({ '@orderBy': 'id' }, tx())
+        let result = await Services.get().serverLogic.read({ '@orderBy': 'id' }, tx())
     
-        expect(serversResult.isValue()).to.be.true
-        expect(serversResult.entities.length).to.equal(1)
-        expect(serversResult.entities[0].ip).to.equal('127.0.0.1')
-        expect(serversResult.entities[0].port).to.equal(27960)
+        expect(result.isValue()).to.be.true
+        expect(result.entities.length).to.equal(1)
+        expect(result.entities[0].firstSeen).to.deep.equal(date)
+        expect(result.entities[0].ip).to.equal('127.0.0.1')
+        expect(result.entities[0].port).to.equal(27960)
+        expect(result.entities[0].title).to.be.null
       })
 
       it('should not create a new server', async function() {
         let firstSeen = new Date
         await create('server', { ip: '127.0.0.1', port: 27960, date: firstSeen })
   
-        let qlDisconnectEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
              "NAME" : "garz",
@@ -49,23 +51,23 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date(new Date(firstSeen).setSeconds(firstSeen.getSeconds() + 1))
-        let event = PlayerDisconnectEvent.fromQl(qlDisconnectEvent['DATA'])
+        let event = PlayerDisconnectEvent.fromQl(qlEvent['DATA'])
         
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let serversResult = await Services.get().serverLogic.read({}, tx())
+        let result = await Services.get().serverLogic.read({}, tx())
   
-        expect(serversResult.entities.length).to.equal(1)
-        expect(serversResult.entities[0].firstSeen).to.deep.equal(firstSeen)
-        expect(serversResult.entities[0].ip).to.equal('127.0.0.1')
-        expect(serversResult.entities[0].port).to.equal(27960)
-        expect(serversResult.entities[0].title).to.be.null
+        expect(result.entities.length).to.equal(1)
+        expect(result.entities[0].firstSeen).to.deep.equal(firstSeen)
+        expect(result.entities[0].ip).to.equal('127.0.0.1')
+        expect(result.entities[0].port).to.equal(27960)
+        expect(result.entities[0].title).to.be.null
       })
 
       it('should update the fist seen date', async function() {
         await create('server', { ip: '127.0.0.1', port: 27960 })
   
-        let qlDisconnectEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
              "NAME" : "garz",
@@ -77,7 +79,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = PlayerDisconnectEvent.fromQl(qlDisconnectEvent['DATA'])
+        let event = PlayerDisconnectEvent.fromQl(qlEvent['DATA'])
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
@@ -86,12 +88,15 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(result.isValue()).to.be.true
         expect(result.entities.length).to.equal(1)
         expect(result.entities[0].firstSeen).to.deep.equal(date)
+        expect(result.entities[0].ip).to.equal('127.0.0.1')
+        expect(result.entities[0].port).to.equal(27960)
+        expect(result.entities[0].title).to.be.null
       })
     })
 
     describe('Player', function() {
       it('should create a new player', async function() {
-        let qlDisconnectEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
              "NAME" : "garz",
@@ -103,7 +108,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let disconnectDate = new Date
-        let disconnectEvent = PlayerDisconnectEvent.fromQl(qlDisconnectEvent['DATA'])
+        let disconnectEvent = PlayerDisconnectEvent.fromQl(qlEvent['DATA'])
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, disconnectEvent, tx(), disconnectDate)
     
@@ -118,7 +123,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       it('should not create a new player', async function() {
         await create('player', { steamId: '76561198170654797' })
   
-        let qlDisconnectEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
              "NAME" : "garz",
@@ -130,7 +135,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = PlayerDisconnectEvent.fromQl(qlDisconnectEvent['DATA'])
+        let event = PlayerDisconnectEvent.fromQl(qlEvent['DATA'])
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
@@ -143,7 +148,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       it('should update a players name', async function() {
         await create('player', { name: 'garz', steamId: '76561198170654797' })
   
-        let qlDisconnectEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
              "NAME" : "garz2",
@@ -155,7 +160,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = PlayerDisconnectEvent.fromQl(qlDisconnectEvent['DATA'])
+        let event = PlayerDisconnectEvent.fromQl(qlEvent['DATA'])
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
@@ -168,7 +173,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       it('should update a players first seen date', async function() {
         await create('player', { name: 'garz', steamId: '76561198170654797' })
   
-        let qlDisconnectEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
              "NAME" : "garz",
@@ -180,7 +185,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = PlayerDisconnectEvent.fromQl(qlDisconnectEvent['DATA'])
+        let event = PlayerDisconnectEvent.fromQl(qlEvent['DATA'])
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
@@ -216,7 +221,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, connectEvent, tx(), connectDate)
   
-        let qlDisconnectEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
              "NAME" : "garz",
@@ -228,7 +233,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let disconnectDate = new Date(new Date(connectDate).setSeconds(connectDate.getSeconds() + 1))
-        let disconnectEvent = PlayerDisconnectEvent.fromQl(qlDisconnectEvent['DATA'])
+        let disconnectEvent = PlayerDisconnectEvent.fromQl(qlEvent['DATA'])
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, disconnectEvent, tx(), disconnectDate)
     
@@ -252,7 +257,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('server_visit', { serverId: 1, playerId: 1, connectDate: date1, active: true })
         await create('player', { steamId: '76561198170654797' })
   
-        let qlDisconnectEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
              "NAME" : "garz",
@@ -264,7 +269,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let disconnectDate = new Date(new Date(date2).setSeconds(date2.getSeconds() + 1))
-        let disconnectEvent = PlayerDisconnectEvent.fromQl(qlDisconnectEvent['DATA'])
+        let disconnectEvent = PlayerDisconnectEvent.fromQl(qlEvent['DATA'])
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, disconnectEvent, tx(), disconnectDate)
     
@@ -291,7 +296,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('server_visit', { serverId: 1, playerId: 1, active: true })
         await create('player', { steamId: '76561198170654797' })
   
-        let qlDisconnectEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
              "NAME" : "garz",
@@ -303,7 +308,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let disconnectDate = new Date(new Date(connectDate).setSeconds(connectDate.getSeconds() + 1))
-        let disconnectEvent = PlayerDisconnectEvent.fromQl(qlDisconnectEvent['DATA'])
+        let disconnectEvent = PlayerDisconnectEvent.fromQl(qlEvent['DATA'])
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, disconnectEvent, tx(), disconnectDate)
     
@@ -326,7 +331,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       })
   
       it('should create a new server visit', async function() {
-        let qlDisconnectEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
              "NAME" : "garz",
@@ -338,7 +343,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
     
         let disconnectDate = new Date
-        let disconnectEvent = PlayerDisconnectEvent.fromQl(qlDisconnectEvent['DATA'])
+        let disconnectEvent = PlayerDisconnectEvent.fromQl(qlEvent['DATA'])
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, disconnectEvent, tx(), disconnectDate)
     
@@ -370,7 +375,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27961, event1, tx(), date1)
   
-        let qlDisconnectEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
              "NAME" : "garz",
@@ -382,7 +387,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date2 = new Date
-        let event2 = PlayerDisconnectEvent.fromQl(qlDisconnectEvent['DATA'])
+        let event2 = PlayerDisconnectEvent.fromQl(qlEvent['DATA'])
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event2, tx(), date2)
     
@@ -398,7 +403,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
     describe('Match', function() {
       it('should create the match if it is not warmup and was not already created', async function() {
-        let qlDisconnectEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
              "NAME" : "garz",
@@ -410,7 +415,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = PlayerDisconnectEvent.fromQl(qlDisconnectEvent['DATA'])
+        let event = PlayerDisconnectEvent.fromQl(qlEvent['DATA'])
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
@@ -418,12 +423,12 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         expect(matchesResult.entities.length).to.equal(1)
         expect(matchesResult.entities[0].active).to.equal(true)
-        expect(matchesResult.entities[0].startDate).to.deep.equal(new Date(date.setSeconds(date.getSeconds() - qlDisconnectEvent['DATA']['TIME'])))
+        expect(matchesResult.entities[0].startDate).to.deep.equal(new Date(date.setSeconds(date.getSeconds() - qlEvent['DATA']['TIME'])))
         expect(matchesResult.entities[0].guid).to.equal('95d60017-6adb-43bf-a146-c1757194d5fc')
       })
   
       it('should not create the match if it is warmup', async function() {
-        let qlDisconnectEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
              "NAME" : "garz",
@@ -435,7 +440,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = PlayerDisconnectEvent.fromQl(qlDisconnectEvent['DATA'])
+        let event = PlayerDisconnectEvent.fromQl(qlEvent['DATA'])
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
@@ -497,7 +502,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       it('should not inactivate a match if it is on a different server', async function() {
         await create('match', { active: true, guid: '95d60017-6adb-43bf-a146-c1757194d5fb', serverId: 2 })
   
-        let qlDisconnectEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
              "NAME" : "garz",
@@ -509,7 +514,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = PlayerDisconnectEvent.fromQl(qlDisconnectEvent['DATA'])
+        let event = PlayerDisconnectEvent.fromQl(qlEvent['DATA'])
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
@@ -529,7 +534,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('match_participation', { active: true, playerId: 2, serverId: 1, startDate: new Date, team: TeamType.Free })
         await create('match_participation', { active: true, playerId: 2, serverId: 2, startDate: new Date, team: TeamType.Free })
   
-        let qlDisconnectEvent = {
+        let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
              "NAME" : "garz",
@@ -541,7 +546,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         }
   
         let date = new Date
-        let event = PlayerDisconnectEvent.fromQl(qlDisconnectEvent['DATA'])
+        let event = PlayerDisconnectEvent.fromQl(qlEvent['DATA'])
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     

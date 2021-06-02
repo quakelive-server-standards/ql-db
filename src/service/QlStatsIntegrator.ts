@@ -59,6 +59,8 @@ export class QlStatsIntegrator {
     let server = serverResult.entity
 
     if (event instanceof MatchReportEvent) {
+      l.dev('Processing MatchReportEvent...')
+      
       let matchResult = await this.matchLogic.createOrGet(event.matchGuid, event.gameLength, eventEmitDate, tx)
       let match = matchResult.entity
 
@@ -278,6 +280,7 @@ export class QlStatsIntegrator {
       l.var('activeServerVisitsResult', activeServerVisitsResult)
   
       for (let serverVisit of activeServerVisitsResult.entities) {
+        // FIND LAST FRAG, MEDAL OR MATCHPARTICIPATION AND USE THE YOUNGEST DATE
         serverVisit.active = false
         let result = await this.serverVisitLogic.update(serverVisit, tx)
   
@@ -435,10 +438,7 @@ export class QlStatsIntegrator {
         serverVisit.playerId = player.id
         serverVisit.serverId = server.id
         serverVisit.active = false
-        // we at least use the length of the current match to determine a start date for the
-        // server visit even if that might be not the truth because there might have been
-        // more matches on the same server before that the player was already participating
-        serverVisit.connectDate = new Date(new Date(eventEmitDate).setSeconds(eventEmitDate.getSeconds() - event.time))
+        serverVisit.connectDate = eventEmitDate
         serverVisit.disconnectDate = eventEmitDate
   
         let serverVisitCreateResult = await this.serverVisitLogic.create(serverVisit, tx)

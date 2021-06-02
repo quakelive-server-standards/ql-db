@@ -1,17 +1,272 @@
 import { expect } from 'chai'
 import 'mocha'
-import { MatchStartedEvent, PlayerConnectEvent, PlayerMedalEvent } from 'ql-stats-model'
+import { MatchStartedEvent, PlayerConnectEvent, PlayerKillEvent } from 'ql-stats-model'
 import { MedalType } from '../../../src/domain/enums/MedalType'
 import { ReasonType } from '../../../src/domain/enums/ReasonType'
 import { TeamType } from '../../../src/domain/enums/TeamType'
 import { WeaponType } from '../../../src/domain/enums/WeaponType'
 import Services from '../../../src/Services'
-import { tx } from '../../tools'
+import { create, tx } from '../../tools'
 
 describe('service/QlStatsIntegrator.ts', function() {
   describe('PLAYER_KILL', function() {
     describe('Server', function() {
+      it('should create a new server', async function() {
+        let qlEvent = {
+          "DATA" : {
+            "KILLER" : {
+               "AIRBORNE" : false,
+               "AMMO" : 0,
+               "ARMOR" : 0,
+               "BOT" : false,
+               "BOT_SKILL" : null,
+               "HEALTH" : 0,
+               "HOLDABLE" : null,
+               "NAME" : "garz",
+               "POSITION" : {
+                  "X" : 314.9967346191406,
+                  "Y" : 427.2147827148438,
+                  "Z" : 264.2636413574219
+               },
+               "POWERUPS" : null,
+               "SPEED" : 0,
+               "STEAM_ID" : "76561198170654797",
+               "SUBMERGED" : false,
+               "TEAM" : 0,
+               "VIEW" : {
+                  "X" : 20.01708984375,
+                  "Y" : -23.70849609375,
+                  "Z" : 0
+               },
+               "WEAPON" : "OTHER_WEAPON"
+            },
+            "MATCH_GUID" : "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
+            "MOD" : "SWITCHTEAM",
+            "OTHER_TEAM_ALIVE" : null,
+            "OTHER_TEAM_DEAD" : null,
+            "ROUND" : null,
+            "SUICIDE" : true,
+            "TEAMKILL" : false,
+            "TEAM_ALIVE" : null,
+            "TEAM_DEAD" : null,
+            "TIME" : 108,
+            "VICTIM" : {
+               "AIRBORNE" : false,
+               "AMMO" : 23,
+               "ARMOR" : 0,
+               "BOT" : false,
+               "BOT_SKILL" : null,
+               "HEALTH" : 100,
+               "HOLDABLE" : null,
+               "NAME" : "garz",
+               "POSITION" : {
+                  "X" : 314.9967346191406,
+                  "Y" : 427.2147827148438,
+                  "Z" : 264.2636413574219
+               },
+               "POWERUPS" : null,
+               "SPEED" : 0,
+               "STEAM_ID" : "76561198170654797",
+               "STREAK" : 0,
+               "SUBMERGED" : false,
+               "TEAM" : 0,
+               "VIEW" : {
+                  "X" : 20.01708984375,
+                  "Y" : -23.70849609375,
+                  "Z" : 0
+               },
+               "WEAPON" : "ROCKET"
+            },
+            "WARMUP" : true
+          },
+          "TYPE" : "PLAYER_KILL"
+        }
+    
+        let date = new Date
+        let event = PlayerKillEvent.fromQl(qlEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+  
+        let result = await Services.get().serverLogic.read({}, tx())
+  
+        expect(result.entities.length).to.equal(1)
+        expect(result.entities[0].firstSeen).to.deep.equal(date)
+        expect(result.entities[0].ip).to.equal('127.0.0.1')
+        expect(result.entities[0].port).to.equal(27960)
+        expect(result.entities[0].title).to.be.null
+      })
 
+      it('should not create a new server', async function() {
+        let firstSeen = new Date
+        await create('server', { ip: '127.0.0.1', port: 27960, firstSeen: firstSeen })
+
+        let qlEvent = {
+          "DATA" : {
+            "KILLER" : {
+               "AIRBORNE" : false,
+               "AMMO" : 0,
+               "ARMOR" : 0,
+               "BOT" : false,
+               "BOT_SKILL" : null,
+               "HEALTH" : 0,
+               "HOLDABLE" : null,
+               "NAME" : "garz",
+               "POSITION" : {
+                  "X" : 314.9967346191406,
+                  "Y" : 427.2147827148438,
+                  "Z" : 264.2636413574219
+               },
+               "POWERUPS" : null,
+               "SPEED" : 0,
+               "STEAM_ID" : "76561198170654797",
+               "SUBMERGED" : false,
+               "TEAM" : 0,
+               "VIEW" : {
+                  "X" : 20.01708984375,
+                  "Y" : -23.70849609375,
+                  "Z" : 0
+               },
+               "WEAPON" : "OTHER_WEAPON"
+            },
+            "MATCH_GUID" : "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
+            "MOD" : "SWITCHTEAM",
+            "OTHER_TEAM_ALIVE" : null,
+            "OTHER_TEAM_DEAD" : null,
+            "ROUND" : null,
+            "SUICIDE" : true,
+            "TEAMKILL" : false,
+            "TEAM_ALIVE" : null,
+            "TEAM_DEAD" : null,
+            "TIME" : 108,
+            "VICTIM" : {
+               "AIRBORNE" : false,
+               "AMMO" : 23,
+               "ARMOR" : 0,
+               "BOT" : false,
+               "BOT_SKILL" : null,
+               "HEALTH" : 100,
+               "HOLDABLE" : null,
+               "NAME" : "garz",
+               "POSITION" : {
+                  "X" : 314.9967346191406,
+                  "Y" : 427.2147827148438,
+                  "Z" : 264.2636413574219
+               },
+               "POWERUPS" : null,
+               "SPEED" : 0,
+               "STEAM_ID" : "76561198170654797",
+               "STREAK" : 0,
+               "SUBMERGED" : false,
+               "TEAM" : 0,
+               "VIEW" : {
+                  "X" : 20.01708984375,
+                  "Y" : -23.70849609375,
+                  "Z" : 0
+               },
+               "WEAPON" : "ROCKET"
+            },
+            "WARMUP" : true
+          },
+          "TYPE" : "PLAYER_KILL"
+        }
+    
+        let date = new Date(new Date(firstSeen).setSeconds(firstSeen.getSeconds() + 1))
+        let event = PlayerKillEvent.fromQl(qlEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+  
+        let result = await Services.get().serverLogic.read({}, tx())
+  
+        expect(result.entities.length).to.equal(1)
+        expect(result.entities[0].firstSeen).to.deep.equal(firstSeen)
+        expect(result.entities[0].ip).to.equal('127.0.0.1')
+        expect(result.entities[0].port).to.equal(27960)
+        expect(result.entities[0].title).to.be.null
+      })
+
+      it('should set the first seen date', async function() {
+        await create('server', { ip: '127.0.0.1', port: 27960 })
+
+        let qlEvent = {
+          "DATA" : {
+            "KILLER" : {
+               "AIRBORNE" : false,
+               "AMMO" : 0,
+               "ARMOR" : 0,
+               "BOT" : false,
+               "BOT_SKILL" : null,
+               "HEALTH" : 0,
+               "HOLDABLE" : null,
+               "NAME" : "garz",
+               "POSITION" : {
+                  "X" : 314.9967346191406,
+                  "Y" : 427.2147827148438,
+                  "Z" : 264.2636413574219
+               },
+               "POWERUPS" : null,
+               "SPEED" : 0,
+               "STEAM_ID" : "76561198170654797",
+               "SUBMERGED" : false,
+               "TEAM" : 0,
+               "VIEW" : {
+                  "X" : 20.01708984375,
+                  "Y" : -23.70849609375,
+                  "Z" : 0
+               },
+               "WEAPON" : "OTHER_WEAPON"
+            },
+            "MATCH_GUID" : "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
+            "MOD" : "SWITCHTEAM",
+            "OTHER_TEAM_ALIVE" : null,
+            "OTHER_TEAM_DEAD" : null,
+            "ROUND" : null,
+            "SUICIDE" : true,
+            "TEAMKILL" : false,
+            "TEAM_ALIVE" : null,
+            "TEAM_DEAD" : null,
+            "TIME" : 108,
+            "VICTIM" : {
+               "AIRBORNE" : false,
+               "AMMO" : 23,
+               "ARMOR" : 0,
+               "BOT" : false,
+               "BOT_SKILL" : null,
+               "HEALTH" : 100,
+               "HOLDABLE" : null,
+               "NAME" : "garz",
+               "POSITION" : {
+                  "X" : 314.9967346191406,
+                  "Y" : 427.2147827148438,
+                  "Z" : 264.2636413574219
+               },
+               "POWERUPS" : null,
+               "SPEED" : 0,
+               "STEAM_ID" : "76561198170654797",
+               "STREAK" : 0,
+               "SUBMERGED" : false,
+               "TEAM" : 0,
+               "VIEW" : {
+                  "X" : 20.01708984375,
+                  "Y" : -23.70849609375,
+                  "Z" : 0
+               },
+               "WEAPON" : "ROCKET"
+            },
+            "WARMUP" : true
+          },
+          "TYPE" : "PLAYER_KILL"
+        }
+    
+        let date = new Date
+        let event = PlayerKillEvent.fromQl(qlEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+  
+        let result = await Services.get().serverLogic.read({}, tx())
+  
+        expect(result.entities.length).to.equal(1)
+        expect(result.entities[0].firstSeen).to.deep.equal(date)
+        expect(result.entities[0].ip).to.equal('127.0.0.1')
+        expect(result.entities[0].port).to.equal(27960)
+        expect(result.entities[0].title).to.be.null
+      })
     })
 
     describe('Player', function() {
@@ -174,7 +429,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       }
   
       let date4 = new Date
-      let event4 = PlayerMedalEvent.fromQl(qlPlayerKillEvent['DATA'])
+      let event4 = PlayerKillEvent.fromQl(qlPlayerKillEvent['DATA'])
       await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event4, tx(), date4)
 
       let fragsResult = await Services.get().fragLogic.read({}, tx())
@@ -276,7 +531,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       let event2 = PlayerConnectEvent.fromQl(qlConnectEvent2['DATA'])
       await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event2, tx(), date2)
 
-      let qlPlayerMedalEvent = {
+      let qlEvent = {
         "DATA" : {
            "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
            "MEDAL" : "FIRSTFRAG",
@@ -290,7 +545,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       }
   
       let date3 = new Date
-      let event3 = PlayerMedalEvent.fromQl(qlPlayerMedalEvent['DATA'])
+      let event3 = PlayerKillEvent.fromQl(qlEvent['DATA'])
       await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event3, tx(), date3)
 
       let medalsResult = await Services.get().medalLogic.read({}, tx())
@@ -315,7 +570,7 @@ describe('service/QlStatsIntegrator.ts', function() {
     })
 
     it('should create a new medal with a new server, a new player, a new server visit, a new match and a new match participation', async function() {
-      let qlPlayerMedalEvent = {
+      let qlEvent = {
         "DATA" : {
            "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
            "MEDAL" : "FIRSTFRAG",
@@ -329,7 +584,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       }
   
       let date = new Date
-      let event = PlayerMedalEvent.fromQl(qlPlayerMedalEvent['DATA'])
+      let event = PlayerKillEvent.fromQl(qlEvent['DATA'])
       await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
 
       let serversResult = await Services.get().serverLogic.read({}, tx())
@@ -410,7 +665,7 @@ describe('service/QlStatsIntegrator.ts', function() {
     })
 
     it('should create a new medal for warmup with a new server, a new player and a new server visit', async function() {
-      let qlPlayerMedalEvent = {
+      let qlEvent = {
         "DATA" : {
            "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
            "MEDAL" : "FIRSTFRAG",
@@ -424,7 +679,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       }
   
       let date = new Date
-      let event = PlayerMedalEvent.fromQl(qlPlayerMedalEvent['DATA'])
+      let event = PlayerKillEvent.fromQl(qlEvent['DATA'])
       await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
 
       let serversResult = await Services.get().serverLogic.read({}, tx())
