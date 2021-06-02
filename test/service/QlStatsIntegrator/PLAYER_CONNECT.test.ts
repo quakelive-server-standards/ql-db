@@ -394,7 +394,7 @@ describe('service/QlStatsIntegrator.ts', function() {
     })
 
     describe('MatchParticipation', function() {
-      it.only('should inactivate all match participations of the connecting player', async function() {
+      it('should inactivate all match participations of the connecting player', async function() {
         await create('server', { ip: '127.0.0.1', port: 27960 })
         await create('server', { ip: '127.0.0.1', port: 27961 })
         await create('server_visit')
