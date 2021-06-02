@@ -37,7 +37,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
       it('should not create a new server', async function() {
         let firstSeen = new Date
-        await create('server', { ip: '127.0.0.1', port: 27960, date: firstSeen })
+        await create('server', { ip: '127.0.0.1', port: 27960, firstSeen: firstSeen })
   
         let qlEvent = {
           "DATA" : {
@@ -290,46 +290,6 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(otherServerVisitsResult.entities[1].active).to.equal(false)
       })
   
-      it('should not consider server visits which do not have a connect date', async function() {
-        let connectDate = new Date
-        
-        await create('server_visit', { serverId: 1, playerId: 1, active: true })
-        await create('player', { steamId: '76561198170654797' })
-  
-        let qlEvent = {
-          "DATA" : {
-             "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
-             "NAME" : "garz",
-             "STEAM_ID" : "76561198170654797",
-             "TIME" : 9367,
-             "WARMUP" : true
-          },
-          "TYPE" : "PLAYER_DISCONNECT"
-        }
-    
-        let disconnectDate = new Date(new Date(connectDate).setSeconds(connectDate.getSeconds() + 1))
-        let disconnectEvent = PlayerDisconnectEvent.fromQl(qlEvent['DATA'])
-  
-        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, disconnectEvent, tx(), disconnectDate)
-    
-        let serverVisitsResult = await Services.get().serverVisitLogic.read({ '@orderBy': 'id' }, tx())
-    
-        expect(serverVisitsResult.isValue()).to.be.true
-        expect(serverVisitsResult.entities.length).to.equal(2)
-        expect(serverVisitsResult.entities[0].id).to.equal(1)
-        expect(serverVisitsResult.entities[0].connectDate).to.be.null
-        expect(serverVisitsResult.entities[0].disconnectDate).to.be.null
-        expect(serverVisitsResult.entities[0].active).to.equal(false)
-        expect(serverVisitsResult.entities[0].playerId).to.equal(1)
-        expect(serverVisitsResult.entities[0].serverId).to.equal(1)
-        expect(serverVisitsResult.entities[1].id).to.equal(2)
-        expect(serverVisitsResult.entities[1].connectDate).to.deep.equal(new Date(new Date(disconnectDate).setSeconds(disconnectDate.getSeconds() - disconnectEvent.time)))
-        expect(serverVisitsResult.entities[1].disconnectDate).to.deep.equal(disconnectDate)
-        expect(serverVisitsResult.entities[1].active).to.equal(false)
-        expect(serverVisitsResult.entities[1].playerId).to.equal(1)
-        expect(serverVisitsResult.entities[1].serverId).to.equal(1)
-      })
-  
       it('should create a new server visit', async function() {
         let qlEvent = {
           "DATA" : {
@@ -352,7 +312,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(serverVisitsResult.isValue()).to.be.true
         expect(serverVisitsResult.entities.length).to.equal(1)
         expect(serverVisitsResult.entities[0].active).to.equal(false)
-        expect(serverVisitsResult.entities[0].connectDate).to.deep.equal(new Date(new Date(disconnectDate).setSeconds(disconnectDate.getSeconds() - disconnectEvent.time)))
+        expect(serverVisitsResult.entities[0].connectDate).to.deep.equal(disconnectDate)
         expect(serverVisitsResult.entities[0].disconnectDate).to.deep.equal(disconnectDate)
         expect(serverVisitsResult.entities[0].playerId).to.equal(1)
         expect(serverVisitsResult.entities[0].serverId).to.equal(1)
@@ -529,10 +489,18 @@ describe('service/QlStatsIntegrator.ts', function() {
       it('should set inactivate all match participation of the disconnecting player', async function() {
         await create('server', { ip: '127.0.0.1', port: 27960 })
         await create('server', { ip: '127.0.0.1', port: 27961 })
-        await create('match_participation', { active: true, playerId: 1, serverId: 1, startDate: new Date, team: TeamType.Free })
-        await create('match_participation', { active: true, playerId: 1, serverId: 2, startDate: new Date, team: TeamType.Free })
-        await create('match_participation', { active: true, playerId: 2, serverId: 1, startDate: new Date, team: TeamType.Free })
-        await create('match_participation', { active: true, playerId: 2, serverId: 2, startDate: new Date, team: TeamType.Free })
+        await create('server_visit')
+        await create('server_visit')
+        await create('server_visit')
+        await create('server_visit')
+        await create('match')
+        await create('match')
+        await create('match')
+        await create('match')
+        await create('match_participation', { active: true, playerId: 1, serverId: 1, serverVisitId: 1, matchId: 1, startDate: new Date, team: TeamType.Free })
+        await create('match_participation', { active: true, playerId: 1, serverId: 2, serverVisitId: 2, matchId: 2, startDate: new Date, team: TeamType.Free })
+        await create('match_participation', { active: true, playerId: 2, serverId: 1, serverVisitId: 3, matchId: 3, startDate: new Date, team: TeamType.Free })
+        await create('match_participation', { active: true, playerId: 2, serverId: 2, serverVisitId: 4, matchId: 4, startDate: new Date, team: TeamType.Free })
   
         let qlEvent = {
           "DATA" : {

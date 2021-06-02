@@ -168,10 +168,6 @@ export class ServerVisitLogic {
         serverId: serverId,
         playerId: playerId,
         active: true,
-        connectDate: {
-          operator: '!=',
-          value: null
-        },
         disconnectDate: null
       }, tx)
 
