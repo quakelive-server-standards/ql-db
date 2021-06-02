@@ -25,7 +25,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let result = await Services.get().serverLogic.read({ '@orderBy': 'id' }, tx())
+        let result = await Services.get().serverLogic.read({}, tx())
     
         expect(result.isValue()).to.be.true
         expect(result.entities.length).to.equal(1)
@@ -83,7 +83,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let result = await Services.get().serverLogic.read({ '@orderBy': 'id' }, tx())
+        let result = await Services.get().serverLogic.read({}, tx())
     
         expect(result.isValue()).to.be.true
         expect(result.entities.length).to.equal(1)
@@ -112,7 +112,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, disconnectEvent, tx(), disconnectDate)
     
-        let playersResult = await Services.get().playerLogic.read({ '@orderBy': 'id' }, tx())
+        let playersResult = await Services.get().playerLogic.read({}, tx())
     
         expect(playersResult.isValue()).to.be.true
         expect(playersResult.entities.length).to.equal(1)
@@ -164,7 +164,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let result = await Services.get().playerLogic.read({ '@orderBy': 'id' }, tx())
+        let result = await Services.get().playerLogic.read({}, tx())
     
         expect(result.entities.length).to.equal(1)
         expect(result.entities[0].name).to.equal('garz2')
@@ -189,7 +189,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let result = await Services.get().playerLogic.read({ '@orderBy': 'id' }, tx())
+        let result = await Services.get().playerLogic.read({}, tx())
     
         expect(result.entities.length).to.equal(1)
         expect(result.entities[0].firstSeen).to.deep.equal(date)
@@ -347,7 +347,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, disconnectEvent, tx(), disconnectDate)
     
-        let serverVisitsResult = await Services.get().serverVisitLogic.read({ '@orderBy': 'id' }, tx())
+        let serverVisitsResult = await Services.get().serverVisitLogic.read({}, tx())
     
         expect(serverVisitsResult.isValue()).to.be.true
         expect(serverVisitsResult.entities.length).to.equal(1)
@@ -419,7 +419,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let matchesResult = await Services.get().matchLogic.read({ '@orderBy': 'id' }, tx())
+        let matchesResult = await Services.get().matchLogic.read({}, tx())
   
         expect(matchesResult.entities.length).to.equal(1)
         expect(matchesResult.entities[0].active).to.equal(true)
@@ -444,7 +444,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let matchesResult = await Services.get().matchLogic.read({ '@orderBy': 'id' }, tx())
+        let matchesResult = await Services.get().matchLogic.read({}, tx())
   
         expect(matchesResult.entities.length).to.equal(0)
       })
@@ -468,7 +468,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let matchesResult = await Services.get().matchLogic.read({ '@orderBy': 'id' }, tx())
+        let matchesResult = await Services.get().matchLogic.read({}, tx())
   
         expect(matchesResult.entities.length).to.equal(1)
         expect(matchesResult.entities[0].active).to.equal(false)
@@ -493,7 +493,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let matchesResult = await Services.get().matchLogic.read({ '@orderBy': 'id' }, tx())
+        let matchesResult = await Services.get().matchLogic.read({}, tx())
   
         expect(matchesResult.entities.length).to.equal(1)
         expect(matchesResult.entities[0].active).to.equal(true)
@@ -518,7 +518,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let matchesResult = await Services.get().matchLogic.read({ '@orderBy': 'id' }, tx())
+        let matchesResult = await Services.get().matchLogic.read({}, tx())
   
         expect(matchesResult.entities.length).to.equal(1)
         expect(matchesResult.entities[0].active).to.equal(true)

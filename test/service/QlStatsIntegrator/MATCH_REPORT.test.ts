@@ -200,23 +200,7 @@ describe('service/QlStatsIntegrator.ts', function () {
       })
     })
 
-    describe('Player', function () {
-
-    })
-
-    describe('ServerVisit', function () {
-
-    })
-
     describe('Match', function () {
-
-    })
-
-    describe('MatchParticipation', function () {
-
-    })
-
-    describe('Frag', function () {
 
     })
   })

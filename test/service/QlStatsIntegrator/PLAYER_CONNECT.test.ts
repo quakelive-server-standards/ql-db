@@ -5,7 +5,7 @@ import { TeamType } from '../../../src/domain/enums/TeamType'
 import Services from '../../../src/Services'
 import { create, tx } from '../../tools'
 
-describe('service/QlStatsIntegrator.ts', function() {
+describe.only('service/QlStatsIntegrator.ts', function() {
   describe('PLAYER_CONNECT', function() {
     describe('Server', function() {
       it('should create a new server', async function() {
@@ -25,7 +25,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let result = await Services.get().serverLogic.read({ '@orderBy': 'id' }, tx())
+        let result = await Services.get().serverLogic.read({}, tx())
     
         expect(result.isValue()).to.be.true
         expect(result.entities.length).to.equal(1)
@@ -83,7 +83,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let result = await Services.get().serverLogic.read({ '@orderBy': 'id' }, tx())
+        let result = await Services.get().serverLogic.read({}, tx())
     
         expect(result.isValue()).to.be.true
         expect(result.entities.length).to.equal(1)
@@ -112,7 +112,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let playersResult = await Services.get().playerLogic.read({ '@orderBy': 'id' }, tx())
+        let playersResult = await Services.get().playerLogic.read({}, tx())
     
         expect(playersResult.isValue()).to.be.true
         expect(playersResult.entities.length).to.equal(1)
@@ -165,7 +165,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let result = await Services.get().playerLogic.read({ '@orderBy': 'id' }, tx())
+        let result = await Services.get().playerLogic.read({}, tx())
     
         expect(result.entities.length).to.equal(1)
         expect(result.entities[0].name).to.equal('garz2')
@@ -190,7 +190,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let result = await Services.get().playerLogic.read({ '@orderBy': 'id' }, tx())
+        let result = await Services.get().playerLogic.read({}, tx())
     
         expect(result.entities.length).to.equal(1)
         expect(result.entities[0].firstSeen).to.deep.equal(date)
@@ -215,7 +215,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let serverVisitsResult = await Services.get().serverVisitLogic.read({ '@orderBy': 'id' }, tx())
+        let serverVisitsResult = await Services.get().serverVisitLogic.read({}, tx())
     
         expect(serverVisitsResult.isValue()).to.be.true
         expect(serverVisitsResult.entities.length).to.equal(1)
@@ -287,7 +287,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let matchesResult = await Services.get().matchLogic.read({ '@orderBy': 'id' }, tx())
+        let matchesResult = await Services.get().matchLogic.read({}, tx())
   
         expect(matchesResult.entities.length).to.equal(1)
         expect(matchesResult.entities[0].active).to.equal(true)
@@ -336,7 +336,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let matchesResult = await Services.get().matchLogic.read({ '@orderBy': 'id' }, tx())
+        let matchesResult = await Services.get().matchLogic.read({}, tx())
   
         expect(matchesResult.entities.length).to.equal(1)
         expect(matchesResult.entities[0].active).to.equal(false)
@@ -361,7 +361,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let matchesResult = await Services.get().matchLogic.read({ '@orderBy': 'id' }, tx())
+        let matchesResult = await Services.get().matchLogic.read({}, tx())
   
         expect(matchesResult.entities.length).to.equal(1)
         expect(matchesResult.entities[0].active).to.equal(true)
@@ -386,7 +386,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let matchesResult = await Services.get().matchLogic.read({ '@orderBy': 'id' }, tx())
+        let matchesResult = await Services.get().matchLogic.read({}, tx())
   
         expect(matchesResult.entities.length).to.equal(1)
         expect(matchesResult.entities[0].active).to.equal(true)
@@ -394,13 +394,21 @@ describe('service/QlStatsIntegrator.ts', function() {
     })
 
     describe('MatchParticipation', function() {
-      it('should set inactivate all match participations of the connecting player', async function() {
+      it.only('should inactivate all match participations of the connecting player', async function() {
         await create('server', { ip: '127.0.0.1', port: 27960 })
         await create('server', { ip: '127.0.0.1', port: 27961 })
-        await create('match_participation', { active: true, playerId: 1, serverId: 1, startDate: new Date, team: TeamType.Free })
-        await create('match_participation', { active: true, playerId: 1, serverId: 2, startDate: new Date, team: TeamType.Free })
-        await create('match_participation', { active: true, playerId: 2, serverId: 1, startDate: new Date, team: TeamType.Free })
-        await create('match_participation', { active: true, playerId: 2, serverId: 2, startDate: new Date, team: TeamType.Free })
+        await create('server_visit')
+        await create('server_visit')
+        await create('server_visit')
+        await create('server_visit')
+        await create('match')
+        await create('match')
+        await create('match')
+        await create('match')
+        await create('match_participation', { active: true, playerId: 1, serverId: 1, serverVisitId: 1, matchId: 1, startDate: new Date, team: TeamType.Free })
+        await create('match_participation', { active: true, playerId: 1, serverId: 2, serverVisitId: 2, matchId: 2, startDate: new Date, team: TeamType.Free })
+        await create('match_participation', { active: true, playerId: 2, serverId: 1, serverVisitId: 3, matchId: 3, startDate: new Date, team: TeamType.Free })
+        await create('match_participation', { active: true, playerId: 2, serverId: 2, serverVisitId: 4, matchId: 4, startDate: new Date, team: TeamType.Free })
   
         let qlEvent = {
           "DATA" : {

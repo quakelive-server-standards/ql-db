@@ -277,12 +277,17 @@ export class QlStatsIntegrator {
       // since the player is freshly connecting to the server, all other server visits
       // that are still active must be thus inactive
       let activeServerVisitsResult = await this.serverVisitLogic.read({ active: true, playerId: player.id }, tx)
-      l.var('activeServerVisitsResult', activeServerVisitsResult)
   
       for (let serverVisit of activeServerVisitsResult.entities) {
+        l.dev('Inactivating sever visit...', serverVisit)
+
+        l.dev('Determining disconnect date by looking for the latest of frag, medal or match participation...')
+
         // FIND LAST FRAG, MEDAL OR MATCHPARTICIPATION AND USE THE YOUNGEST DATE
+
         serverVisit.active = false
         let result = await this.serverVisitLogic.update(serverVisit, tx)
+        l.dev('Result of updating', result)
   
         if (result.isMisfits()) {
           throw new MisfitsError(result.misfits)
@@ -293,12 +298,8 @@ export class QlStatsIntegrator {
       // right now, thus we can inactivate any active match participtions.
       let activeMatchParticipationsResult = await this.matchParticipationLogic.read({ active: true, playerId: player.id }, tx)
 
-      if (activeMatchParticipationsResult.entities.length > 0) {
-        l.dev('Found active match participations. Setting them to inactive...')
-      }
-  
       for (let matchParticipation of activeMatchParticipationsResult.entities) {
-        l.dev('Setting match participation to inactive...', matchParticipation)
+        l.dev('Inactivating match participation...', matchParticipation)
         
         matchParticipation.active = false
         let result = await this.matchParticipationLogic.update(matchParticipation, tx)
@@ -313,12 +314,14 @@ export class QlStatsIntegrator {
       // we can inactivate any active matches on the same server that have a different
       // match guid.
       let activeMatchesResult = await this.matchLogic.read({ active: true, serverId: server.id }, tx)
-      l.var('activeMatchesResult', activeMatchesResult)
   
       for (let match of activeMatchesResult.entities) {
         if (match.guid != event.matchGuid) {
+          l.dev('Inactivating match...', match)
+
           match.active = false
           let result = await this.matchLogic.update(match, tx)
+          l.dev('Result of updating...', result)
   
           if (result.isMisfits()) {
             throw new MisfitsError(result.misfits)
@@ -342,10 +345,12 @@ export class QlStatsIntegrator {
       serverVisit.active = true
       serverVisit.connectDate = eventEmitDate
 
-      let serverVisitCreateResult = await this.serverVisitLogic.create(serverVisit, tx)
+      l.dev('Creating server visit...', serverVisit)
+      let result = await this.serverVisitLogic.create(serverVisit, tx)
+      l.dev('Result of creating', result)
 
-      if (serverVisitCreateResult.isMisfits()) {
-        throw new MisfitsError(serverVisitCreateResult.misfits)
+      if (result.isMisfits()) {
+        throw new MisfitsError(result.misfits)
       }
     }
     else if (event instanceof PlayerDeathEvent) {
