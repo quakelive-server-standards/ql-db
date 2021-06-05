@@ -126,7 +126,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
       it('should not create a new player', async function() {
         let firstSeen = new Date
-        await create('player', { steamId: '11111111111111111', name: 'Player', firstSeen: firstSeen })
+        await create('player', { steamId: '11111111111111111', name: 'Player', firstSeen: firstSeen, model: 'sarge' })
 
         let qlEvent = {
           "DATA" : {
@@ -149,20 +149,20 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         expect(playersResult.entities.length).to.equal(1)
         expect(playersResult.entities[0].firstSeen).to.deep.equal(firstSeen)
-        expect(playersResult.entities[0].model).to.be.null
+        expect(playersResult.entities[0].model).to.equal('sarge')
         expect(playersResult.entities[0].name).to.equal('Player')
         expect(playersResult.entities[0].steamId).to.equal('11111111111111111')
       })  
 
       it('should update the player name', async function() {
         let firstSeen = new Date
-        await create('player', { steamId: '11111111111111111', name: 'Player', firstSeen: firstSeen })
+        await create('player', { steamId: '11111111111111111', name: 'OldPlayerName', firstSeen: firstSeen, model: 'sarge' })
 
         let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
-             "NAME" : "UnnamedPlayer1",
+             "NAME" : "Player",
              "STEAM_ID" : "11111111111111111",
              "TIME" : 23,
              "TOTAL" : 1,
@@ -179,19 +179,19 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         expect(playersResult.entities.length).to.equal(1)
         expect(playersResult.entities[0].firstSeen).to.deep.equal(firstSeen)
-        expect(playersResult.entities[0].model).to.be.null
-        expect(playersResult.entities[0].name).to.equal('UnnamedPlayer1')
+        expect(playersResult.entities[0].model).to.equal('sarge')
+        expect(playersResult.entities[0].name).to.equal('Player')
         expect(playersResult.entities[0].steamId).to.equal('11111111111111111')
       })  
 
       it('should set the first seen date', async function() {
-        await create('player', { steamId: '11111111111111111', name: 'Player' })
+        await create('player', { steamId: '11111111111111111', name: 'Player', model: 'sarge' })
 
         let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
-             "NAME" : "UnnamedPlayer1",
+             "NAME" : "Player",
              "STEAM_ID" : "11111111111111111",
              "TIME" : 23,
              "TOTAL" : 1,
@@ -208,8 +208,8 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         expect(playersResult.entities.length).to.equal(1)
         expect(playersResult.entities[0].firstSeen).to.deep.equal(date)
-        expect(playersResult.entities[0].model).to.be.null
-        expect(playersResult.entities[0].name).to.equal('UnnamedPlayer1')
+        expect(playersResult.entities[0].model).to.equal('sarge')
+        expect(playersResult.entities[0].name).to.equal('Player')
         expect(playersResult.entities[0].steamId).to.equal('11111111111111111')
       })  
     })

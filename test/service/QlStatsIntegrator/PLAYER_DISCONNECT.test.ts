@@ -152,7 +152,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
       it('should update a players name', async function() {
         let firstSeen = new Date
-        await create('player', { name: 'Player', steamId: '11111111111111111', firstSeen: firstSeen, model: 'sarge' })
+        await create('player', { name: 'OldPlayerName', steamId: '11111111111111111', firstSeen: firstSeen, model: 'sarge' })
   
         let qlEvent = {
           "DATA" : {
