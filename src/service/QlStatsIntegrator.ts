@@ -77,7 +77,7 @@ export class QlStatsIntegrator {
 
         l.dev('Determining disconnect date by looking for the latest of frag, medal or match participation...')
 
-        // FIND LAST FRAG, MEDAL OR MATCHPARTICIPATION AND USE THE YOUNGEST DATE
+        // FIND LAST FRAG, MEDAL OR MATCHPARTICIPATION AND USE THE LATEST DATE
 
         serverVisit.active = false
         let result = await this.serverVisitLogic.update(serverVisit, tx)
@@ -180,7 +180,7 @@ export class QlStatsIntegrator {
       }
       
       // since we know that the player now disconnected, we can inactivate any active match
-      // participation on any server
+      // participations of that player on any server
       let activeMatchParticipationsResult = await this.matchParticipationLogic.read({ active: true, playerId: player.id }, tx)
 
       for (let matchParticipation of activeMatchParticipationsResult.entities) {

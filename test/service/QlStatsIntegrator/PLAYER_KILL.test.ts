@@ -8,86 +8,86 @@ import { WeaponType } from '../../../src/domain/enums/WeaponType'
 import Services from '../../../src/Services'
 import { create, tx } from '../../tools'
 
-describe('service/QlStatsIntegrator.ts', function() {
-  describe('PLAYER_KILL', function() {
-    describe('Server', function() {
-      it('should create a new server', async function() {
+describe('service/QlStatsIntegrator.ts', function () {
+  describe('PLAYER_KILL', function () {
+    describe('Server', function () {
+      it('should create a new server', async function () {
         let qlEvent = {
-          "DATA" : {
-            "KILLER" : {
-               "AIRBORNE" : false,
-               "AMMO" : 0,
-               "ARMOR" : 0,
-               "BOT" : false,
-               "BOT_SKILL" : null,
-               "HEALTH" : 0,
-               "HOLDABLE" : null,
-               "NAME" : "garz",
-               "POSITION" : {
-                  "X" : 314.9967346191406,
-                  "Y" : 427.2147827148438,
-                  "Z" : 264.2636413574219
-               },
-               "POWERUPS" : null,
-               "SPEED" : 0,
-               "STEAM_ID" : "76561198170654797",
-               "SUBMERGED" : false,
-               "TEAM" : 0,
-               "VIEW" : {
-                  "X" : 20.01708984375,
-                  "Y" : -23.70849609375,
-                  "Z" : 0
-               },
-               "WEAPON" : "OTHER_WEAPON"
+          "DATA": {
+            "KILLER": {
+              "AIRBORNE": false,
+              "AMMO": 0,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 0,
+              "HOLDABLE": null,
+              "NAME": "Player1",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "11111111111111111",
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "OTHER_WEAPON"
             },
-            "MATCH_GUID" : "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
-            "MOD" : "SWITCHTEAM",
-            "OTHER_TEAM_ALIVE" : null,
-            "OTHER_TEAM_DEAD" : null,
-            "ROUND" : null,
-            "SUICIDE" : true,
-            "TEAMKILL" : false,
-            "TEAM_ALIVE" : null,
-            "TEAM_DEAD" : null,
-            "TIME" : 108,
-            "VICTIM" : {
-               "AIRBORNE" : false,
-               "AMMO" : 23,
-               "ARMOR" : 0,
-               "BOT" : false,
-               "BOT_SKILL" : null,
-               "HEALTH" : 100,
-               "HOLDABLE" : null,
-               "NAME" : "garz",
-               "POSITION" : {
-                  "X" : 314.9967346191406,
-                  "Y" : 427.2147827148438,
-                  "Z" : 264.2636413574219
-               },
-               "POWERUPS" : null,
-               "SPEED" : 0,
-               "STEAM_ID" : "76561198170654797",
-               "STREAK" : 0,
-               "SUBMERGED" : false,
-               "TEAM" : 0,
-               "VIEW" : {
-                  "X" : 20.01708984375,
-                  "Y" : -23.70849609375,
-                  "Z" : 0
-               },
-               "WEAPON" : "ROCKET"
+            "MATCH_GUID": "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
+            "MOD": "SWITCHTEAM",
+            "OTHER_TEAM_ALIVE": null,
+            "OTHER_TEAM_DEAD": null,
+            "ROUND": null,
+            "SUICIDE": true,
+            "TEAMKILL": false,
+            "TEAM_ALIVE": null,
+            "TEAM_DEAD": null,
+            "TIME": 108,
+            "VICTIM": {
+              "AIRBORNE": false,
+              "AMMO": 23,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 100,
+              "HOLDABLE": null,
+              "NAME": "Player2",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "22222222222222222",
+              "STREAK": 0,
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "ROCKET"
             },
-            "WARMUP" : true
+            "WARMUP": true
           },
-          "TYPE" : "PLAYER_KILL"
+          "TYPE": "PLAYER_KILL"
         }
-    
+
         let date = new Date
         let event = PlayerKillEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
-  
+
         let result = await Services.get().serverLogic.read({}, tx())
-  
+
         expect(result.entities.length).to.equal(1)
         expect(result.entities[0].firstSeen).to.deep.equal(date)
         expect(result.entities[0].ip).to.equal('127.0.0.1')
@@ -95,86 +95,86 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(result.entities[0].title).to.be.null
       })
 
-      it('should not create a new server', async function() {
+      it('should not create a new server', async function () {
         let firstSeen = new Date
         await create('server', { ip: '127.0.0.1', port: 27960, firstSeen: firstSeen })
 
         let qlEvent = {
-          "DATA" : {
-            "KILLER" : {
-               "AIRBORNE" : false,
-               "AMMO" : 0,
-               "ARMOR" : 0,
-               "BOT" : false,
-               "BOT_SKILL" : null,
-               "HEALTH" : 0,
-               "HOLDABLE" : null,
-               "NAME" : "garz",
-               "POSITION" : {
-                  "X" : 314.9967346191406,
-                  "Y" : 427.2147827148438,
-                  "Z" : 264.2636413574219
-               },
-               "POWERUPS" : null,
-               "SPEED" : 0,
-               "STEAM_ID" : "76561198170654797",
-               "SUBMERGED" : false,
-               "TEAM" : 0,
-               "VIEW" : {
-                  "X" : 20.01708984375,
-                  "Y" : -23.70849609375,
-                  "Z" : 0
-               },
-               "WEAPON" : "OTHER_WEAPON"
+          "DATA": {
+            "KILLER": {
+              "AIRBORNE": false,
+              "AMMO": 0,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 0,
+              "HOLDABLE": null,
+              "NAME": "Player1",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "11111111111111111",
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "OTHER_WEAPON"
             },
-            "MATCH_GUID" : "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
-            "MOD" : "SWITCHTEAM",
-            "OTHER_TEAM_ALIVE" : null,
-            "OTHER_TEAM_DEAD" : null,
-            "ROUND" : null,
-            "SUICIDE" : true,
-            "TEAMKILL" : false,
-            "TEAM_ALIVE" : null,
-            "TEAM_DEAD" : null,
-            "TIME" : 108,
-            "VICTIM" : {
-               "AIRBORNE" : false,
-               "AMMO" : 23,
-               "ARMOR" : 0,
-               "BOT" : false,
-               "BOT_SKILL" : null,
-               "HEALTH" : 100,
-               "HOLDABLE" : null,
-               "NAME" : "garz",
-               "POSITION" : {
-                  "X" : 314.9967346191406,
-                  "Y" : 427.2147827148438,
-                  "Z" : 264.2636413574219
-               },
-               "POWERUPS" : null,
-               "SPEED" : 0,
-               "STEAM_ID" : "76561198170654797",
-               "STREAK" : 0,
-               "SUBMERGED" : false,
-               "TEAM" : 0,
-               "VIEW" : {
-                  "X" : 20.01708984375,
-                  "Y" : -23.70849609375,
-                  "Z" : 0
-               },
-               "WEAPON" : "ROCKET"
+            "MATCH_GUID": "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
+            "MOD": "SWITCHTEAM",
+            "OTHER_TEAM_ALIVE": null,
+            "OTHER_TEAM_DEAD": null,
+            "ROUND": null,
+            "SUICIDE": true,
+            "TEAMKILL": false,
+            "TEAM_ALIVE": null,
+            "TEAM_DEAD": null,
+            "TIME": 108,
+            "VICTIM": {
+              "AIRBORNE": false,
+              "AMMO": 23,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 100,
+              "HOLDABLE": null,
+              "NAME": "Player2",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "22222222222222222",
+              "STREAK": 0,
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "ROCKET"
             },
-            "WARMUP" : true
+            "WARMUP": true
           },
-          "TYPE" : "PLAYER_KILL"
+          "TYPE": "PLAYER_KILL"
         }
-    
+
         let date = new Date(new Date(firstSeen).setSeconds(firstSeen.getSeconds() + 1))
         let event = PlayerKillEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
-  
+
         let result = await Services.get().serverLogic.read({}, tx())
-  
+
         expect(result.entities.length).to.equal(1)
         expect(result.entities[0].firstSeen).to.deep.equal(firstSeen)
         expect(result.entities[0].ip).to.equal('127.0.0.1')
@@ -182,85 +182,85 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(result.entities[0].title).to.be.null
       })
 
-      it('should set the first seen date', async function() {
+      it('should set the first seen date', async function () {
         await create('server', { ip: '127.0.0.1', port: 27960 })
 
         let qlEvent = {
-          "DATA" : {
-            "KILLER" : {
-               "AIRBORNE" : false,
-               "AMMO" : 0,
-               "ARMOR" : 0,
-               "BOT" : false,
-               "BOT_SKILL" : null,
-               "HEALTH" : 0,
-               "HOLDABLE" : null,
-               "NAME" : "garz",
-               "POSITION" : {
-                  "X" : 314.9967346191406,
-                  "Y" : 427.2147827148438,
-                  "Z" : 264.2636413574219
-               },
-               "POWERUPS" : null,
-               "SPEED" : 0,
-               "STEAM_ID" : "76561198170654797",
-               "SUBMERGED" : false,
-               "TEAM" : 0,
-               "VIEW" : {
-                  "X" : 20.01708984375,
-                  "Y" : -23.70849609375,
-                  "Z" : 0
-               },
-               "WEAPON" : "OTHER_WEAPON"
+          "DATA": {
+            "KILLER": {
+              "AIRBORNE": false,
+              "AMMO": 0,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 0,
+              "HOLDABLE": null,
+              "NAME": "Player1",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "11111111111111111",
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "OTHER_WEAPON"
             },
-            "MATCH_GUID" : "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
-            "MOD" : "SWITCHTEAM",
-            "OTHER_TEAM_ALIVE" : null,
-            "OTHER_TEAM_DEAD" : null,
-            "ROUND" : null,
-            "SUICIDE" : true,
-            "TEAMKILL" : false,
-            "TEAM_ALIVE" : null,
-            "TEAM_DEAD" : null,
-            "TIME" : 108,
-            "VICTIM" : {
-               "AIRBORNE" : false,
-               "AMMO" : 23,
-               "ARMOR" : 0,
-               "BOT" : false,
-               "BOT_SKILL" : null,
-               "HEALTH" : 100,
-               "HOLDABLE" : null,
-               "NAME" : "garz",
-               "POSITION" : {
-                  "X" : 314.9967346191406,
-                  "Y" : 427.2147827148438,
-                  "Z" : 264.2636413574219
-               },
-               "POWERUPS" : null,
-               "SPEED" : 0,
-               "STEAM_ID" : "76561198170654797",
-               "STREAK" : 0,
-               "SUBMERGED" : false,
-               "TEAM" : 0,
-               "VIEW" : {
-                  "X" : 20.01708984375,
-                  "Y" : -23.70849609375,
-                  "Z" : 0
-               },
-               "WEAPON" : "ROCKET"
+            "MATCH_GUID": "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
+            "MOD": "SWITCHTEAM",
+            "OTHER_TEAM_ALIVE": null,
+            "OTHER_TEAM_DEAD": null,
+            "ROUND": null,
+            "SUICIDE": true,
+            "TEAMKILL": false,
+            "TEAM_ALIVE": null,
+            "TEAM_DEAD": null,
+            "TIME": 108,
+            "VICTIM": {
+              "AIRBORNE": false,
+              "AMMO": 23,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 100,
+              "HOLDABLE": null,
+              "NAME": "Player2",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "22222222222222222",
+              "STREAK": 0,
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "ROCKET"
             },
-            "WARMUP" : true
+            "WARMUP": true
           },
-          "TYPE" : "PLAYER_KILL"
+          "TYPE": "PLAYER_KILL"
         }
-    
+
         let date = new Date
         let event = PlayerKillEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
-  
+
         let result = await Services.get().serverLogic.read({}, tx())
-  
+
         expect(result.entities.length).to.equal(1)
         expect(result.entities[0].firstSeen).to.deep.equal(date)
         expect(result.entities[0].ip).to.equal('127.0.0.1')
@@ -269,36 +269,397 @@ describe('service/QlStatsIntegrator.ts', function() {
       })
     })
 
-    describe('Player', function() {
+    describe('Player', function () {
+      it('should create new players', async function () {
+        let qlEvent = {
+          "DATA": {
+            "KILLER": {
+              "AIRBORNE": false,
+              "AMMO": 0,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 0,
+              "HOLDABLE": null,
+              "NAME": "Player1",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "11111111111111111",
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "OTHER_WEAPON"
+            },
+            "MATCH_GUID": "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
+            "MOD": "SWITCHTEAM",
+            "OTHER_TEAM_ALIVE": null,
+            "OTHER_TEAM_DEAD": null,
+            "ROUND": null,
+            "SUICIDE": true,
+            "TEAMKILL": false,
+            "TEAM_ALIVE": null,
+            "TEAM_DEAD": null,
+            "TIME": 108,
+            "VICTIM": {
+              "AIRBORNE": false,
+              "AMMO": 23,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 100,
+              "HOLDABLE": null,
+              "NAME": "Player2",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "22222222222222222",
+              "STREAK": 0,
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "ROCKET"
+            },
+            "WARMUP": true
+          },
+          "TYPE": "PLAYER_KILL"
+        }
+
+        let date = new Date
+        let event = PlayerKillEvent.fromQl(qlEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+
+        let playersResult = await Services.get().playerLogic.read({ '@orderBy': 'name' }, tx())
+
+        expect(playersResult.entities.length).to.equal(2)
+        expect(playersResult.entities[0].firstSeen).to.deep.equal(date)
+        expect(playersResult.entities[0].model).to.be.null
+        expect(playersResult.entities[0].name).to.equal('Player1')
+        expect(playersResult.entities[0].steamId).to.equal('11111111111111111')
+        expect(playersResult.entities[1].firstSeen).to.deep.equal(date)
+        expect(playersResult.entities[1].model).to.be.null
+        expect(playersResult.entities[1].name).to.equal('Player2')
+        expect(playersResult.entities[1].steamId).to.equal('22222222222222222')
+      })
+
+      it('should not create new players', async function () {
+        let firstSeen = new Date
+        await create('player', { name: 'Player1', steamId: '11111111111111111', firstSeen: firstSeen, model: 'sarge' })
+        await create('player', { name: 'Player1', steamId: '22222222222222222', firstSeen: firstSeen, model: 'sarge' })
+
+        let qlEvent = {
+          "DATA": {
+            "KILLER": {
+              "AIRBORNE": false,
+              "AMMO": 0,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 0,
+              "HOLDABLE": null,
+              "NAME": "Player1",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "11111111111111111",
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "OTHER_WEAPON"
+            },
+            "MATCH_GUID": "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
+            "MOD": "SWITCHTEAM",
+            "OTHER_TEAM_ALIVE": null,
+            "OTHER_TEAM_DEAD": null,
+            "ROUND": null,
+            "SUICIDE": true,
+            "TEAMKILL": false,
+            "TEAM_ALIVE": null,
+            "TEAM_DEAD": null,
+            "TIME": 108,
+            "VICTIM": {
+              "AIRBORNE": false,
+              "AMMO": 23,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 100,
+              "HOLDABLE": null,
+              "NAME": "Player2",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "22222222222222222",
+              "STREAK": 0,
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "ROCKET"
+            },
+            "WARMUP": true
+          },
+          "TYPE": "PLAYER_KILL"
+        }
+
+        let date = new Date(new Date(firstSeen).setSeconds(firstSeen.getSeconds() + 1))
+        let event = PlayerKillEvent.fromQl(qlEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+
+        let playersResult = await Services.get().playerLogic.read({ '@orderBy': 'name' }, tx())
+
+        expect(playersResult.entities.length).to.equal(2)
+        expect(playersResult.entities[0].firstSeen).to.deep.equal(firstSeen)
+        expect(playersResult.entities[0].model).to.equal('sarge')
+        expect(playersResult.entities[0].name).to.equal('Player1')
+        expect(playersResult.entities[0].steamId).to.equal('11111111111111111')
+        expect(playersResult.entities[1].firstSeen).to.deep.equal(firstSeen)
+        expect(playersResult.entities[1].model).to.equal('sarge')
+        expect(playersResult.entities[1].name).to.equal('Player2')
+        expect(playersResult.entities[1].steamId).to.equal('22222222222222222')
+      })
+
+      it('should update the player names', async function () {
+        let firstSeen = new Date
+        await create('player', { name: 'OldPlayer1Name', steamId: '11111111111111111', firstSeen: firstSeen, model: 'sarge' })
+        await create('player', { name: 'OldPlayer2Name', steamId: '22222222222222222', firstSeen: firstSeen, model: 'sarge' })
+
+        let qlEvent = {
+          "DATA": {
+            "KILLER": {
+              "AIRBORNE": false,
+              "AMMO": 0,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 0,
+              "HOLDABLE": null,
+              "NAME": "Player1",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "11111111111111111",
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "OTHER_WEAPON"
+            },
+            "MATCH_GUID": "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
+            "MOD": "SWITCHTEAM",
+            "OTHER_TEAM_ALIVE": null,
+            "OTHER_TEAM_DEAD": null,
+            "ROUND": null,
+            "SUICIDE": true,
+            "TEAMKILL": false,
+            "TEAM_ALIVE": null,
+            "TEAM_DEAD": null,
+            "TIME": 108,
+            "VICTIM": {
+              "AIRBORNE": false,
+              "AMMO": 23,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 100,
+              "HOLDABLE": null,
+              "NAME": "Player2",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "22222222222222222",
+              "STREAK": 0,
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "ROCKET"
+            },
+            "WARMUP": true
+          },
+          "TYPE": "PLAYER_KILL"
+        }
+
+        let date = new Date(new Date(firstSeen).setSeconds(firstSeen.getSeconds() + 1))
+        let event = PlayerKillEvent.fromQl(qlEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+
+        let playersResult = await Services.get().playerLogic.read({ '@orderBy': 'name' }, tx())
+
+        expect(playersResult.entities.length).to.equal(2)
+        expect(playersResult.entities[0].firstSeen).to.deep.equal(firstSeen)
+        expect(playersResult.entities[0].model).to.equal('sarge')
+        expect(playersResult.entities[0].name).to.equal('Player1')
+        expect(playersResult.entities[0].steamId).to.equal('11111111111111111')
+        expect(playersResult.entities[1].firstSeen).to.deep.equal(firstSeen)
+        expect(playersResult.entities[1].model).to.equal('sarge')
+        expect(playersResult.entities[1].name).to.equal('Player2')
+        expect(playersResult.entities[1].steamId).to.equal('22222222222222222')
+      })
+
+      it('should set the first seen dates', async function () {
+        await create('player', { name: 'Player1', steamId: '11111111111111111', model: 'sarge' })
+        await create('player', { name: 'Player2', steamId: '22222222222222222', model: 'sarge' })
+
+        let qlEvent = {
+          "DATA": {
+            "KILLER": {
+              "AIRBORNE": false,
+              "AMMO": 0,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 0,
+              "HOLDABLE": null,
+              "NAME": "Player1",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "11111111111111111",
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "OTHER_WEAPON"
+            },
+            "MATCH_GUID": "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
+            "MOD": "SWITCHTEAM",
+            "OTHER_TEAM_ALIVE": null,
+            "OTHER_TEAM_DEAD": null,
+            "ROUND": null,
+            "SUICIDE": true,
+            "TEAMKILL": false,
+            "TEAM_ALIVE": null,
+            "TEAM_DEAD": null,
+            "TIME": 108,
+            "VICTIM": {
+              "AIRBORNE": false,
+              "AMMO": 23,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 100,
+              "HOLDABLE": null,
+              "NAME": "Player2",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "22222222222222222",
+              "STREAK": 0,
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "ROCKET"
+            },
+            "WARMUP": true
+          },
+          "TYPE": "PLAYER_KILL"
+        }
+
+        let date = new Date
+        let event = PlayerKillEvent.fromQl(qlEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+
+        let playersResult = await Services.get().playerLogic.read({ '@orderBy': 'name' }, tx())
+
+        expect(playersResult.entities.length).to.equal(2)
+        expect(playersResult.entities[0].firstSeen).to.deep.equal(date)
+        expect(playersResult.entities[0].model).to.equal('sarge')
+        expect(playersResult.entities[0].name).to.equal('Player1')
+        expect(playersResult.entities[0].steamId).to.equal('11111111111111111')
+        expect(playersResult.entities[1].firstSeen).to.deep.equal(date)
+        expect(playersResult.entities[1].model).to.equal('sarge')
+        expect(playersResult.entities[1].name).to.equal('Player2')
+        expect(playersResult.entities[1].steamId).to.equal('22222222222222222')
+      })
+    })
+
+    describe('ServerVisit', function () {
 
     })
 
-    describe('ServerVisit', function() {
+    describe('Match', function () {
 
     })
 
-    describe('Match', function() {
+    describe('MatchParticipation', function () {
 
     })
 
-    describe('MatchParticipation', function() {
+    describe('Frag', function () {
 
     })
 
-    describe('Frag', function() {
-      
-    })
-
-    it('should create a new frag', async function() {
+    it('should create a new frag', async function () {
       let qlConnectEvent1 = {
-        "DATA" : {
-           "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
-           "NAME" : "Play_ua",
-           "STEAM_ID" : "76561198157458366",
-           "TIME" : 7,
-           "WARMUP" : true
+        "DATA": {
+          "MATCH_GUID": "95d60017-6adb-43bf-a146-c1757194d5fc",
+          "NAME": "Play_ua",
+          "STEAM_ID": "76561198157458366",
+          "TIME": 7,
+          "WARMUP": true
         },
-        "TYPE" : "PLAYER_CONNECT"
+        "TYPE": "PLAYER_CONNECT"
       }
 
       let date1 = new Date
@@ -306,14 +667,14 @@ describe('service/QlStatsIntegrator.ts', function() {
       await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event1, tx(), date1)
 
       let qlConnectEvent2 = {
-        "DATA" : {
-           "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
-           "NAME" : "goromir",
-           "STEAM_ID" : "76561198145690430",
-           "TIME" : 7,
-           "WARMUP" : true
+        "DATA": {
+          "MATCH_GUID": "95d60017-6adb-43bf-a146-c1757194d5fc",
+          "NAME": "goromir",
+          "STEAM_ID": "76561198145690430",
+          "TIME": 7,
+          "WARMUP": true
         },
-        "TYPE" : "PLAYER_CONNECT"
+        "TYPE": "PLAYER_CONNECT"
       }
 
       let date2 = new Date
@@ -359,75 +720,75 @@ describe('service/QlStatsIntegrator.ts', function() {
       await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event3, tx(), date3)
 
       let qlPlayerKillEvent = {
-        "DATA" : {
-          "KILLER" : {
-             "AIRBORNE" : false,
-             "AMMO" : 0,
-             "ARMOR" : 0,
-             "BOT" : false,
-             "BOT_SKILL" : null,
-             "HEALTH" : 0,
-             "HOLDABLE" : null,
-             "NAME" : "Play_ua",
-             "POSITION" : {
-                "X" : 314.9967346191406,
-                "Y" : 427.2147827148438,
-                "Z" : 264.2636413574219
-             },
-             "POWERUPS" : null,
-             "SPEED" : 0,
-             "STEAM_ID" : "76561198157458366",
-             "SUBMERGED" : false,
-             "TEAM" : 0,
-             "VIEW" : {
-                "X" : 20.01708984375,
-                "Y" : -23.70849609375,
-                "Z" : 0
-             },
-             "WEAPON" : "ROCKET"
+        "DATA": {
+          "KILLER": {
+            "AIRBORNE": false,
+            "AMMO": 0,
+            "ARMOR": 0,
+            "BOT": false,
+            "BOT_SKILL": null,
+            "HEALTH": 0,
+            "HOLDABLE": null,
+            "NAME": "Play_ua",
+            "POSITION": {
+              "X": 314.9967346191406,
+              "Y": 427.2147827148438,
+              "Z": 264.2636413574219
+            },
+            "POWERUPS": null,
+            "SPEED": 0,
+            "STEAM_ID": "76561198157458366",
+            "SUBMERGED": false,
+            "TEAM": 0,
+            "VIEW": {
+              "X": 20.01708984375,
+              "Y": -23.70849609375,
+              "Z": 0
+            },
+            "WEAPON": "ROCKET"
           },
-          "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
-          "MOD" : "ROCKET_SPLASH",
-          "OTHER_TEAM_ALIVE" : null,
-          "OTHER_TEAM_DEAD" : null,
-          "ROUND" : null,
-          "SUICIDE" : true,
-          "TEAMKILL" : false,
-          "TEAM_ALIVE" : null,
-          "TEAM_DEAD" : null,
-          "TIME" : 108,
-          "VICTIM" : {
-             "AIRBORNE" : false,
-             "AMMO" : 23,
-             "ARMOR" : 0,
-             "BOT" : false,
-             "BOT_SKILL" : null,
-             "HEALTH" : 100,
-             "HOLDABLE" : null,
-             "NAME" : "goromir",
-             "POSITION" : {
-                "X" : 314.9967346191406,
-                "Y" : 427.2147827148438,
-                "Z" : 264.2636413574219
-             },
-             "POWERUPS" : null,
-             "SPEED" : 0,
-             "STEAM_ID" : "76561198145690430",
-             "STREAK" : 0,
-             "SUBMERGED" : false,
-             "TEAM" : 0,
-             "VIEW" : {
-                "X" : 20.01708984375,
-                "Y" : -23.70849609375,
-                "Z" : 0
-             },
-             "WEAPON" : "ROCKET"
+          "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+          "MOD": "ROCKET_SPLASH",
+          "OTHER_TEAM_ALIVE": null,
+          "OTHER_TEAM_DEAD": null,
+          "ROUND": null,
+          "SUICIDE": true,
+          "TEAMKILL": false,
+          "TEAM_ALIVE": null,
+          "TEAM_DEAD": null,
+          "TIME": 108,
+          "VICTIM": {
+            "AIRBORNE": false,
+            "AMMO": 23,
+            "ARMOR": 0,
+            "BOT": false,
+            "BOT_SKILL": null,
+            "HEALTH": 100,
+            "HOLDABLE": null,
+            "NAME": "goromir",
+            "POSITION": {
+              "X": 314.9967346191406,
+              "Y": 427.2147827148438,
+              "Z": 264.2636413574219
+            },
+            "POWERUPS": null,
+            "SPEED": 0,
+            "STEAM_ID": "76561198145690430",
+            "STREAK": 0,
+            "SUBMERGED": false,
+            "TEAM": 0,
+            "VIEW": {
+              "X": 20.01708984375,
+              "Y": -23.70849609375,
+              "Z": 0
+            },
+            "WEAPON": "ROCKET"
           },
-          "WARMUP" : false
+          "WARMUP": false
         },
-        "TYPE" : "PLAYER_KILL"
+        "TYPE": "PLAYER_KILL"
       }
-  
+
       let date4 = new Date
       let event4 = PlayerKillEvent.fromQl(qlPlayerKillEvent['DATA'])
       await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event4, tx(), date4)
@@ -500,16 +861,16 @@ describe('service/QlStatsIntegrator.ts', function() {
       expect(fragsResult.entities[0].warmup).to.equal(false)
     })
 
-    it('should create a new medal for warmup', async function() {
+    it('should create a new medal for warmup', async function () {
       let qlConnectEvent1 = {
-        "DATA" : {
-           "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
-           "NAME" : "Play_ua",
-           "STEAM_ID" : "76561198157458366",
-           "TIME" : 7,
-           "WARMUP" : true
+        "DATA": {
+          "MATCH_GUID": "95d60017-6adb-43bf-a146-c1757194d5fc",
+          "NAME": "Play_ua",
+          "STEAM_ID": "76561198157458366",
+          "TIME": 7,
+          "WARMUP": true
         },
-        "TYPE" : "PLAYER_CONNECT"
+        "TYPE": "PLAYER_CONNECT"
       }
 
       let date1 = new Date
@@ -517,14 +878,14 @@ describe('service/QlStatsIntegrator.ts', function() {
       await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event1, tx(), date1)
 
       let qlConnectEvent2 = {
-        "DATA" : {
-           "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
-           "NAME" : "goromir",
-           "STEAM_ID" : "76561198145690430",
-           "TIME" : 7,
-           "WARMUP" : true
+        "DATA": {
+          "MATCH_GUID": "95d60017-6adb-43bf-a146-c1757194d5fc",
+          "NAME": "goromir",
+          "STEAM_ID": "76561198145690430",
+          "TIME": 7,
+          "WARMUP": true
         },
-        "TYPE" : "PLAYER_CONNECT"
+        "TYPE": "PLAYER_CONNECT"
       }
 
       let date2 = new Date
@@ -532,18 +893,18 @@ describe('service/QlStatsIntegrator.ts', function() {
       await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event2, tx(), date2)
 
       let qlEvent = {
-        "DATA" : {
-           "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
-           "MEDAL" : "FIRSTFRAG",
-           "NAME" : "Play_ua",
-           "STEAM_ID" : "76561198157458366",
-           "TIME" : 23,
-           "TOTAL" : 1,
-           "WARMUP" : false
+        "DATA": {
+          "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+          "MEDAL": "FIRSTFRAG",
+          "NAME": "Play_ua",
+          "STEAM_ID": "76561198157458366",
+          "TIME": 23,
+          "TOTAL": 1,
+          "WARMUP": false
         },
-        "TYPE" : "PLAYER_MEDAL"
+        "TYPE": "PLAYER_MEDAL"
       }
-  
+
       let date3 = new Date
       let event3 = PlayerKillEvent.fromQl(qlEvent['DATA'])
       await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event3, tx(), date3)
@@ -569,20 +930,20 @@ describe('service/QlStatsIntegrator.ts', function() {
       expect(matchParticipationsResult.count).to.equal(0)
     })
 
-    it('should create a new medal with a new server, a new player, a new server visit, a new match and a new match participation', async function() {
+    it('should create a new medal with a new server, a new player, a new server visit, a new match and a new match participation', async function () {
       let qlEvent = {
-        "DATA" : {
-           "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
-           "MEDAL" : "FIRSTFRAG",
-           "NAME" : "Play_ua",
-           "STEAM_ID" : "76561198157458366",
-           "TIME" : 23,
-           "TOTAL" : 1,
-           "WARMUP" : false
+        "DATA": {
+          "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+          "MEDAL": "FIRSTFRAG",
+          "NAME": "Play_ua",
+          "STEAM_ID": "76561198157458366",
+          "TIME": 23,
+          "TOTAL": 1,
+          "WARMUP": false
         },
-        "TYPE" : "PLAYER_MEDAL"
+        "TYPE": "PLAYER_MEDAL"
       }
-  
+
       let date = new Date
       let event = PlayerKillEvent.fromQl(qlEvent['DATA'])
       await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
@@ -640,7 +1001,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       expect(matchesResult.entities[0].startDate).to.deep.equal(date)
 
       let matchParticipationsResult = await Services.get().matchParticipationLogic.read({}, tx())
-      
+
       expect(matchParticipationsResult.entities.length).to.equal(1)
       expect(matchParticipationsResult.entities[0].finishDate).to.be.null
       expect(matchParticipationsResult.entities[0].matchId).to.equal(1)
@@ -664,20 +1025,20 @@ describe('service/QlStatsIntegrator.ts', function() {
       expect(medalsResult.entities[0].warmup).to.equal(false)
     })
 
-    it('should create a new medal for warmup with a new server, a new player and a new server visit', async function() {
+    it('should create a new medal for warmup with a new server, a new player and a new server visit', async function () {
       let qlEvent = {
-        "DATA" : {
-           "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
-           "MEDAL" : "FIRSTFRAG",
-           "NAME" : "Play_ua",
-           "STEAM_ID" : "76561198157458366",
-           "TIME" : 23,
-           "TOTAL" : 1,
-           "WARMUP" : false
+        "DATA": {
+          "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+          "MEDAL": "FIRSTFRAG",
+          "NAME": "Play_ua",
+          "STEAM_ID": "76561198157458366",
+          "TIME": 23,
+          "TOTAL": 1,
+          "WARMUP": false
         },
-        "TYPE" : "PLAYER_MEDAL"
+        "TYPE": "PLAYER_MEDAL"
       }
-  
+
       let date = new Date
       let event = PlayerKillEvent.fromQl(qlEvent['DATA'])
       await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
@@ -712,7 +1073,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       expect(matchesResult.count).to.equal(0)
 
       let matchParticipationsResult = await Services.get().matchParticipationLogic.count({}, tx())
-      
+
       expect(matchParticipationsResult.count).to.equal(0)
 
       let medalsResult = await Services.get().medalLogic.read({}, tx())

@@ -24,13 +24,13 @@ describe('service/QlStatsIntegrator.ts', function() {
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
-                "NAME": "Play_ua",
-                "STEAM_ID": "76561198157458366",
+                "NAME": "Player1",
+                "STEAM_ID": "1111111111111111",
                 "TEAM": 0
               },
               {
-                "NAME": "goromir",
-                "STEAM_ID": "76561198145690430",
+                "NAME": "Player2",
+                "STEAM_ID": "2222222222222222",
                 "TEAM": 0
               }
             ],
@@ -75,13 +75,13 @@ describe('service/QlStatsIntegrator.ts', function() {
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
-                "NAME": "Play_ua",
-                "STEAM_ID": "76561198157458366",
+                "NAME": "Player1",
+                "STEAM_ID": "1111111111111111",
                 "TEAM": 0
               },
               {
-                "NAME": "goromir",
-                "STEAM_ID": "76561198145690430",
+                "NAME": "Player2",
+                "STEAM_ID": "2222222222222222",
                 "TEAM": 0
               }
             ],
@@ -125,13 +125,13 @@ describe('service/QlStatsIntegrator.ts', function() {
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
-                "NAME": "Play_ua",
-                "STEAM_ID": "76561198157458366",
+                "NAME": "Player1",
+                "STEAM_ID": "1111111111111111",
                 "TEAM": 0
               },
               {
-                "NAME": "goromir",
-                "STEAM_ID": "76561198145690430",
+                "NAME": "Player2",
+                "STEAM_ID": "2222222222222222",
                 "TEAM": 0
               }
             ],
@@ -176,13 +176,13 @@ describe('service/QlStatsIntegrator.ts', function() {
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
-                "NAME": "Play_ua",
-                "STEAM_ID": "76561198157458366",
+                "NAME": "Player1",
+                "STEAM_ID": "1111111111111111",
                 "TEAM": 0
               },
               {
-                "NAME": "goromir",
-                "STEAM_ID": "76561198145690430",
+                "NAME": "Player2",
+                "STEAM_ID": "2222222222222222",
                 "TEAM": 0
               }
             ],
@@ -226,13 +226,13 @@ describe('service/QlStatsIntegrator.ts', function() {
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
-                "NAME": "Play_ua",
-                "STEAM_ID": "76561198157458366",
+                "NAME": "Player1",
+                "STEAM_ID": "1111111111111111",
                 "TEAM": 0
               },
               {
-                "NAME": "goromir",
-                "STEAM_ID": "76561198145690430",
+                "NAME": "Player2",
+                "STEAM_ID": "2222222222222222",
                 "TEAM": 0
               }
             ],
@@ -275,13 +275,13 @@ describe('service/QlStatsIntegrator.ts', function() {
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
-                "NAME": "Play_ua",
-                "STEAM_ID": "76561198157458366",
+                "NAME": "Player1",
+                "STEAM_ID": "1111111111111111",
                 "TEAM": 0
               },
               {
-                "NAME": "goromir",
-                "STEAM_ID": "76561198145690430",
+                "NAME": "Player2",
+                "STEAM_ID": "2222222222222222",
                 "TEAM": 0
               }
             ],
@@ -324,13 +324,13 @@ describe('service/QlStatsIntegrator.ts', function() {
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
-                "NAME": "Play_ua",
-                "STEAM_ID": "76561198157458366",
+                "NAME": "Player1",
+                "STEAM_ID": "1111111111111111",
                 "TEAM": 0
               },
               {
-                "NAME": "goromir",
-                "STEAM_ID": "76561198145690430",
+                "NAME": "Player2",
+                "STEAM_ID": "2222222222222222",
                 "TEAM": 0
               }
             ],
@@ -372,13 +372,13 @@ describe('service/QlStatsIntegrator.ts', function() {
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
-                "NAME": "Play_ua",
-                "STEAM_ID": "76561198157458366",
+                "NAME": "Player1",
+                "STEAM_ID": "1111111111111111",
                 "TEAM": 0
               },
               {
-                "NAME": "goromir",
-                "STEAM_ID": "76561198145690430",
+                "NAME": "Player2",
+                "STEAM_ID": "2222222222222222",
                 "TEAM": 0
               }
             ],
@@ -424,13 +424,13 @@ describe('service/QlStatsIntegrator.ts', function() {
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
-                "NAME": "Play_ua",
-                "STEAM_ID": "76561198157458366",
+                "NAME": "Player1",
+                "STEAM_ID": "1111111111111111",
                 "TEAM": 0
               },
               {
-                "NAME": "goromir",
-                "STEAM_ID": "76561198145690430",
+                "NAME": "Player2",
+                "STEAM_ID": "2222222222222222",
                 "TEAM": 0
               }
             ],
@@ -471,13 +471,13 @@ describe('service/QlStatsIntegrator.ts', function() {
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
-                "NAME": "Play_ua",
-                "STEAM_ID": "76561198157458366",
+                "NAME": "Player1",
+                "STEAM_ID": "1111111111111111",
                 "TEAM": 0
               },
               {
-                "NAME": "goromir",
-                "STEAM_ID": "76561198145690430",
+                "NAME": "Player2",
+                "STEAM_ID": "2222222222222222",
                 "TEAM": 0
               }
             ],
@@ -517,13 +517,13 @@ describe('service/QlStatsIntegrator.ts', function() {
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
-                "NAME": "Play_ua",
-                "STEAM_ID": "76561198157458366",
+                "NAME": "Player1",
+                "STEAM_ID": "1111111111111111",
                 "TEAM": 0
               },
               {
-                "NAME": "goromir",
-                "STEAM_ID": "76561198145690430",
+                "NAME": "Player2",
+                "STEAM_ID": "2222222222222222",
                 "TEAM": 0
               }
             ],
@@ -546,17 +546,17 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(playersResult.entities.length).to.equal(2)
         expect(playersResult.entities[0].firstSeen).to.deep.equal(date)
         expect(playersResult.entities[0].model).to.be.null
-        expect(playersResult.entities[0].name).to.equal('goromir')
-        expect(playersResult.entities[0].steamId).to.equal('76561198145690430')
+        expect(playersResult.entities[0].name).to.equal('Player2')
+        expect(playersResult.entities[0].steamId).to.equal('2222222222222222')
         expect(playersResult.entities[1].firstSeen).to.deep.equal(date)
         expect(playersResult.entities[1].model).to.be.null
-        expect(playersResult.entities[1].name).to.equal('Play_ua')
-        expect(playersResult.entities[1].steamId).to.equal('76561198157458366')
+        expect(playersResult.entities[1].name).to.equal('Player1')
+        expect(playersResult.entities[1].steamId).to.equal('1111111111111111')
       })
 
       it('should not create new players', async function() {
-        await create('player', { steamId: '76561198157458366' })
-        await create('player', { steamId: '76561198145690430' })
+        await create('player', { steamId: '1111111111111111' })
+        await create('player', { steamId: '2222222222222222' })
 
         let qlEvent = {
           "DATA": {
@@ -572,13 +572,13 @@ describe('service/QlStatsIntegrator.ts', function() {
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
-                "NAME": "Play_ua",
-                "STEAM_ID": "76561198157458366",
+                "NAME": "Player1",
+                "STEAM_ID": "1111111111111111",
                 "TEAM": 0
               },
               {
-                "NAME": "goromir",
-                "STEAM_ID": "76561198145690430",
+                "NAME": "Player2",
+                "STEAM_ID": "2222222222222222",
                 "TEAM": 0
               }
             ],
@@ -601,17 +601,17 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(playersResult.entities.length).to.equal(2)
         expect(playersResult.entities[0].firstSeen).to.deep.equal(date)
         expect(playersResult.entities[0].model).to.be.null
-        expect(playersResult.entities[0].name).to.equal('goromir')
-        expect(playersResult.entities[0].steamId).to.equal('76561198145690430')
+        expect(playersResult.entities[0].name).to.equal('Player2')
+        expect(playersResult.entities[0].steamId).to.equal('2222222222222222')
         expect(playersResult.entities[1].firstSeen).to.deep.equal(date)
         expect(playersResult.entities[1].model).to.be.null
-        expect(playersResult.entities[1].name).to.equal('Play_ua')
-        expect(playersResult.entities[1].steamId).to.equal('76561198157458366')
+        expect(playersResult.entities[1].name).to.equal('Player1')
+        expect(playersResult.entities[1].steamId).to.equal('1111111111111111')
       })
 
       it('should update the player names', async function() {
-        await create('player', { steamId: '76561198157458366', name: 'a' })
-        await create('player', { steamId: '76561198145690430', name: 'b' })
+        await create('player', { steamId: '1111111111111111', name: 'a' })
+        await create('player', { steamId: '2222222222222222', name: 'b' })
 
         let qlEvent = {
           "DATA": {
@@ -627,13 +627,13 @@ describe('service/QlStatsIntegrator.ts', function() {
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
-                "NAME": "Play_ua",
-                "STEAM_ID": "76561198157458366",
+                "NAME": "Player1",
+                "STEAM_ID": "1111111111111111",
                 "TEAM": 0
               },
               {
-                "NAME": "goromir",
-                "STEAM_ID": "76561198145690430",
+                "NAME": "Player2",
+                "STEAM_ID": "2222222222222222",
                 "TEAM": 0
               }
             ],
@@ -656,17 +656,17 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(playersResult.entities.length).to.equal(2)
         expect(playersResult.entities[0].firstSeen).to.deep.equal(date)
         expect(playersResult.entities[0].model).to.be.null
-        expect(playersResult.entities[0].name).to.equal('goromir')
-        expect(playersResult.entities[0].steamId).to.equal('76561198145690430')
+        expect(playersResult.entities[0].name).to.equal('Player2')
+        expect(playersResult.entities[0].steamId).to.equal('2222222222222222')
         expect(playersResult.entities[1].firstSeen).to.deep.equal(date)
         expect(playersResult.entities[1].model).to.be.null
-        expect(playersResult.entities[1].name).to.equal('Play_ua')
-        expect(playersResult.entities[1].steamId).to.equal('76561198157458366')
+        expect(playersResult.entities[1].name).to.equal('Player1')
+        expect(playersResult.entities[1].steamId).to.equal('1111111111111111')
       })
 
       it('should set the first seen dates', async function() {
-        await create('player', { steamId: '76561198157458366' })
-        await create('player', { steamId: '76561198145690430' })
+        await create('player', { steamId: '1111111111111111' })
+        await create('player', { steamId: '2222222222222222' })
 
         let qlEvent = {
           "DATA": {
@@ -682,13 +682,13 @@ describe('service/QlStatsIntegrator.ts', function() {
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
-                "NAME": "Play_ua",
-                "STEAM_ID": "76561198157458366",
+                "NAME": "Player1",
+                "STEAM_ID": "1111111111111111",
                 "TEAM": 0
               },
               {
-                "NAME": "goromir",
-                "STEAM_ID": "76561198145690430",
+                "NAME": "Player2",
+                "STEAM_ID": "2222222222222222",
                 "TEAM": 0
               }
             ],
@@ -711,12 +711,12 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(playersResult.entities.length).to.equal(2)
         expect(playersResult.entities[0].firstSeen).to.deep.equal(date)
         expect(playersResult.entities[0].model).to.be.null
-        expect(playersResult.entities[0].name).to.equal('goromir')
-        expect(playersResult.entities[0].steamId).to.equal('76561198145690430')
+        expect(playersResult.entities[0].name).to.equal('Player2')
+        expect(playersResult.entities[0].steamId).to.equal('2222222222222222')
         expect(playersResult.entities[1].firstSeen).to.deep.equal(date)
         expect(playersResult.entities[1].model).to.be.null
-        expect(playersResult.entities[1].name).to.equal('Play_ua')
-        expect(playersResult.entities[1].steamId).to.equal('76561198157458366')
+        expect(playersResult.entities[1].name).to.equal('Player1')
+        expect(playersResult.entities[1].steamId).to.equal('1111111111111111')
       })
     })
 
@@ -736,13 +736,13 @@ describe('service/QlStatsIntegrator.ts', function() {
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
-                "NAME": "Play_ua",
-                "STEAM_ID": "76561198157458366",
+                "NAME": "Player1",
+                "STEAM_ID": "1111111111111111",
                 "TEAM": 0
               },
               {
-                "NAME": "goromir",
-                "STEAM_ID": "76561198145690430",
+                "NAME": "Player2",
+                "STEAM_ID": "2222222222222222",
                 "TEAM": 0
               }
             ],
@@ -779,8 +779,8 @@ describe('service/QlStatsIntegrator.ts', function() {
         let qlConnectEvent1 = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
-             "NAME" : "Play_ua",
-             "STEAM_ID" : "76561198157458366",
+             "NAME" : "Player1",
+             "STEAM_ID" : "1111111111111111",
              "TIME" : 7,
              "WARMUP" : true
           },
@@ -793,8 +793,8 @@ describe('service/QlStatsIntegrator.ts', function() {
         let qlConnectEvent2 = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
-             "NAME" : "goromir",
-             "STEAM_ID" : "76561198145690430",
+             "NAME" : "Player2",
+             "STEAM_ID" : "2222222222222222",
              "TIME" : 7,
              "WARMUP" : true
           },
@@ -818,13 +818,13 @@ describe('service/QlStatsIntegrator.ts', function() {
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
-                "NAME": "Play_ua",
-                "STEAM_ID": "76561198157458366",
+                "NAME": "Player1",
+                "STEAM_ID": "1111111111111111",
                 "TEAM": 0
               },
               {
-                "NAME": "goromir",
-                "STEAM_ID": "76561198145690430",
+                "NAME": "Player2",
+                "STEAM_ID": "2222222222222222",
                 "TEAM": 0
               }
             ],
@@ -865,13 +865,13 @@ describe('service/QlStatsIntegrator.ts', function() {
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
-                "NAME": "Play_ua",
-                "STEAM_ID": "76561198157458366",
+                "NAME": "Player1",
+                "STEAM_ID": "1111111111111111",
                 "TEAM": 0
               },
               {
-                "NAME": "goromir",
-                "STEAM_ID": "76561198145690430",
+                "NAME": "Player2",
+                "STEAM_ID": "2222222222222222",
                 "TEAM": 0
               }
             ],
@@ -919,13 +919,13 @@ describe('service/QlStatsIntegrator.ts', function() {
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
-                "NAME": "Play_ua",
-                "STEAM_ID": "76561198157458366",
+                "NAME": "Player1",
+                "STEAM_ID": "1111111111111111",
                 "TEAM": 0
               },
               {
-                "NAME": "goromir",
-                "STEAM_ID": "76561198145690430",
+                "NAME": "Player2",
+                "STEAM_ID": "2222222222222222",
                 "TEAM": 0
               }
             ],
@@ -989,13 +989,13 @@ describe('service/QlStatsIntegrator.ts', function() {
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
-                "NAME": "Play_ua",
-                "STEAM_ID": "76561198157458366",
+                "NAME": "Player1",
+                "STEAM_ID": "1111111111111111",
                 "TEAM": 0
               },
               {
-                "NAME": "goromir",
-                "STEAM_ID": "76561198145690430",
+                "NAME": "Player2",
+                "STEAM_ID": "2222222222222222",
                 "TEAM": 0
               }
             ],
@@ -1037,13 +1037,13 @@ describe('service/QlStatsIntegrator.ts', function() {
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
-                "NAME": "Play_ua",
-                "STEAM_ID": "76561198157458366",
+                "NAME": "Player1",
+                "STEAM_ID": "1111111111111111",
                 "TEAM": 0
               },
               {
-                "NAME": "goromir",
-                "STEAM_ID": "76561198145690430",
+                "NAME": "Player2",
+                "STEAM_ID": "2222222222222222",
                 "TEAM": 0
               }
             ],
@@ -1105,13 +1105,13 @@ describe('service/QlStatsIntegrator.ts', function() {
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
-                "NAME": "Play_ua",
-                "STEAM_ID": "76561198157458366",
+                "NAME": "Player1",
+                "STEAM_ID": "1111111111111111",
                 "TEAM": 0
               },
               {
-                "NAME": "goromir",
-                "STEAM_ID": "76561198145690430",
+                "NAME": "Player2",
+                "STEAM_ID": "2222222222222222",
                 "TEAM": 0
               }
             ],
@@ -1142,8 +1142,8 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('server', { ip: '127.0.0.1', port: 27960 })
         await create('server', { ip: '127.0.0.1', port: 27961 })
         await create('server', { ip: '127.0.0.1', port: 27962 })
-        await create('player', { steamId: '76561198157458366' })
-        await create('player', { steamId: '76561198145690430' })
+        await create('player', { steamId: '1111111111111111' })
+        await create('player', { steamId: '2222222222222222' })
         await create('match_participation', { playerId: 1, serverId: 2, active: true, startDate: new Date, team: TeamType.Red })
         await create('match_participation', { playerId: 2, serverId: 3, active: true, startDate: new Date, team: TeamType.Blue })
 
@@ -1161,13 +1161,13 @@ describe('service/QlStatsIntegrator.ts', function() {
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
-                "NAME": "Play_ua",
-                "STEAM_ID": "76561198157458366",
+                "NAME": "Player1",
+                "STEAM_ID": "1111111111111111",
                 "TEAM": 0
               },
               {
-                "NAME": "goromir",
-                "STEAM_ID": "76561198145690430",
+                "NAME": "Player2",
+                "STEAM_ID": "2222222222222222",
                 "TEAM": 0
               }
             ],

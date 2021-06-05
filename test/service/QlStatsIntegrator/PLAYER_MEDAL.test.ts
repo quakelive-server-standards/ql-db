@@ -14,8 +14,8 @@ describe('service/QlStatsIntegrator.ts', function() {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
-             "NAME" : "UnnamedPlayer",
-             "STEAM_ID" : "77777777777777777",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 23,
              "TOTAL" : 1,
              "WARMUP" : false
@@ -44,8 +44,8 @@ describe('service/QlStatsIntegrator.ts', function() {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
-             "NAME" : "UnnamedPlayer",
-             "STEAM_ID" : "77777777777777777",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 23,
              "TOTAL" : 1,
              "WARMUP" : false
@@ -73,8 +73,8 @@ describe('service/QlStatsIntegrator.ts', function() {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
-             "NAME" : "UnnamedPlayer",
-             "STEAM_ID" : "77777777777777777",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 23,
              "TOTAL" : 1,
              "WARMUP" : false
@@ -102,8 +102,8 @@ describe('service/QlStatsIntegrator.ts', function() {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
-             "NAME" : "UnnamedPlayer",
-             "STEAM_ID" : "77777777777777777",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 23,
              "TOTAL" : 1,
              "WARMUP" : false
@@ -120,20 +120,20 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(playersResult.entities.length).to.equal(1)
         expect(playersResult.entities[0].firstSeen).to.deep.equal(date)
         expect(playersResult.entities[0].model).to.be.null
-        expect(playersResult.entities[0].name).to.equal('UnnamedPlayer')
-        expect(playersResult.entities[0].steamId).to.equal('77777777777777777')
+        expect(playersResult.entities[0].name).to.equal('Player')
+        expect(playersResult.entities[0].steamId).to.equal('11111111111111111')
       })  
 
       it('should not create a new player', async function() {
         let firstSeen = new Date
-        await create('player', { steamId: '77777777777777777', name: 'UnnamedPlayer', firstSeen: firstSeen })
+        await create('player', { steamId: '11111111111111111', name: 'Player', firstSeen: firstSeen })
 
         let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
-             "NAME" : "UnnamedPlayer",
-             "STEAM_ID" : "77777777777777777",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 23,
              "TOTAL" : 1,
              "WARMUP" : false
@@ -150,20 +150,20 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(playersResult.entities.length).to.equal(1)
         expect(playersResult.entities[0].firstSeen).to.deep.equal(firstSeen)
         expect(playersResult.entities[0].model).to.be.null
-        expect(playersResult.entities[0].name).to.equal('UnnamedPlayer')
-        expect(playersResult.entities[0].steamId).to.equal('77777777777777777')
+        expect(playersResult.entities[0].name).to.equal('Player')
+        expect(playersResult.entities[0].steamId).to.equal('11111111111111111')
       })  
 
       it('should update the player name', async function() {
         let firstSeen = new Date
-        await create('player', { steamId: '77777777777777777', name: 'UnnamedPlayer', firstSeen: firstSeen })
+        await create('player', { steamId: '11111111111111111', name: 'Player', firstSeen: firstSeen })
 
         let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
              "NAME" : "UnnamedPlayer1",
-             "STEAM_ID" : "77777777777777777",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 23,
              "TOTAL" : 1,
              "WARMUP" : false
@@ -181,18 +181,18 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(playersResult.entities[0].firstSeen).to.deep.equal(firstSeen)
         expect(playersResult.entities[0].model).to.be.null
         expect(playersResult.entities[0].name).to.equal('UnnamedPlayer1')
-        expect(playersResult.entities[0].steamId).to.equal('77777777777777777')
+        expect(playersResult.entities[0].steamId).to.equal('11111111111111111')
       })  
 
       it('should set the first seen date', async function() {
-        await create('player', { steamId: '77777777777777777', name: 'UnnamedPlayer' })
+        await create('player', { steamId: '11111111111111111', name: 'Player' })
 
         let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
              "NAME" : "UnnamedPlayer1",
-             "STEAM_ID" : "77777777777777777",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 23,
              "TOTAL" : 1,
              "WARMUP" : false
@@ -210,22 +210,22 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(playersResult.entities[0].firstSeen).to.deep.equal(date)
         expect(playersResult.entities[0].model).to.be.null
         expect(playersResult.entities[0].name).to.equal('UnnamedPlayer1')
-        expect(playersResult.entities[0].steamId).to.equal('77777777777777777')
+        expect(playersResult.entities[0].steamId).to.equal('11111111111111111')
       })  
     })
 
     describe('ServerVisit', function() {
       it('should create a new server visit', async function() {
         await create('server', { ip: '127.0.0.1', port: 27960 })
-        await create('player', { steamId: '77777777777777777' })
+        await create('player', { steamId: '11111111111111111' })
         await create('server_visit', { serverId: 1, playerId: 1, active: false })
 
         let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
-             "NAME" : "UnnamedPlayer",
-             "STEAM_ID" : "77777777777777777",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 23,
              "TOTAL" : 1,
              "WARMUP" : false
@@ -255,15 +255,15 @@ describe('service/QlStatsIntegrator.ts', function() {
       it('should not create a new server visit', async function() {
         let connectDate = new Date
         await create('server', { ip: '127.0.0.1', port: 27960 })
-        await create('player', { steamId: '77777777777777777' })
+        await create('player', { steamId: '11111111111111111' })
         await create('server_visit', { serverId: 1, playerId: 1, active: true, connectDate: connectDate })
 
         let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
-             "NAME" : "UnnamedPlayer",
-             "STEAM_ID" : "77777777777777777",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 23,
              "TOTAL" : 1,
              "WARMUP" : false
@@ -289,7 +289,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         let connectDate = new Date
         await create('server', { ip: '127.0.0.1', port: 27960 })
         await create('server', { ip: '127.0.0.1', port: 27961 })
-        await create('player', { steamId: '77777777777777777' })
+        await create('player', { steamId: '11111111111111111' })
         await create('player', { steamId: '88888888888888888' })
         await create('server_visit', { serverId: 1, playerId: 1, active: true, connectDate: connectDate })
         await create('server_visit', { serverId: 2, playerId: 1, active: true, connectDate: connectDate })
@@ -300,8 +300,8 @@ describe('service/QlStatsIntegrator.ts', function() {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
-             "NAME" : "UnnamedPlayer",
-             "STEAM_ID" : "77777777777777777",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 23,
              "TOTAL" : 1,
              "WARMUP" : false
@@ -345,8 +345,8 @@ describe('service/QlStatsIntegrator.ts', function() {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
-             "NAME" : "UnnamedPlayer",
-             "STEAM_ID" : "77777777777777777",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 23,
              "TOTAL" : 1,
              "WARMUP" : false
@@ -395,8 +395,8 @@ describe('service/QlStatsIntegrator.ts', function() {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
-             "NAME" : "UnnamedPlayer",
-             "STEAM_ID" : "77777777777777777",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 23,
              "TOTAL" : 1,
              "WARMUP" : false
@@ -418,8 +418,8 @@ describe('service/QlStatsIntegrator.ts', function() {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
-             "NAME" : "UnnamedPlayer",
-             "STEAM_ID" : "77777777777777777",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 23,
              "TOTAL" : 1,
              "WARMUP" : true
@@ -444,8 +444,8 @@ describe('service/QlStatsIntegrator.ts', function() {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fc0",
              "MEDAL" : "FIRSTFRAG",
-             "NAME" : "UnnamedPlayer",
-             "STEAM_ID" : "77777777777777777",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 23,
              "TOTAL" : 1,
              "WARMUP" : true
@@ -471,8 +471,8 @@ describe('service/QlStatsIntegrator.ts', function() {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
-             "NAME" : "UnnamedPlayer",
-             "STEAM_ID" : "77777777777777777",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 23,
              "TOTAL" : 1,
              "WARMUP" : false
@@ -499,7 +499,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
       it('should not create a new match participation', async function() {
         await create('server', { ip: '127.0.0.1', port: 27960 })
-        await create('player', { steamId: '77777777777777777' })
+        await create('player', { steamId: '11111111111111111' })
         await create('match', { serverId: 1, guid: '66fe025a-63ff-4852-96bd-9102411e9fb0', active: true })
         await create('match_participation', { serverId: 1, playerId: 1, matchId: 1, active: true, team: TeamType.Blue })
   
@@ -507,8 +507,8 @@ describe('service/QlStatsIntegrator.ts', function() {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
-             "NAME" : "UnnamedPlayer",
-             "STEAM_ID" : "77777777777777777",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 23,
              "TOTAL" : 1,
              "WARMUP" : false
@@ -527,7 +527,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
       it('should inactivate any former match participations on the same server if the current game is another one', async function() {
         await create('server', { ip: '127.0.0.1', port: 27960 })
-        await create('player', { steamId: '77777777777777777' })
+        await create('player', { steamId: '11111111111111111' })
         await create('player', { steamId: '88888888888888888' })
         await create('match', { serverId: 1, guid: '66fe025a-63ff-4852-96bd-9102411e9fa0', active: true })
         await create('match_participation', { serverId: 1, playerId: 1, matchId: 1, active: true, startDate: new Date, team: TeamType.Blue })
@@ -537,8 +537,8 @@ describe('service/QlStatsIntegrator.ts', function() {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
-             "NAME" : "UnnamedPlayer",
-             "STEAM_ID" : "77777777777777777",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 23,
              "TOTAL" : 1,
              "WARMUP" : false
@@ -561,7 +561,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       it('should inactivate any former match participation of the same player on any other servers', async function() {
         await create('server', { ip: '127.0.0.1', port: 27960 })
         await create('server', { ip: '127.0.0.1', port: 27961 })
-        await create('player', { steamId: '77777777777777777' })
+        await create('player', { steamId: '11111111111111111' })
         await create('match', { serverId: 2, guid: '66fe025a-63ff-4852-96bd-9102411e9fa0', active: true })
         await create('match_participation', { serverId: 2, playerId: 1, matchId: 1, active: true, startDate: new Date, team: TeamType.Blue })
   
@@ -569,8 +569,8 @@ describe('service/QlStatsIntegrator.ts', function() {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
-             "NAME" : "UnnamedPlayer",
-             "STEAM_ID" : "77777777777777777",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 23,
              "TOTAL" : 1,
              "WARMUP" : false
@@ -596,8 +596,8 @@ describe('service/QlStatsIntegrator.ts', function() {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
-             "NAME" : "UnnamedPlayer",
-             "STEAM_ID" : "77777777777777777",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 23,
              "TOTAL" : 1,
              "WARMUP" : false
@@ -627,8 +627,8 @@ describe('service/QlStatsIntegrator.ts', function() {
           "DATA" : {
              "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
              "MEDAL" : "FIRSTFRAG",
-             "NAME" : "UnnamedPlayer",
-             "STEAM_ID" : "77777777777777777",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 23,
              "TOTAL" : 1,
              "WARMUP" : true

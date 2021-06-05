@@ -12,8 +12,8 @@ describe('service/QlStatsIntegrator.ts', function() {
         let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
-             "NAME" : "garz",
-             "STEAM_ID" : "76561198170654797",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 7,
              "WARMUP" : true
           },
@@ -42,8 +42,8 @@ describe('service/QlStatsIntegrator.ts', function() {
         let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
-             "NAME" : "garz",
-             "STEAM_ID" : "76561198170654797",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 7,
              "WARMUP" : true
           },
@@ -70,8 +70,8 @@ describe('service/QlStatsIntegrator.ts', function() {
         let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
-             "NAME" : "garz",
-             "STEAM_ID" : "76561198170654797",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 7,
              "WARMUP" : true
           },
@@ -99,86 +99,8 @@ describe('service/QlStatsIntegrator.ts', function() {
         let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
-             "NAME" : "garz",
-             "STEAM_ID" : "76561198170654797",
-             "TIME" : 7,
-             "WARMUP" : true
-          },
-          "TYPE" : "PLAYER_CONNECT"
-        }
-  
-        let date = new Date
-        let event = PlayerConnectEvent.fromQl(qlEvent['DATA'])
-  
-        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
-    
-        let playersResult = await Services.get().playerLogic.read({}, tx())
-    
-        expect(playersResult.isValue()).to.be.true
-        expect(playersResult.entities.length).to.equal(1)
-        expect(playersResult.entities[0].firstSeen).to.deep.equal(date)
-        expect(playersResult.entities[0].name).to.equal('garz')
-        expect(playersResult.entities[0].steamId).to.equal('76561198170654797')
-      })
-
-      it('should not create a new player', async function() {
-        await create('player', { steamId: '76561198170654797' })
-  
-        let qlEvent = {
-          "DATA" : {
-             "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
-             "NAME" : "garz",
-             "STEAM_ID" : "76561198170654797",
-             "TIME" : 7,
-             "WARMUP" : true
-          },
-          "TYPE" : "PLAYER_CONNECT"
-        }
-  
-        let date = new Date
-        let event = PlayerConnectEvent.fromQl(qlEvent['DATA'])
-  
-        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
-    
-        let result = await Services.get().playerLogic.count({}, tx())
-    
-        expect(result.isValue()).to.be.true
-        expect(result.count).to.equal(1)
-      })  
-
-      it('should update a players name', async function() {
-        await create('player', { name: 'garz', steamId: '76561198170654797' })
-  
-        let qlEvent = {
-          "DATA" : {
-             "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
-             "NAME" : "garz2",
-             "STEAM_ID" : "76561198170654797",
-             "TIME" : 7,
-             "WARMUP" : true
-          },
-          "TYPE" : "PLAYER_CONNECT"
-        }
-  
-        let date = new Date
-        let event = PlayerConnectEvent.fromQl(qlEvent['DATA'])
-  
-        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
-    
-        let result = await Services.get().playerLogic.read({}, tx())
-    
-        expect(result.entities.length).to.equal(1)
-        expect(result.entities[0].name).to.equal('garz2')
-      })
-  
-      it('should update a players first seen date', async function() {
-        await create('player', { name: 'garz', steamId: '76561198170654797' })
-  
-        let qlEvent = {
-          "DATA" : {
-             "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
-             "NAME" : "garz",
-             "STEAM_ID" : "76561198170654797",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 7,
              "WARMUP" : true
           },
@@ -194,6 +116,95 @@ describe('service/QlStatsIntegrator.ts', function() {
     
         expect(result.entities.length).to.equal(1)
         expect(result.entities[0].firstSeen).to.deep.equal(date)
+        expect(result.entities[0].name).to.equal('Player')
+        expect(result.entities[0].steamId).to.equal('11111111111111111')
+        expect(result.entities[0].model).to.be.null
+      })
+
+      it('should not create a new player', async function() {
+        let firstSeen = new Date
+        await create('player', { name: 'Player', steamId: '11111111111111111', firstSeen: firstSeen, model: 'sarge' })
+  
+        let qlEvent = {
+          "DATA" : {
+             "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
+             "TIME" : 7,
+             "WARMUP" : true
+          },
+          "TYPE" : "PLAYER_CONNECT"
+        }
+  
+        let date = new Date(new Date(firstSeen).setSeconds(firstSeen.getSeconds() + 1))
+        let event = PlayerConnectEvent.fromQl(qlEvent['DATA'])
+  
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+    
+        let result = await Services.get().playerLogic.read({}, tx())
+    
+        expect(result.entities.length).to.equal(1)
+        expect(result.entities[0].firstSeen).to.deep.equal(firstSeen)
+        expect(result.entities[0].name).to.equal('Player')
+        expect(result.entities[0].steamId).to.equal('11111111111111111')
+        expect(result.entities[0].model).to.equal('sarge')
+      })  
+
+      it('should update a players name', async function() {
+        let firstSeen = new Date
+        await create('player', { name: 'Player', steamId: '11111111111111111', firstSeen: firstSeen, model: 'sarge' })
+  
+        let qlEvent = {
+          "DATA" : {
+             "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
+             "NAME" : "garz2",
+             "STEAM_ID" : "11111111111111111",
+             "TIME" : 7,
+             "WARMUP" : true
+          },
+          "TYPE" : "PLAYER_CONNECT"
+        }
+  
+        let date = new Date(new Date(firstSeen).setSeconds(firstSeen.getSeconds() + 1))
+        let event = PlayerConnectEvent.fromQl(qlEvent['DATA'])
+  
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+    
+        let result = await Services.get().playerLogic.read({}, tx())
+    
+        expect(result.entities.length).to.equal(1)
+        expect(result.entities[0].firstSeen).to.deep.equal(firstSeen)
+        expect(result.entities[0].name).to.equal('Player')
+        expect(result.entities[0].steamId).to.equal('11111111111111111')
+        expect(result.entities[0].model).to.equal('sarge')
+      })
+  
+      it('should update a players first seen date', async function() {
+        await create('player', { name: 'Player', steamId: '11111111111111111', model: 'sarge' })
+  
+        let qlEvent = {
+          "DATA" : {
+             "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
+             "TIME" : 7,
+             "WARMUP" : true
+          },
+          "TYPE" : "PLAYER_CONNECT"
+        }
+  
+        let date = new Date
+        let event = PlayerConnectEvent.fromQl(qlEvent['DATA'])
+  
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+    
+        let result = await Services.get().playerLogic.read({}, tx())
+    
+        expect(result.entities.length).to.equal(1)
+        expect(result.entities[0].firstSeen).to.deep.equal(date)
+        expect(result.entities[0].name).to.equal('Player')
+        expect(result.entities[0].steamId).to.equal('11111111111111111')
+        expect(result.entities[0].model).to.equal('sarge')
       })  
     })
 
@@ -202,8 +213,8 @@ describe('service/QlStatsIntegrator.ts', function() {
         let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
-             "NAME" : "garz",
-             "STEAM_ID" : "76561198170654797",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 7,
              "WARMUP" : true
           },
@@ -230,8 +241,8 @@ describe('service/QlStatsIntegrator.ts', function() {
         let qlConnectEvent1 = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fb",
-             "NAME" : "garz",
-             "STEAM_ID" : "76561198170654797",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 7,
              "WARMUP" : true
           },
@@ -246,8 +257,8 @@ describe('service/QlStatsIntegrator.ts', function() {
         let qlConnectEvent2 = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
-             "NAME" : "garz",
-             "STEAM_ID" : "76561198170654797",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 7,
              "WARMUP" : true
           },
@@ -274,8 +285,8 @@ describe('service/QlStatsIntegrator.ts', function() {
         let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
-             "NAME" : "garz",
-             "STEAM_ID" : "76561198170654797",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 7,
              "WARMUP" : false
           },
@@ -299,8 +310,8 @@ describe('service/QlStatsIntegrator.ts', function() {
         let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
-             "NAME" : "garz",
-             "STEAM_ID" : "76561198170654797",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 7,
              "WARMUP" : true
           },
@@ -323,8 +334,8 @@ describe('service/QlStatsIntegrator.ts', function() {
         let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
-             "NAME" : "garz",
-             "STEAM_ID" : "76561198170654797",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 7,
              "WARMUP" : true
           },
@@ -348,8 +359,8 @@ describe('service/QlStatsIntegrator.ts', function() {
         let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
-             "NAME" : "garz",
-             "STEAM_ID" : "76561198170654797",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 7,
              "WARMUP" : false
           },
@@ -373,8 +384,8 @@ describe('service/QlStatsIntegrator.ts', function() {
         let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
-             "NAME" : "garz",
-             "STEAM_ID" : "76561198170654797",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 7,
              "WARMUP" : true
           },
@@ -413,8 +424,8 @@ describe('service/QlStatsIntegrator.ts', function() {
         let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "95d60017-6adb-43bf-a146-c1757194d5fc",
-             "NAME" : "garz",
-             "STEAM_ID" : "76561198170654797",
+             "NAME" : "Player",
+             "STEAM_ID" : "11111111111111111",
              "TIME" : 7,
              "WARMUP" : true
           },
