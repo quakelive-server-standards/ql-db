@@ -483,8 +483,12 @@ export class QlStatsIntegrator {
     /********************************************/
     else if (event instanceof PlayerKillEvent) {
       let warmup = event.warmup
-      let matchesResult = await this.matchLogic.read({ guid: event.matchGuid }, tx)
-      let match = matchesResult.entities.length == 1 ? matchesResult.entities[0] : undefined
+      let match
+
+      if (! warmup) {
+        let matchesResult = await this.matchLogic.read({ guid: event.matchGuid }, tx)
+        match = matchesResult.entities.length == 1 ? matchesResult.entities[0] : undefined
+      }
 
       if (match || warmup) {
         let killerResult = await this.playerLogic.createOrGet(event.killer.steamId, event.killer.name, eventEmitDate, tx)
