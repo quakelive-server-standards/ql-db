@@ -226,15 +226,15 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let serverVisitsResult = await Services.get().serverVisitLogic.read({}, tx())
+        let result = await Services.get().serverVisitLogic.read({}, tx())
     
-        expect(serverVisitsResult.isValue()).to.be.true
-        expect(serverVisitsResult.entities.length).to.equal(1)
-        expect(serverVisitsResult.entities[0].connectDate).to.deep.equal(date)
-        expect(serverVisitsResult.entities[0].disconnectDate).to.be.null
-        expect(serverVisitsResult.entities[0].active).to.equal(true)
-        expect(serverVisitsResult.entities[0].playerId).to.equal(1)
-        expect(serverVisitsResult.entities[0].serverId).to.equal(1)
+        expect(result.isValue()).to.be.true
+        expect(result.entities.length).to.equal(1)
+        expect(result.entities[0].connectDate).to.deep.equal(date)
+        expect(result.entities[0].disconnectDate).to.be.null
+        expect(result.entities[0].active).to.equal(true)
+        expect(result.entities[0].playerId).to.equal(1)
+        expect(result.entities[0].serverId).to.equal(1)
       })
 
       it('should set active on all former server visits to false', async function() {
@@ -270,13 +270,13 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event2, tx(), date2)
     
-        let serverVisitsResult = await Services.get().serverVisitLogic.read({ '@orderBy': 'id' }, tx())
+        let result = await Services.get().serverVisitLogic.read({ '@orderBy': 'id' }, tx())
   
-        expect(serverVisitsResult.entities.length).to.equal(2)
-        expect(serverVisitsResult.entities[0].id).to.equal(1)
-        expect(serverVisitsResult.entities[0].active).to.equal(false)
-        expect(serverVisitsResult.entities[1].id).to.equal(2)
-        expect(serverVisitsResult.entities[1].active).to.equal(true)
+        expect(result.entities.length).to.equal(2)
+        expect(result.entities[0].id).to.equal(1)
+        expect(result.entities[0].active).to.equal(false)
+        expect(result.entities[1].id).to.equal(2)
+        expect(result.entities[1].active).to.equal(true)
       })  
     })
 
@@ -298,12 +298,12 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let matchesResult = await Services.get().matchLogic.read({}, tx())
+        let result = await Services.get().matchLogic.read({}, tx())
   
-        expect(matchesResult.entities.length).to.equal(1)
-        expect(matchesResult.entities[0].active).to.equal(true)
-        expect(matchesResult.entities[0].startDate).to.deep.equal(new Date(date.setSeconds(date.getSeconds() - qlEvent['DATA']['TIME'])))
-        expect(matchesResult.entities[0].guid).to.equal('95d60017-6adb-43bf-a146-c1757194d5fc')
+        expect(result.entities.length).to.equal(1)
+        expect(result.entities[0].active).to.equal(true)
+        expect(result.entities[0].startDate).to.deep.equal(new Date(date.setSeconds(date.getSeconds() - qlEvent['DATA']['TIME'])))
+        expect(result.entities[0].guid).to.equal('95d60017-6adb-43bf-a146-c1757194d5fc')
       })
   
       it('should not create the match if it is warmup', async function() {
@@ -372,10 +372,10 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let matchesResult = await Services.get().matchLogic.read({}, tx())
+        let result = await Services.get().matchLogic.read({}, tx())
   
-        expect(matchesResult.entities.length).to.equal(1)
-        expect(matchesResult.entities[0].active).to.equal(true)
+        expect(result.entities.length).to.equal(1)
+        expect(result.entities[0].active).to.equal(true)
       })
   
       it('should not inactivate a match if it is on a different server', async function() {
@@ -397,10 +397,10 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let matchesResult = await Services.get().matchLogic.read({}, tx())
+        let result = await Services.get().matchLogic.read({}, tx())
   
-        expect(matchesResult.entities.length).to.equal(1)
-        expect(matchesResult.entities[0].active).to.equal(true)
+        expect(result.entities.length).to.equal(1)
+        expect(result.entities[0].active).to.equal(true)
       })  
     })
 
@@ -437,17 +437,17 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
     
-        let matchParticipationsResult = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
+        let result = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
   
-        expect(matchParticipationsResult.entities.length).to.equal(4)
-        expect(matchParticipationsResult.entities[0].id).to.equal(1)
-        expect(matchParticipationsResult.entities[0].active).to.equal(false)
-        expect(matchParticipationsResult.entities[1].id).to.equal(2)
-        expect(matchParticipationsResult.entities[1].active).to.equal(false)
-        expect(matchParticipationsResult.entities[2].id).to.equal(3)
-        expect(matchParticipationsResult.entities[2].active).to.equal(true)
-        expect(matchParticipationsResult.entities[3].id).to.equal(4)
-        expect(matchParticipationsResult.entities[3].active).to.equal(true)
+        expect(result.entities.length).to.equal(4)
+        expect(result.entities[0].id).to.equal(1)
+        expect(result.entities[0].active).to.equal(false)
+        expect(result.entities[1].id).to.equal(2)
+        expect(result.entities[1].active).to.equal(false)
+        expect(result.entities[2].id).to.equal(3)
+        expect(result.entities[2].active).to.equal(true)
+        expect(result.entities[3].id).to.equal(4)
+        expect(result.entities[3].active).to.equal(true)
       })  
     })
   })
