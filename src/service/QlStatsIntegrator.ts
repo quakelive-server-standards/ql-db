@@ -979,12 +979,17 @@ export class QlStatsIntegrator {
       medal.matchParticipationId = matchParticipation ? matchParticipation.id : null
       medal.playerId = player.id
       medal.serverId = server.id
+      medal.serverVisitId = activeServerVisit.id
 
       medal.date = eventEmitDate
       medal.medal = mapMedalType(event.medal)
       medal.warmup = event.warmup
 
-      await this.medalLogic.create(medal, tx)
+      let medalCreateResult = await this.medalLogic.create(medal, tx)
+
+      if (medalCreateResult.isMisfits()) {
+        throw new MisfitsError(medalCreateResult.misfits)
+      }
     }
 
     /********************************************/
