@@ -68,6 +68,25 @@ export class QlStatsIntegrator {
       // setting its first seen date if not present
       let player = await this.createOrGetPlayer(event.steamId, event.name, eventEmitDate, tx)
 
+      // when the player connects we know that it cannot be participating in any matches
+      // right now, thus we can deactivate any active match participtions.
+      let activeMatchParticipationsResult = await this.matchParticipationLogic.read({ active: true, playerId: player.id }, tx)
+
+      for (let matchParticipation of activeMatchParticipationsResult.entities) {
+        l.dev('Deactivating match participation...', matchParticipation)
+        
+        matchParticipation.active = false
+
+        // TODO: Determine finish date
+
+        let result = await this.matchParticipationLogic.update(matchParticipation, tx)
+        l.dev('Result of update', result)
+  
+        if (result.isMisfits()) {
+          throw new MisfitsError(result.misfits)
+        }
+      }
+  
       // since the player is freshly connecting to the server, all other server visits
       // that are still active must be thus inactive
       let activeServerVisitsResult = await this.serverVisitLogic.read({ active: true, playerId: player.id }, tx)
@@ -88,22 +107,6 @@ export class QlStatsIntegrator {
           throw new MisfitsError(result.misfits)
         }
       }  
-  
-      // when the player connects we know that it cannot be participating in any matches
-      // right now, thus we can deactivate any active match participtions.
-      let activeMatchParticipationsResult = await this.matchParticipationLogic.read({ active: true, playerId: player.id }, tx)
-
-      for (let matchParticipation of activeMatchParticipationsResult.entities) {
-        l.dev('Deactivating match participation...', matchParticipation)
-        
-        matchParticipation.active = false
-        let result = await this.matchParticipationLogic.update(matchParticipation, tx)
-        l.dev('Result of update', result)
-  
-        if (result.isMisfits()) {
-          throw new MisfitsError(result.misfits)
-        }
-      }
   
       // when the player connects we get to know the match guid of the active match.
       // we can deactivate any active matches on the same server that have a different
@@ -160,6 +163,22 @@ export class QlStatsIntegrator {
       // setting its first seen date if not present
       let player = await this.createOrGetPlayer(event.steamId, event.name, eventEmitDate, tx)
 
+      // since we know that the player now disconnected, we can deactivate any active match
+      // participations of that player on any server
+      let activeMatchParticipationsResult = await this.matchParticipationLogic.read({ active: true, playerId: player.id }, tx)
+
+      for (let matchParticipation of activeMatchParticipationsResult.entities) {
+        l.dev('Deactivating match participation...', matchParticipation)
+        
+        matchParticipation.active = false
+        let result = await this.matchParticipationLogic.update(matchParticipation, tx)
+        l.dev('Result of update', result)
+  
+        if (result.isMisfits()) {
+          throw new MisfitsError(result.misfits)
+        }
+      }
+
       // since we know the current match guid, we can check if there is any match marked as
       // active and associated to this server but with a different match guid
       let activeMatchesResult = await this.matchLogic.read({ active: true, serverId: server.id }, tx)
@@ -180,22 +199,6 @@ export class QlStatsIntegrator {
         }
       }
       
-      // since we know that the player now disconnected, we can deactivate any active match
-      // participations of that player on any server
-      let activeMatchParticipationsResult = await this.matchParticipationLogic.read({ active: true, playerId: player.id }, tx)
-
-      for (let matchParticipation of activeMatchParticipationsResult.entities) {
-        l.dev('Deactivating match participation...', matchParticipation)
-        
-        matchParticipation.active = false
-        let result = await this.matchParticipationLogic.update(matchParticipation, tx)
-        l.dev('Result of update', result)
-  
-        if (result.isMisfits()) {
-          throw new MisfitsError(result.misfits)
-        }
-      }
-
       // in the disconnect event we get to know the active match and thus we can check if this
       // match is warmup and if it is not warmup we can create it if it is missing.
       if (! event.warmup) {

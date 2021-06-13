@@ -1818,7 +1818,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[2].team).to.equal(TeamType.Red)
       })  
 
-      it.only('should create a new match participation if the player is in a different team than expected', async function() {
+      it('should create a new match participation if the player is in a different team than expected', async function() {
         let startDate = new Date
         await create('server', { ip: '127.0.0.1', port: 27960 })
         await create('server', { ip: '127.0.0.1', port: 27961 })
