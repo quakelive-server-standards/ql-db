@@ -40,7 +40,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               },
               "WEAPON": "OTHER_WEAPON"
             },
-            "MATCH_GUID": "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MOD": "SWITCHTEAM",
             "OTHER_TEAM_ALIVE": null,
             "OTHER_TEAM_DEAD": null,
@@ -127,7 +127,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               },
               "WEAPON": "OTHER_WEAPON"
             },
-            "MATCH_GUID": "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MOD": "SWITCHTEAM",
             "OTHER_TEAM_ALIVE": null,
             "OTHER_TEAM_DEAD": null,
@@ -213,7 +213,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               },
               "WEAPON": "OTHER_WEAPON"
             },
-            "MATCH_GUID": "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MOD": "SWITCHTEAM",
             "OTHER_TEAM_ALIVE": null,
             "OTHER_TEAM_DEAD": null,
@@ -299,7 +299,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               },
               "WEAPON": "OTHER_WEAPON"
             },
-            "MATCH_GUID": "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MOD": "SWITCHTEAM",
             "OTHER_TEAM_ALIVE": null,
             "OTHER_TEAM_DEAD": null,
@@ -391,7 +391,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               },
               "WEAPON": "OTHER_WEAPON"
             },
-            "MATCH_GUID": "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MOD": "SWITCHTEAM",
             "OTHER_TEAM_ALIVE": null,
             "OTHER_TEAM_DEAD": null,
@@ -483,7 +483,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               },
               "WEAPON": "OTHER_WEAPON"
             },
-            "MATCH_GUID": "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MOD": "SWITCHTEAM",
             "OTHER_TEAM_ALIVE": null,
             "OTHER_TEAM_DEAD": null,
@@ -574,7 +574,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               },
               "WEAPON": "OTHER_WEAPON"
             },
-            "MATCH_GUID": "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MOD": "SWITCHTEAM",
             "OTHER_TEAM_ALIVE": null,
             "OTHER_TEAM_DEAD": null,
@@ -667,7 +667,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               },
               "WEAPON": "OTHER_WEAPON"
             },
-            "MATCH_GUID": "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MOD": "SWITCHTEAM",
             "OTHER_TEAM_ALIVE": null,
             "OTHER_TEAM_DEAD": null,
@@ -764,7 +764,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               },
               "WEAPON": "OTHER_WEAPON"
             },
-            "MATCH_GUID": "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MOD": "SWITCHTEAM",
             "OTHER_TEAM_ALIVE": null,
             "OTHER_TEAM_DEAD": null,
@@ -865,7 +865,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               },
               "WEAPON": "OTHER_WEAPON"
             },
-            "MATCH_GUID": "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MOD": "SWITCHTEAM",
             "OTHER_TEAM_ALIVE": null,
             "OTHER_TEAM_DEAD": null,
@@ -965,7 +965,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               },
               "WEAPON": "OTHER_WEAPON"
             },
-            "MATCH_GUID": "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MOD": "SWITCHTEAM",
             "OTHER_TEAM_ALIVE": null,
             "OTHER_TEAM_DEAD": null,
@@ -1029,7 +1029,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].exitMessage).to.be.null
         expect(result.entities[0].factoryId).to.be.null
         expect(result.entities[0].finishDate).to.be.null
-        expect(result.entities[0].guid).to.equal('0c150d44-ba0b-48b4-bf5d-9d689ee5329a')
+        expect(result.entities[0].guid).to.equal('111111111111111111111111111111111111')
         expect(result.entities[0].lastLeadChangeTime).to.be.null
         expect(result.entities[0].length).to.be.null
         expect(result.entities[0].mapId).to.be.null
@@ -1042,7 +1042,7 @@ describe('service/QlStatsIntegrator.ts', function () {
 
       it('should not create a new match', async function() {
         await create('server', { ip: '127.0.0.1', port: 27960 })
-        await create('match', { serverId: 1, guid: '0c150d44-ba0b-48b4-bf5d-9d689ee5329a', active: true })
+        await create('match', { serverId: 1, guid: '111111111111111111111111111111111111', active: true })
 
         let qlEvent = {
           "DATA": {
@@ -1072,7 +1072,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               },
               "WEAPON": "OTHER_WEAPON"
             },
-            "MATCH_GUID": "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MOD": "SWITCHTEAM",
             "OTHER_TEAM_ALIVE": null,
             "OTHER_TEAM_DEAD": null,
@@ -1152,7 +1152,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               },
               "WEAPON": "OTHER_WEAPON"
             },
-            "MATCH_GUID": "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MOD": "SWITCHTEAM",
             "OTHER_TEAM_ALIVE": null,
             "OTHER_TEAM_DEAD": null,
@@ -1204,8 +1204,8 @@ describe('service/QlStatsIntegrator.ts', function () {
       })      
 
       it('should inactivate matches on the same server if they are not the current active match', async function() {
-        await create('match', { active: true, guid: '66fe025a-63ff-4852-96bd-9102411e9fa0', serverId: 1 })
-        await create('match', { active: true, guid: '66fe025a-63ff-4852-96bd-9102411e9fb0', serverId: 2 })
+        await create('match', { active: true, guid: '111111111111111111111111111111111111', serverId: 1 })
+        await create('match', { active: true, guid: '222222222222222222222222222222222222', serverId: 2 })
         
         let qlEvent = {
           "DATA": {
@@ -1235,7 +1235,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               },
               "WEAPON": "OTHER_WEAPON"
             },
-            "MATCH_GUID": "0c150d44-ba0b-48b4-bf5d-9d689ee5329a",
+            "MATCH_GUID": "333333333333333333333333333333333333",
             "MOD": "SWITCHTEAM",
             "OTHER_TEAM_ALIVE": null,
             "OTHER_TEAM_DEAD": null,
@@ -1289,8 +1289,538 @@ describe('service/QlStatsIntegrator.ts', function () {
       })
     })
 
-    describe('MatchParticipation', function () {
+    describe.only('MatchParticipation', function () {
+      it('should create new new match participations', async function() {
+        let qlEvent = {
+          "DATA": {
+            "KILLER": {
+              "AIRBORNE": false,
+              "AMMO": 0,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 0,
+              "HOLDABLE": null,
+              "NAME": "Player1",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "11111111111111111",
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "OTHER_WEAPON"
+            },
+            "MATCH_GUID": "111111111111111111111111111111111111",
+            "MOD": "SWITCHTEAM",
+            "OTHER_TEAM_ALIVE": null,
+            "OTHER_TEAM_DEAD": null,
+            "ROUND": null,
+            "SUICIDE": true,
+            "TEAMKILL": false,
+            "TEAM_ALIVE": null,
+            "TEAM_DEAD": null,
+            "TIME": 108,
+            "VICTIM": {
+              "AIRBORNE": false,
+              "AMMO": 23,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 100,
+              "HOLDABLE": null,
+              "NAME": "Player2",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "22222222222222222",
+              "STREAK": 0,
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "ROCKET"
+            },
+            "WARMUP": false
+          },
+          "TYPE": "PLAYER_KILL"
+        }
+    
+        let date = new Date
+        let event = PlayerKillEvent.fromQl(qlEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+  
+        let result = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
 
+        expect(result.entities.length).to.equal(2)
+        expect(result.entities[0].active).to.equal(true)
+        expect(result.entities[0].finishDate).to.be.null
+        expect(result.entities[0].matchId).to.equal(1)
+        expect(result.entities[0].playerId).to.equal(1)
+        expect(result.entities[0].roundId).to.be.null
+        expect(result.entities[0].serverId).to.equal(1)
+        expect(result.entities[0].startDate).to.deep.equal(date)
+        expect(result.entities[0].statsId).to.be.null
+        expect(result.entities[0].team).to.equal(TeamType.Free)
+        expect(result.entities[1].active).to.equal(true)
+        expect(result.entities[1].finishDate).to.be.null
+        expect(result.entities[1].matchId).to.equal(1)
+        expect(result.entities[1].playerId).to.equal(2)
+        expect(result.entities[1].roundId).to.be.null
+        expect(result.entities[1].serverId).to.equal(1)
+        expect(result.entities[1].startDate).to.deep.equal(date)
+        expect(result.entities[1].statsId).to.be.null
+        expect(result.entities[1].team).to.equal(TeamType.Free)
+      })
+
+      it('should not create a new match participation', async function() {
+        let startDate = new Date
+        await create('server', { ip: '127.0.0.1', port: 27960 })
+        await create('player', { steamId: '11111111111111111' })
+        await create('player', { steamId: '22222222222222222' })
+        await create('player', { steamId: '33333333333333333' })
+        await create('server_visit', { serverId: 1, playerId: 1 })
+        await create('server_visit', { serverId: 1, playerId: 2 })
+        await create('server_visit', { serverId: 1, playerId: 3 })
+        await create('match', { serverId: 1, guid: '111111111111111111111111111111111111', active: true })
+        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Free })
+        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Free })
+        await create('match_participation', { serverId: 1, playerId: 3, serverVisitId: 3, matchId: 1, active: true, startDate: startDate, team: TeamType.Free })
+  
+        let qlEvent = {
+          "DATA": {
+            "KILLER": {
+              "AIRBORNE": false,
+              "AMMO": 0,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 0,
+              "HOLDABLE": null,
+              "NAME": "Player2",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "22222222222222222",
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "OTHER_WEAPON"
+            },
+            "MATCH_GUID": "111111111111111111111111111111111111",
+            "MOD": "SWITCHTEAM",
+            "OTHER_TEAM_ALIVE": null,
+            "OTHER_TEAM_DEAD": null,
+            "ROUND": null,
+            "SUICIDE": true,
+            "TEAMKILL": false,
+            "TEAM_ALIVE": null,
+            "TEAM_DEAD": null,
+            "TIME": 108,
+            "VICTIM": {
+              "AIRBORNE": false,
+              "AMMO": 23,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 100,
+              "HOLDABLE": null,
+              "NAME": "Player3",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "33333333333333333",
+              "STREAK": 0,
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "ROCKET"
+            },
+            "WARMUP": false
+          },
+          "TYPE": "PLAYER_KILL"
+        }
+    
+        let date = new Date(new Date(startDate).setSeconds(startDate.getSeconds() + 1))
+        let event = PlayerKillEvent.fromQl(qlEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+  
+        let result = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
+        
+        expect(result.entities.length).to.equal(3)
+        expect(result.entities[0].active).to.equal(true)
+        expect(result.entities[0].finishDate).to.be.null
+        expect(result.entities[0].matchId).to.equal(1)
+        expect(result.entities[0].playerId).to.equal(1)
+        expect(result.entities[0].roundId).to.be.null
+        expect(result.entities[0].serverId).to.equal(1)
+        expect(result.entities[0].startDate).to.deep.equal(startDate)
+        expect(result.entities[0].statsId).to.be.null
+        expect(result.entities[0].team).to.equal(TeamType.Free)
+        expect(result.entities[1].active).to.equal(true)
+        expect(result.entities[1].finishDate).to.be.null
+        expect(result.entities[1].matchId).to.equal(1)
+        expect(result.entities[1].playerId).to.equal(2)
+        expect(result.entities[1].roundId).to.be.null
+        expect(result.entities[1].serverId).to.equal(1)
+        expect(result.entities[1].startDate).to.deep.equal(startDate)
+        expect(result.entities[1].statsId).to.be.null
+        expect(result.entities[1].team).to.equal(TeamType.Free)
+      })  
+
+      it('should not create a new match participation for warmup', async function() {
+        let qlEvent = {
+          "DATA": {
+            "KILLER": {
+              "AIRBORNE": false,
+              "AMMO": 0,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 0,
+              "HOLDABLE": null,
+              "NAME": "Player1",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "11111111111111111",
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "OTHER_WEAPON"
+            },
+            "MATCH_GUID": "111111111111111111111111111111111111",
+            "MOD": "SWITCHTEAM",
+            "OTHER_TEAM_ALIVE": null,
+            "OTHER_TEAM_DEAD": null,
+            "ROUND": null,
+            "SUICIDE": true,
+            "TEAMKILL": false,
+            "TEAM_ALIVE": null,
+            "TEAM_DEAD": null,
+            "TIME": 108,
+            "VICTIM": {
+              "AIRBORNE": false,
+              "AMMO": 23,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 100,
+              "HOLDABLE": null,
+              "NAME": "Player2",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "22222222222222222",
+              "STREAK": 0,
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "ROCKET"
+            },
+            "WARMUP": true
+          },
+          "TYPE": "PLAYER_KILL"
+        }
+    
+        let date = new Date
+        let event = PlayerKillEvent.fromQl(qlEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+  
+        let result = await Services.get().matchParticipationLogic.count({}, tx())
+        
+        expect(result.count).to.equal(0)
+      })  
+
+      it('should inactivate any former match participations on the same server if the current game is another one', async function() {
+        let startDate = new Date
+        await create('server', { ip: '127.0.0.1', port: 27960 })
+        await create('server', { ip: '127.0.0.1', port: 27961 })
+        await create('player', { steamId: '11111111111111111' })
+        await create('player', { steamId: '22222222222222222' })
+        await create('player', { steamId: '33333333333333333' })
+        await create('server_visit', { serverId: 1, playerId: 2 })
+        await create('server_visit', { serverId: 1, playerId: 2 })
+        await create('server_visit', { serverId: 2, playerId: 3 })
+        await create('match', { serverId: 1, guid: '111111111111111111111111111111111111', active: true })
+        await create('match', { serverId: 2, guid: '222222222222222222222222222222222222', active: true })
+        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue })
+        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Red })
+        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 2, active: true, startDate: startDate, team: TeamType.Free })
+  
+        let qlEvent = {
+          "DATA": {
+            "KILLER": {
+              "AIRBORNE": false,
+              "AMMO": 0,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 0,
+              "HOLDABLE": null,
+              "NAME": "Player1",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "11111111111111111",
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "OTHER_WEAPON"
+            },
+            "MATCH_GUID": "333333333333333333333333333333333333",
+            "MOD": "SWITCHTEAM",
+            "OTHER_TEAM_ALIVE": null,
+            "OTHER_TEAM_DEAD": null,
+            "ROUND": null,
+            "SUICIDE": true,
+            "TEAMKILL": false,
+            "TEAM_ALIVE": null,
+            "TEAM_DEAD": null,
+            "TIME": 108,
+            "VICTIM": {
+              "AIRBORNE": false,
+              "AMMO": 23,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 100,
+              "HOLDABLE": null,
+              "NAME": "Player2",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "22222222222222222",
+              "STREAK": 0,
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "ROCKET"
+            },
+            "WARMUP": true
+          },
+          "TYPE": "PLAYER_KILL"
+        }
+    
+        let date = new Date(new Date(startDate).setSeconds(startDate.getSeconds() + 1))
+        let event = PlayerKillEvent.fromQl(qlEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+  
+        let result = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
+        
+        expect(result.entities.length).to.equal(3)
+        expect(result.entities[0].active).to.equal(false)
+        expect(result.entities[0].finishDate).to.be.null
+        expect(result.entities[0].matchId).to.equal(1)
+        expect(result.entities[0].playerId).to.equal(1)
+        expect(result.entities[0].roundId).to.be.null
+        expect(result.entities[0].serverId).to.equal(1)
+        expect(result.entities[0].startDate).to.deep.equal(startDate)
+        expect(result.entities[0].statsId).to.be.null
+        expect(result.entities[0].team).to.equal(TeamType.Blue)
+        expect(result.entities[1].active).to.equal(false)
+        expect(result.entities[1].finishDate).to.be.null
+        expect(result.entities[1].matchId).to.equal(1)
+        expect(result.entities[1].playerId).to.equal(2)
+        expect(result.entities[1].roundId).to.be.null
+        expect(result.entities[1].serverId).to.equal(1)
+        expect(result.entities[1].startDate).to.deep.equal(startDate)
+        expect(result.entities[1].statsId).to.be.null
+        expect(result.entities[1].team).to.equal(TeamType.Red)
+        expect(result.entities[2].active).to.equal(true)
+        expect(result.entities[2].finishDate).to.be.null
+        expect(result.entities[2].matchId).to.equal(2)
+        expect(result.entities[2].playerId).to.equal(3)
+        expect(result.entities[2].roundId).to.be.null
+        expect(result.entities[2].serverId).to.equal(2)
+        expect(result.entities[2].startDate).to.deep.equal(startDate)
+        expect(result.entities[2].statsId).to.be.null
+        expect(result.entities[2].team).to.equal(TeamType.Free)
+      })  
+
+      it('should inactivate any former match participation of the same player on any other servers', async function() {
+        let startDate = new Date
+        await create('server', { ip: '127.0.0.1', port: 27960 })
+        await create('server', { ip: '127.0.0.1', port: 27961 })
+        await create('player', { steamId: '11111111111111111' })
+        await create('player', { steamId: '22222222222222222' })
+        await create('player', { steamId: '33333333333333333' })
+        await create('server_visit', { serverId: 2, playerId: 2 })
+        await create('server_visit', { serverId: 2, playerId: 2 })
+        await create('server_visit', { serverId: 2, playerId: 3 })
+        await create('match', { serverId: 2, guid: '111111111111111111111111111111111111', active: true })
+        await create('match_participation', { serverId: 2, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue })
+        await create('match_participation', { serverId: 2, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Red })
+        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 1, active: true, startDate: startDate, team: TeamType.Red })
+  
+        let qlEvent = {
+          "DATA": {
+            "KILLER": {
+              "AIRBORNE": false,
+              "AMMO": 0,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 0,
+              "HOLDABLE": null,
+              "NAME": "Player1",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "11111111111111111",
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "OTHER_WEAPON"
+            },
+            "MATCH_GUID": "222222222222222222222222222222222222",
+            "MOD": "SWITCHTEAM",
+            "OTHER_TEAM_ALIVE": null,
+            "OTHER_TEAM_DEAD": null,
+            "ROUND": null,
+            "SUICIDE": true,
+            "TEAMKILL": false,
+            "TEAM_ALIVE": null,
+            "TEAM_DEAD": null,
+            "TIME": 108,
+            "VICTIM": {
+              "AIRBORNE": false,
+              "AMMO": 23,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 100,
+              "HOLDABLE": null,
+              "NAME": "Player2",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "22222222222222222",
+              "STREAK": 0,
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "ROCKET"
+            },
+            "WARMUP": true
+          },
+          "TYPE": "PLAYER_KILL"
+        }
+    
+        let date = new Date(new Date(startDate).setSeconds(startDate.getSeconds() + 1))
+        let event = PlayerKillEvent.fromQl(qlEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+  
+        let result = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
+        
+        expect(result.entities.length).to.equal(3)
+        expect(result.entities[0].active).to.equal(false)
+        expect(result.entities[0].finishDate).to.be.null
+        expect(result.entities[0].matchId).to.equal(1)
+        expect(result.entities[0].playerId).to.equal(1)
+        expect(result.entities[0].roundId).to.be.null
+        expect(result.entities[0].serverId).to.equal(2)
+        expect(result.entities[0].startDate).to.deep.equal(startDate)
+        expect(result.entities[0].statsId).to.be.null
+        expect(result.entities[0].team).to.equal(TeamType.Blue)
+        expect(result.entities[1].active).to.equal(false)
+        expect(result.entities[1].finishDate).to.be.null
+        expect(result.entities[1].matchId).to.equal(1)
+        expect(result.entities[1].playerId).to.equal(2)
+        expect(result.entities[1].roundId).to.be.null
+        expect(result.entities[1].serverId).to.equal(2)
+        expect(result.entities[1].startDate).to.deep.equal(startDate)
+        expect(result.entities[1].statsId).to.be.null
+        expect(result.entities[1].team).to.equal(TeamType.Red)
+        expect(result.entities[2].active).to.equal(true)
+        expect(result.entities[2].finishDate).to.be.null
+        expect(result.entities[2].matchId).to.equal(1)
+        expect(result.entities[2].playerId).to.equal(3)
+        expect(result.entities[2].roundId).to.be.null
+        expect(result.entities[2].serverId).to.equal(2)
+        expect(result.entities[2].startDate).to.deep.equal(startDate)
+        expect(result.entities[2].statsId).to.be.null
+        expect(result.entities[2].team).to.equal(TeamType.Red)
+      })  
     })
 
     describe('Frag', function () {
@@ -1338,7 +1868,7 @@ describe('service/QlStatsIntegrator.ts', function () {
           "INFECTED": 0,
           "INSTAGIB": 0,
           "MAP": "toxicity",
-          "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+          "MATCH_GUID": "111111111111111111111111111111111111",
           "MERCY_LIMIT": 0,
           "PLAYERS": [
             {
@@ -1394,7 +1924,7 @@ describe('service/QlStatsIntegrator.ts', function () {
             },
             "WEAPON": "ROCKET"
           },
-          "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+          "MATCH_GUID": "111111111111111111111111111111111111",
           "MOD": "ROCKET_SPLASH",
           "OTHER_TEAM_ALIVE": null,
           "OTHER_TEAM_DEAD": null,
@@ -1541,7 +2071,7 @@ describe('service/QlStatsIntegrator.ts', function () {
 
       let qlEvent = {
         "DATA": {
-          "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+          "MATCH_GUID": "111111111111111111111111111111111111",
           "MEDAL": "FIRSTFRAG",
           "NAME": "Play_ua",
           "STEAM_ID": "76561198157458366",
@@ -1580,7 +2110,7 @@ describe('service/QlStatsIntegrator.ts', function () {
     it('should create a new medal with a new server, a new player, a new server visit, a new match and a new match participation', async function () {
       let qlEvent = {
         "DATA": {
-          "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+          "MATCH_GUID": "111111111111111111111111111111111111",
           "MEDAL": "FIRSTFRAG",
           "NAME": "Play_ua",
           "STEAM_ID": "76561198157458366",
@@ -1637,7 +2167,7 @@ describe('service/QlStatsIntegrator.ts', function () {
       expect(matchesResult.entities[0].exitMessage).to.be.null
       expect(matchesResult.entities[0].factoryId).to.be.null
       expect(matchesResult.entities[0].finishDate).to.be.null
-      expect(matchesResult.entities[0].guid).to.equal('66fe025a-63ff-4852-96bd-9102411e9fb0')
+      expect(matchesResult.entities[0].guid).to.equal('111111111111111111111111111111111111')
       expect(matchesResult.entities[0].lastLeadChangeTime).to.be.null
       expect(matchesResult.entities[0].length).to.be.null
       expect(matchesResult.entities[0].mapId).to.be.null
@@ -1675,7 +2205,7 @@ describe('service/QlStatsIntegrator.ts', function () {
     it('should create a new medal for warmup with a new server, a new player and a new server visit', async function () {
       let qlEvent = {
         "DATA": {
-          "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+          "MATCH_GUID": "111111111111111111111111111111111111",
           "MEDAL": "FIRSTFRAG",
           "NAME": "Play_ua",
           "STEAM_ID": "76561198157458366",

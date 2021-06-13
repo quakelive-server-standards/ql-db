@@ -12,7 +12,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       it('should create a new server', async function() {
         let qlEvent = {
           "DATA" : {
-             "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
+             "MATCH_GUID" : "111111111111111111111111111111111111",
              "MEDAL" : "FIRSTFRAG",
              "NAME" : "Player",
              "STEAM_ID" : "11111111111111111",
@@ -42,7 +42,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
         let qlEvent = {
           "DATA" : {
-             "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
+             "MATCH_GUID" : "111111111111111111111111111111111111",
              "MEDAL" : "FIRSTFRAG",
              "NAME" : "Player",
              "STEAM_ID" : "11111111111111111",
@@ -71,7 +71,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
         let qlEvent = {
           "DATA" : {
-             "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
+             "MATCH_GUID" : "111111111111111111111111111111111111",
              "MEDAL" : "FIRSTFRAG",
              "NAME" : "Player",
              "STEAM_ID" : "11111111111111111",
@@ -100,7 +100,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       it('should create a new player', async function() {
         let qlEvent = {
           "DATA" : {
-             "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
+             "MATCH_GUID" : "111111111111111111111111111111111111",
              "MEDAL" : "FIRSTFRAG",
              "NAME" : "Player",
              "STEAM_ID" : "11111111111111111",
@@ -130,7 +130,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
         let qlEvent = {
           "DATA" : {
-             "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
+             "MATCH_GUID" : "111111111111111111111111111111111111",
              "MEDAL" : "FIRSTFRAG",
              "NAME" : "Player",
              "STEAM_ID" : "11111111111111111",
@@ -160,7 +160,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
         let qlEvent = {
           "DATA" : {
-             "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
+             "MATCH_GUID" : "111111111111111111111111111111111111",
              "MEDAL" : "FIRSTFRAG",
              "NAME" : "Player",
              "STEAM_ID" : "11111111111111111",
@@ -189,7 +189,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
         let qlEvent = {
           "DATA" : {
-             "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
+             "MATCH_GUID" : "111111111111111111111111111111111111",
              "MEDAL" : "FIRSTFRAG",
              "NAME" : "Player",
              "STEAM_ID" : "11111111111111111",
@@ -222,7 +222,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
         let qlEvent = {
           "DATA" : {
-             "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
+             "MATCH_GUID" : "111111111111111111111111111111111111",
              "MEDAL" : "FIRSTFRAG",
              "NAME" : "Player",
              "STEAM_ID" : "11111111111111111",
@@ -260,7 +260,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
         let qlEvent = {
           "DATA" : {
-             "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
+             "MATCH_GUID" : "111111111111111111111111111111111111",
              "MEDAL" : "FIRSTFRAG",
              "NAME" : "Player",
              "STEAM_ID" : "11111111111111111",
@@ -298,7 +298,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
         let qlEvent = {
           "DATA" : {
-             "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
+             "MATCH_GUID" : "111111111111111111111111111111111111",
              "MEDAL" : "FIRSTFRAG",
              "NAME" : "Player",
              "STEAM_ID" : "11111111111111111",
@@ -343,7 +343,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       it('should create a new match', async function() {
         let qlEvent = {
           "DATA" : {
-             "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
+             "MATCH_GUID" : "111111111111111111111111111111111111",
              "MEDAL" : "FIRSTFRAG",
              "NAME" : "Player",
              "STEAM_ID" : "11111111111111111",
@@ -376,7 +376,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(result.entities[0].exitMessage).to.be.null
         expect(result.entities[0].factoryId).to.be.null
         expect(result.entities[0].finishDate).to.be.null
-        expect(result.entities[0].guid).to.equal('66fe025a-63ff-4852-96bd-9102411e9fb0')
+        expect(result.entities[0].guid).to.equal('111111111111111111111111111111111111')
         expect(result.entities[0].lastLeadChangeTime).to.be.null
         expect(result.entities[0].length).to.be.null
         expect(result.entities[0].mapId).to.be.null
@@ -389,11 +389,11 @@ describe('service/QlStatsIntegrator.ts', function() {
 
       it('should not create a new match', async function() {
         await create('server', { ip: '127.0.0.1', port: 27960 })
-        await create('match', { serverId: 1, guid: '66fe025a-63ff-4852-96bd-9102411e9fb0', active: true })
+        await create('match', { serverId: 1, guid: '111111111111111111111111111111111111', active: true })
 
         let qlEvent = {
           "DATA" : {
-             "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
+             "MATCH_GUID" : "111111111111111111111111111111111111",
              "MEDAL" : "FIRSTFRAG",
              "NAME" : "Player",
              "STEAM_ID" : "11111111111111111",
@@ -416,7 +416,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       it('should not create a new match if the current match is warmup', async function() {
         let qlEvent = {
           "DATA" : {
-             "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
+             "MATCH_GUID" : "111111111111111111111111111111111111",
              "MEDAL" : "FIRSTFRAG",
              "NAME" : "Player",
              "STEAM_ID" : "11111111111111111",
@@ -438,7 +438,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
       it('should inactivate matches on the same server if they are not the current active match', async function() {
         await create('match', { active: true, guid: '66fe025a-63ff-4852-96bd-9102411e9fa0', serverId: 1 })
-        await create('match', { active: true, guid: '66fe025a-63ff-4852-96bd-9102411e9fb0', serverId: 2 })
+        await create('match', { active: true, guid: '111111111111111111111111111111111111', serverId: 2 })
         
         let qlEvent = {
           "DATA" : {
@@ -469,7 +469,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       it('should create a new new match participation', async function() {
         let qlEvent = {
           "DATA" : {
-             "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
+             "MATCH_GUID" : "111111111111111111111111111111111111",
              "MEDAL" : "FIRSTFRAG",
              "NAME" : "Player",
              "STEAM_ID" : "11111111111111111",
@@ -502,15 +502,19 @@ describe('service/QlStatsIntegrator.ts', function() {
         let startDate = new Date
         await create('server', { ip: '127.0.0.1', port: 27960 })
         await create('player', { steamId: '11111111111111111' })
-        await create('match', { serverId: 1, guid: '66fe025a-63ff-4852-96bd-9102411e9fb0', active: true })
-        await create('match_participation', { serverId: 1, playerId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue })
+        await create('player', { steamId: '22222222222222222' })
+        await create('server_visit', { serverId: 1, playerId: 1 })
+        await create('server_visit', { serverId: 1, playerId: 2 })
+        await create('match', { serverId: 1, guid: '111111111111111111111111111111111111', active: true })
+        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue })
+        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue })
   
         let qlEvent = {
           "DATA" : {
-             "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
+             "MATCH_GUID" : "111111111111111111111111111111111111",
              "MEDAL" : "FIRSTFRAG",
              "NAME" : "Player",
-             "STEAM_ID" : "11111111111111111",
+             "STEAM_ID" : "22222222222222222",
              "TIME" : 23,
              "TOTAL" : 1,
              "WARMUP" : false
@@ -539,7 +543,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       it('should not create a new match participation for warmup', async function() {
         let qlEvent = {
           "DATA" : {
-             "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
+             "MATCH_GUID" : "111111111111111111111111111111111111",
              "MEDAL" : "FIRSTFRAG",
              "NAME" : "Player",
              "STEAM_ID" : "11111111111111111",
@@ -554,9 +558,9 @@ describe('service/QlStatsIntegrator.ts', function() {
         let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
   
-        let matchParticipationsResult = await Services.get().matchParticipationLogic.count({}, tx())
+        let result = await Services.get().matchParticipationLogic.count({}, tx())
         
-        expect(matchParticipationsResult.count).to.equal(0)
+        expect(result.count).to.equal(0)
       })  
 
       it('should inactivate any former match participations on the same server if the current game is another one', async function() {
@@ -564,15 +568,19 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('server', { ip: '127.0.0.1', port: 27960 })
         await create('player', { steamId: '11111111111111111' })
         await create('player', { steamId: '22222222222222222' })
+        await create('player', { steamId: '33333333333333333' })
         await create('server_visit', { serverId: 1, playerId: 2 })
         await create('server_visit', { serverId: 1, playerId: 2 })
-        await create('match', { serverId: 1, guid: '66fe025a-63ff-4852-96bd-9102411e9fa0', active: true })
+        await create('server_visit', { serverId: 2, playerId: 3 })
+        await create('match', { serverId: 1, guid: '111111111111111111111111111111111111', active: true })
+        await create('match', { serverId: 2, guid: '222222222222222222222222222222222222', active: true })
         await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue })
         await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Red })
+        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 2, active: true, startDate: startDate, team: TeamType.Free })
   
         let qlEvent = {
           "DATA" : {
-             "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
+             "MATCH_GUID" : "111111111111111111111111111111111111",
              "MEDAL" : "FIRSTFRAG",
              "NAME" : "Player",
              "STEAM_ID" : "11111111111111111",
@@ -589,7 +597,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         let result = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
         
-        expect(result.entities.length).to.equal(2)
+        expect(result.entities.length).to.equal(3)
         expect(result.entities[0].active).to.equal(false)
         expect(result.entities[0].finishDate).to.be.null
         expect(result.entities[0].matchId).to.equal(1)
@@ -608,6 +616,15 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(result.entities[1].startDate).to.deep.equal(startDate)
         expect(result.entities[1].statsId).to.be.null
         expect(result.entities[1].team).to.equal(TeamType.Red)
+        expect(result.entities[2].active).to.equal(true)
+        expect(result.entities[2].finishDate).to.be.null
+        expect(result.entities[2].matchId).to.equal(2)
+        expect(result.entities[2].playerId).to.equal(3)
+        expect(result.entities[2].roundId).to.be.null
+        expect(result.entities[2].serverId).to.equal(2)
+        expect(result.entities[2].startDate).to.deep.equal(startDate)
+        expect(result.entities[2].statsId).to.be.null
+        expect(result.entities[2].team).to.equal(TeamType.Free)
       })  
 
       it('should inactivate any former match participation of the same player on any other servers', async function() {
@@ -616,15 +633,15 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('server', { ip: '127.0.0.1', port: 27961 })
         await create('player', { steamId: '11111111111111111' })
         await create('player', { steamId: '22222222222222222' })
-        await create('server_visit', { serverId: 1, playerId: 2 })
-        await create('server_visit', { serverId: 1, playerId: 2 })
-        await create('match', { serverId: 2, guid: '66fe025a-63ff-4852-96bd-9102411e9fa0', active: true })
+        await create('server_visit', { serverId: 2, playerId: 2 })
+        await create('server_visit', { serverId: 2, playerId: 2 })
+        await create('match', { serverId: 2, guid: '111111111111111111111111111111111111', active: true })
         await create('match_participation', { serverId: 2, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue })
         await create('match_participation', { serverId: 2, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Red })
   
         let qlEvent = {
           "DATA" : {
-             "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
+             "MATCH_GUID" : "222222222222222222222222222222222222",
              "MEDAL" : "FIRSTFRAG",
              "NAME" : "Player",
              "STEAM_ID" : "11111111111111111",
@@ -667,7 +684,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       it('should create a new medal', async function() {
         let qlEvent = {
           "DATA" : {
-             "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
+             "MATCH_GUID" : "111111111111111111111111111111111111",
              "MEDAL" : "FIRSTFRAG",
              "NAME" : "Player",
              "STEAM_ID" : "11111111111111111",
@@ -698,7 +715,7 @@ describe('service/QlStatsIntegrator.ts', function() {
       it('should create a new medal for warmup', async function() {
         let qlEvent = {
           "DATA" : {
-             "MATCH_GUID" : "66fe025a-63ff-4852-96bd-9102411e9fb0",
+             "MATCH_GUID" : "111111111111111111111111111111111111",
              "MEDAL" : "FIRSTFRAG",
              "NAME" : "Player",
              "STEAM_ID" : "11111111111111111",

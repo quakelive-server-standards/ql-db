@@ -529,50 +529,50 @@ export class QlStatsIntegrator {
       }
 
       // get or create active server visit
-      let activeServerVisitOfKillerResult = await this.serverVisitLogic.getActive(server.id!, killer.id!, tx)
-      l.dev('activeServerVisitResult', activeServerVisitOfKillerResult)
-      let killerServerVisit = activeServerVisitOfKillerResult.entity
+      let activeKillerServerVisitResult = await this.serverVisitLogic.getActive(server.id!, killer.id!, tx)
+      l.dev('activeServerVisitResult', activeKillerServerVisitResult)
+      let activeKillerServerVisit = activeKillerServerVisitResult.entity
 
-      if (killerServerVisit == undefined) {
+      if (activeKillerServerVisit == undefined) {
         l.dev('There is no server visit for the killer. Creating one...')
 
-        killerServerVisit = new ServerVisit
-        killerServerVisit.connectDate = eventEmitDate
-        killerServerVisit.active = true
-        killerServerVisit.playerId = killer.id
-        killerServerVisit.serverId = server.id
+        activeKillerServerVisit = new ServerVisit
+        activeKillerServerVisit.connectDate = eventEmitDate
+        activeKillerServerVisit.active = true
+        activeKillerServerVisit.playerId = killer.id
+        activeKillerServerVisit.serverId = server.id
 
-        let serverVisitCreateResult = await this.serverVisitLogic.create(killerServerVisit, tx)
+        let serverVisitCreateResult = await this.serverVisitLogic.create(activeKillerServerVisit, tx)
         l.var('serverVisitCreateResult', serverVisitCreateResult)
 
         if (serverVisitCreateResult.isMisfits()) {
           throw new MisfitsError(serverVisitCreateResult.misfits)
         }
 
-        killerServerVisit = serverResult.entity
+        activeKillerServerVisit = serverResult.entity
       }
 
-      let activeServerVisitOfVictimResult = await this.serverVisitLogic.getActive(server.id!, victim.id!, tx)
-      l.dev('activeServerVisitResult', activeServerVisitOfVictimResult)
-      let victimServerVisit = activeServerVisitOfVictimResult.entity
+      let activeVictimServerVisitResult = await this.serverVisitLogic.getActive(server.id!, victim.id!, tx)
+      l.dev('activeServerVisitResult', activeVictimServerVisitResult)
+      let activeVictimServerVisit = activeVictimServerVisitResult.entity
 
-      if (victimServerVisit == undefined) {
+      if (activeVictimServerVisit == undefined) {
         l.dev('There is no server visit for the victim. Creating one...')
 
-        victimServerVisit = new ServerVisit
-        victimServerVisit.connectDate = eventEmitDate
-        victimServerVisit.active = true
-        victimServerVisit.playerId = victim.id
-        victimServerVisit.serverId = server.id
+        activeVictimServerVisit = new ServerVisit
+        activeVictimServerVisit.connectDate = eventEmitDate
+        activeVictimServerVisit.active = true
+        activeVictimServerVisit.playerId = victim.id
+        activeVictimServerVisit.serverId = server.id
 
-        let serverVisitCreateResult = await this.serverVisitLogic.create(victimServerVisit, tx)
+        let serverVisitCreateResult = await this.serverVisitLogic.create(activeVictimServerVisit, tx)
         l.var('serverVisitCreateResult', serverVisitCreateResult)
 
         if (serverVisitCreateResult.isMisfits()) {
           throw new MisfitsError(serverVisitCreateResult.misfits)
         }
 
-        victimServerVisit = serverResult.entity
+        activeVictimServerVisit = serverResult.entity
       }
 
       // find all active matches on the server and inactivate them if they are not the current active match
@@ -589,22 +589,132 @@ export class QlStatsIntegrator {
         }
       }
 
+      // inactivate any match participation on this server which does not reference the current match
+      let activeMatchParticipationsResult = await this.matchParticipationLogic.read({
+        serverId: server.id,
+        active: true,
+        match: {
+          '@filterGlobally': true,
+          guid: { operator: '!=', value: event.matchGuid }
+        }
+      }, tx)
+
+      l.var('activeMatchParticipationsResult', activeMatchParticipationsResult)
+
+      for (let activeMatchParticipation of activeMatchParticipationsResult.entities) {
+        activeMatchParticipation.active = false
+        let matchParticipationUpdateResult = await this.matchParticipationLogic.update(activeMatchParticipation, tx)
+
+        if (matchParticipationUpdateResult.isMisfits()) {
+          throw new MisfitsError(matchParticipationUpdateResult.misfits)
+        }
+      }
+
+      // inactivate any match participation of that player on any other servers
+      let activeKillerMatchParticipationsOnOtherServersResult = await this.matchParticipationLogic.read({
+        serverId: { operator: '!=', value: server.id },
+        playerId: killer.id,
+        active: true
+      }, tx)
+
+      for (let activeMatchParticipation of activeKillerMatchParticipationsOnOtherServersResult.entities) {
+        activeMatchParticipation.active = false
+        let matchParticipationUpdateResult = await this.matchParticipationLogic.update(activeMatchParticipation, tx)
+
+        if (matchParticipationUpdateResult.isMisfits()) {
+          throw new MisfitsError(matchParticipationUpdateResult.misfits)
+        }
+      }
+    
+      // inactivate any match participation of that player on any other servers
+      let activeVictimMatchParticipationsOnOtherServersResult = await this.matchParticipationLogic.read({
+        serverId: { operator: '!=', value: server.id },
+        playerId: victim.id,
+        active: true
+      }, tx)
+
+      for (let activeMatchParticipation of activeVictimMatchParticipationsOnOtherServersResult.entities) {
+        activeMatchParticipation.active = false
+        let matchParticipationUpdateResult = await this.matchParticipationLogic.update(activeMatchParticipation, tx)
+
+        if (matchParticipationUpdateResult.isMisfits()) {
+          throw new MisfitsError(matchParticipationUpdateResult.misfits)
+        }
+      }
+    
       // if we are not in warmup, create or get the match
       let match
       if (! event.warmup) {
         match = await this.createMissingMatch(server.id!, event.matchGuid, event.time, eventEmitDate, tx)
       }
 
+      // if we have a match then we can try to get the corresponding match participation for the player
+      let killerMatchParticipation
+      if (match) {
+        let matchParticipationsResult = await this.matchParticipationLogic.read({ matchId: match.id, playerId: killer.id }, tx)
+
+        if (matchParticipationsResult.entities.length == 0) {
+          killerMatchParticipation = new MatchParticipation
+          killerMatchParticipation.active = true
+          killerMatchParticipation.matchId = match.id
+          killerMatchParticipation.playerId = killer.id
+          killerMatchParticipation.serverId = server.id
+          killerMatchParticipation.serverVisitId = activeKillerServerVisit.id
+          // we cannot know the start date thus we just take the date of the kill itself
+          killerMatchParticipation.startDate = eventEmitDate
+          killerMatchParticipation.team = mapTeamType(event.killer.team)
+
+          let matchParticipationCreateResult = await this.matchParticipationLogic.create(killerMatchParticipation, tx)
+
+          if (matchParticipationCreateResult.isMisfits()) {
+            throw new MisfitsError(matchParticipationCreateResult.misfits)
+          }
+
+          killerMatchParticipation = matchParticipationCreateResult.entity
+        }
+        else {
+          killerMatchParticipation = matchParticipationsResult.entities[0]
+        }
+      }      
+
+      let victimMatchParticipation
+      if (match) {
+        let matchParticipationsResult = await this.matchParticipationLogic.read({ matchId: match.id, playerId: victim.id }, tx)
+
+        if (matchParticipationsResult.entities.length == 0) {
+          victimMatchParticipation = new MatchParticipation
+          victimMatchParticipation.active = true
+          victimMatchParticipation.matchId = match.id
+          victimMatchParticipation.playerId = victim.id
+          victimMatchParticipation.serverId = server.id
+          victimMatchParticipation.serverVisitId = activeVictimServerVisit.id
+          // we cannot know the start date thus we just take the date of the kill itself
+          victimMatchParticipation.startDate = eventEmitDate
+          victimMatchParticipation.team = mapTeamType(event.victim.team)
+
+          let matchParticipationCreateResult = await this.matchParticipationLogic.create(victimMatchParticipation, tx)
+
+          if (matchParticipationCreateResult.isMisfits()) {
+            throw new MisfitsError(matchParticipationCreateResult.misfits)
+          }
+
+          victimMatchParticipation = matchParticipationCreateResult.entity
+        }
+        else {
+          victimMatchParticipation = matchParticipationsResult.entities[0]
+        }
+      }      
+
       let frag = new Frag
 
       frag.date = eventEmitDate
       frag.killer = new FragParticipant
       frag.killer.playerId = killer.id
-      frag.killer.serverVisitId = killerServerVisit.id
+      frag.killer.serverVisitId = activeKillerServerVisit.id
       frag.matchId = match ? match.id : null
       frag.victim = new FragParticipant
       frag.victim.playerId = victim.id
-      frag.victim.serverVisitId = victimServerVisit.id
+      frag.victim.serverVisitId = activeVictimServerVisit.id
       frag.serverId = server.id
 
       frag.otherTeamAlive = event.otherTeamAlive
@@ -792,40 +902,6 @@ export class QlStatsIntegrator {
         }
       }
 
-      // if we are not in warmup, create or get the match
-      let match
-      if (! event.warmup) {
-        match = await this.createMissingMatch(server.id!, event.matchGuid, event.time, eventEmitDate, tx)
-      }
-
-      // if we have a match then we can try to get the corresponding match participation for the player
-      let matchParticipation
-      if (match) {
-        let matchParticipationsResult = await this.matchParticipationLogic.read({ matchId: match.id }, tx)
-
-        if (matchParticipationsResult.entities.length == 0) {
-          matchParticipation = new MatchParticipation
-          matchParticipation.active = true
-          matchParticipation.matchId = match.id
-          matchParticipation.playerId = player.id
-          matchParticipation.serverId = server.id
-          matchParticipation.serverVisitId = activeServerVisit.id
-          // we cannot know the start date thus we just take the date of the medal itself
-          matchParticipation.startDate = eventEmitDate
-
-          let matchParticipationCreateResult = await this.matchParticipationLogic.create(matchParticipation, tx)
-
-          if (matchParticipationCreateResult.isMisfits()) {
-            throw new MisfitsError(matchParticipationCreateResult.misfits)
-          }
-
-          matchParticipation = matchParticipationCreateResult.entity
-        }
-        else {
-          matchParticipation = matchParticipationsResult.entities[0]
-        }
-      }
-
       // inactivate any match participation on this server which does not reference the current match
       let activeMatchParticipationsResult = await this.matchParticipationLogic.read({
         serverId: server.id,
@@ -860,6 +936,40 @@ export class QlStatsIntegrator {
 
         if (matchParticipationUpdateResult.isMisfits()) {
           throw new MisfitsError(matchParticipationUpdateResult.misfits)
+        }
+      }
+
+      // if we are not in warmup, create or get the match
+      let match
+      if (! event.warmup) {
+        match = await this.createMissingMatch(server.id!, event.matchGuid, event.time, eventEmitDate, tx)
+      }
+
+      // if we have a match then we can try to get the corresponding match participation for the player
+      let matchParticipation
+      if (match) {
+        let matchParticipationsResult = await this.matchParticipationLogic.read({ matchId: match.id }, tx)
+
+        if (matchParticipationsResult.entities.length == 0) {
+          matchParticipation = new MatchParticipation
+          matchParticipation.active = true
+          matchParticipation.matchId = match.id
+          matchParticipation.playerId = player.id
+          matchParticipation.serverId = server.id
+          matchParticipation.serverVisitId = activeServerVisit.id
+          // we cannot know the start date thus we just take the date of the medal itself
+          matchParticipation.startDate = eventEmitDate
+
+          let matchParticipationCreateResult = await this.matchParticipationLogic.create(matchParticipation, tx)
+
+          if (matchParticipationCreateResult.isMisfits()) {
+            throw new MisfitsError(matchParticipationCreateResult.misfits)
+          }
+
+          matchParticipation = matchParticipationCreateResult.entity
+        }
+        else {
+          matchParticipation = matchParticipationsResult.entities[0]
         }
       }
 
