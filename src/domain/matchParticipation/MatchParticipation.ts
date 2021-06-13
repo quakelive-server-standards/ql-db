@@ -11,7 +11,7 @@ import { Stats } from '../stats/Stats'
 export class MatchParticipation {
   
   id?: number
-  matchId?: number
+  matchId?: number | null
   playerId?: number
   roundId?: number | null
   serverId?: number
