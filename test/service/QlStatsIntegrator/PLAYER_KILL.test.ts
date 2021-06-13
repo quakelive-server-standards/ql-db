@@ -31,7 +31,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "SPEED": 0,
               "STEAM_ID": "11111111111111111",
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 1,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -68,7 +68,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "STEAM_ID": "22222222222222222",
               "STREAK": 0,
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 2,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -118,7 +118,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "SPEED": 0,
               "STEAM_ID": "11111111111111111",
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 1,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -155,7 +155,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "STEAM_ID": "22222222222222222",
               "STREAK": 0,
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 2,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -204,7 +204,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "SPEED": 0,
               "STEAM_ID": "11111111111111111",
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 1,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -241,7 +241,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "STEAM_ID": "22222222222222222",
               "STREAK": 0,
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 2,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -290,7 +290,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "SPEED": 0,
               "STEAM_ID": "11111111111111111",
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 1,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -327,7 +327,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "STEAM_ID": "22222222222222222",
               "STREAK": 0,
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 2,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -382,7 +382,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "SPEED": 0,
               "STEAM_ID": "11111111111111111",
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 1,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -419,7 +419,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "STEAM_ID": "22222222222222222",
               "STREAK": 0,
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 2,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -474,7 +474,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "SPEED": 0,
               "STEAM_ID": "11111111111111111",
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 1,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -511,7 +511,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "STEAM_ID": "22222222222222222",
               "STREAK": 0,
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 2,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -565,7 +565,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "SPEED": 0,
               "STEAM_ID": "11111111111111111",
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 1,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -602,7 +602,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "STEAM_ID": "22222222222222222",
               "STREAK": 0,
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 2,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -658,7 +658,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "SPEED": 0,
               "STEAM_ID": "11111111111111111",
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 1,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -695,7 +695,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "STEAM_ID": "22222222222222222",
               "STREAK": 0,
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 2,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -755,7 +755,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "SPEED": 0,
               "STEAM_ID": "11111111111111111",
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 1,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -792,7 +792,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "STEAM_ID": "22222222222222222",
               "STREAK": 0,
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 2,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -856,7 +856,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "SPEED": 0,
               "STEAM_ID": "11111111111111111",
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 1,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -893,7 +893,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "STEAM_ID": "22222222222222222",
               "STREAK": 0,
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 2,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -956,7 +956,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "SPEED": 0,
               "STEAM_ID": "11111111111111111",
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 1,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -993,7 +993,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "STEAM_ID": "22222222222222222",
               "STREAK": 0,
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 2,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -1063,7 +1063,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "SPEED": 0,
               "STEAM_ID": "11111111111111111",
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 1,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -1100,7 +1100,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "STEAM_ID": "22222222222222222",
               "STREAK": 0,
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 2,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -1143,7 +1143,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "SPEED": 0,
               "STEAM_ID": "11111111111111111",
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 1,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -1180,7 +1180,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "STEAM_ID": "22222222222222222",
               "STREAK": 0,
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 2,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -1226,7 +1226,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "SPEED": 0,
               "STEAM_ID": "11111111111111111",
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 1,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -1263,7 +1263,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "STEAM_ID": "22222222222222222",
               "STREAK": 0,
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 2,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -1310,7 +1310,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "SPEED": 0,
               "STEAM_ID": "11111111111111111",
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 1,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -1347,7 +1347,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "STEAM_ID": "22222222222222222",
               "STREAK": 0,
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 2,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -1375,7 +1375,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].serverId).to.equal(1)
         expect(result.entities[0].startDate).to.deep.equal(date)
         expect(result.entities[0].statsId).to.be.null
-        expect(result.entities[0].team).to.equal(TeamType.Free)
+        expect(result.entities[0].team).to.equal(TeamType.Red)
         expect(result.entities[1].active).to.equal(true)
         expect(result.entities[1].finishDate).to.be.null
         expect(result.entities[1].matchId).to.equal(1)
@@ -1384,7 +1384,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[1].serverId).to.equal(1)
         expect(result.entities[1].startDate).to.deep.equal(date)
         expect(result.entities[1].statsId).to.be.null
-        expect(result.entities[1].team).to.equal(TeamType.Free)
+        expect(result.entities[1].team).to.equal(TeamType.Blue)
       })
 
       it('should not create a new match participation', async function() {
@@ -1395,8 +1395,8 @@ describe('service/QlStatsIntegrator.ts', function () {
         await create('server_visit', { serverId: 1, playerId: 1 })
         await create('server_visit', { serverId: 1, playerId: 2 })
         await create('match', { serverId: 1, guid: '111111111111111111111111111111111111', active: true })
-        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Free })
-        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Free })
+        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Red })
+        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue })
   
         let qlEvent = {
           "DATA": {
@@ -1418,7 +1418,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "SPEED": 0,
               "STEAM_ID": "11111111111111111",
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 1,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -1455,7 +1455,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "STEAM_ID": "22222222222222222",
               "STREAK": 0,
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 2,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -1483,7 +1483,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].serverId).to.equal(1)
         expect(result.entities[0].startDate).to.deep.equal(startDate)
         expect(result.entities[0].statsId).to.be.null
-        expect(result.entities[0].team).to.equal(TeamType.Free)
+        expect(result.entities[0].team).to.equal(TeamType.Red)
         expect(result.entities[1].active).to.equal(true)
         expect(result.entities[1].finishDate).to.be.null
         expect(result.entities[1].matchId).to.equal(1)
@@ -1492,7 +1492,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[1].serverId).to.equal(1)
         expect(result.entities[1].startDate).to.deep.equal(startDate)
         expect(result.entities[1].statsId).to.be.null
-        expect(result.entities[1].team).to.equal(TeamType.Free)
+        expect(result.entities[1].team).to.equal(TeamType.Blue)
       })  
 
       it('should not create a new match participation for warmup', async function() {
@@ -1516,7 +1516,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "SPEED": 0,
               "STEAM_ID": "11111111111111111",
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 1,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -1553,7 +1553,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "STEAM_ID": "22222222222222222",
               "STREAK": 0,
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 2,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -1589,7 +1589,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         await create('match', { serverId: 2, guid: '222222222222222222222222222222222222', active: true })
         await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue })
         await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Red })
-        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 2, active: true, startDate: startDate, team: TeamType.Free })
+        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 2, active: true, startDate: startDate, team: TeamType.Blue })
   
         let qlEvent = {
           "DATA": {
@@ -1611,7 +1611,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "SPEED": 0,
               "STEAM_ID": "11111111111111111",
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 1,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -1648,7 +1648,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               "STEAM_ID": "22222222222222222",
               "STREAK": 0,
               "SUBMERGED": false,
-              "TEAM": 0,
+              "TEAM": 2,
               "VIEW": {
                 "X": 20.01708984375,
                 "Y": -23.70849609375,
@@ -1694,10 +1694,131 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[2].serverId).to.equal(2)
         expect(result.entities[2].startDate).to.deep.equal(startDate)
         expect(result.entities[2].statsId).to.be.null
-        expect(result.entities[2].team).to.equal(TeamType.Free)
+        expect(result.entities[2].team).to.equal(TeamType.Blue)
       })  
 
       it('should inactivate any former match participation of the same player on any other servers', async function() {
+        let startDate = new Date
+        await create('server', { ip: '127.0.0.1', port: 27960 })
+        await create('server', { ip: '127.0.0.1', port: 27961 })
+        await create('player', { steamId: '11111111111111111' })
+        await create('player', { steamId: '22222222222222222' })
+        await create('player', { steamId: '33333333333333333' })
+        await create('server_visit', { serverId: 2, playerId: 2 })
+        await create('server_visit', { serverId: 2, playerId: 2 })
+        await create('server_visit', { serverId: 2, playerId: 3 })
+        await create('match', { serverId: 2, guid: '111111111111111111111111111111111111', active: true })
+        await create('match_participation', { serverId: 2, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue })
+        await create('match_participation', { serverId: 2, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Red })
+        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 1, active: true, startDate: startDate, team: TeamType.Red })
+  
+        let qlEvent = {
+          "DATA": {
+            "KILLER": {
+              "AIRBORNE": false,
+              "AMMO": 0,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 0,
+              "HOLDABLE": null,
+              "NAME": "Player1",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "11111111111111111",
+              "SUBMERGED": false,
+              "TEAM": 1,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "OTHER_WEAPON"
+            },
+            "MATCH_GUID": "222222222222222222222222222222222222",
+            "MOD": "SWITCHTEAM",
+            "OTHER_TEAM_ALIVE": null,
+            "OTHER_TEAM_DEAD": null,
+            "ROUND": null,
+            "SUICIDE": true,
+            "TEAMKILL": false,
+            "TEAM_ALIVE": null,
+            "TEAM_DEAD": null,
+            "TIME": 108,
+            "VICTIM": {
+              "AIRBORNE": false,
+              "AMMO": 23,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 100,
+              "HOLDABLE": null,
+              "NAME": "Player2",
+              "POSITION": {
+                "X": 314.9967346191406,
+                "Y": 427.2147827148438,
+                "Z": 264.2636413574219
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "22222222222222222",
+              "STREAK": 0,
+              "SUBMERGED": false,
+              "TEAM": 2,
+              "VIEW": {
+                "X": 20.01708984375,
+                "Y": -23.70849609375,
+                "Z": 0
+              },
+              "WEAPON": "ROCKET"
+            },
+            "WARMUP": true
+          },
+          "TYPE": "PLAYER_KILL"
+        }
+    
+        let date = new Date(new Date(startDate).setSeconds(startDate.getSeconds() + 1))
+        let event = PlayerKillEvent.fromQl(qlEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+  
+        let result = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
+        
+        expect(result.entities.length).to.equal(3)
+        expect(result.entities[0].active).to.equal(false)
+        expect(result.entities[0].finishDate).to.be.null
+        expect(result.entities[0].matchId).to.equal(1)
+        expect(result.entities[0].playerId).to.equal(1)
+        expect(result.entities[0].roundId).to.be.null
+        expect(result.entities[0].serverId).to.equal(2)
+        expect(result.entities[0].startDate).to.deep.equal(startDate)
+        expect(result.entities[0].statsId).to.be.null
+        expect(result.entities[0].team).to.equal(TeamType.Blue)
+        expect(result.entities[1].active).to.equal(false)
+        expect(result.entities[1].finishDate).to.be.null
+        expect(result.entities[1].matchId).to.equal(1)
+        expect(result.entities[1].playerId).to.equal(2)
+        expect(result.entities[1].roundId).to.be.null
+        expect(result.entities[1].serverId).to.equal(2)
+        expect(result.entities[1].startDate).to.deep.equal(startDate)
+        expect(result.entities[1].statsId).to.be.null
+        expect(result.entities[1].team).to.equal(TeamType.Red)
+        expect(result.entities[2].active).to.equal(true)
+        expect(result.entities[2].finishDate).to.be.null
+        expect(result.entities[2].matchId).to.equal(1)
+        expect(result.entities[2].playerId).to.equal(3)
+        expect(result.entities[2].roundId).to.be.null
+        expect(result.entities[2].serverId).to.equal(2)
+        expect(result.entities[2].startDate).to.deep.equal(startDate)
+        expect(result.entities[2].statsId).to.be.null
+        expect(result.entities[2].team).to.equal(TeamType.Red)
+      })  
+
+      it('should create a new match participation if the player is in a different team than expected', async function() {
         let startDate = new Date
         await create('server', { ip: '127.0.0.1', port: 27960 })
         await create('server', { ip: '127.0.0.1', port: 27961 })
@@ -1819,7 +1940,7 @@ describe('service/QlStatsIntegrator.ts', function () {
       })  
     })
 
-    describe.only('Frag', function () {
+    describe('Frag', function () {
       it('should create a new medal', async function() {
         let startDate = new Date
         await create('server', { ip: '127.0.0.1', port: 27960 })
