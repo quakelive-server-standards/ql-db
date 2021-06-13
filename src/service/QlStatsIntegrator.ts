@@ -753,7 +753,13 @@ export class QlStatsIntegrator {
         serverVisit.active = true
         serverVisit.connectDate = eventEmitDate
   
-        await this.serverVisitLogic.create(serverVisit, tx)
+        let serverVisitCreateResult = await this.serverVisitLogic.create(serverVisit, tx)
+
+        if (serverVisitCreateResult.isMisfits()) {
+          throw new MisfitsError(serverVisitCreateResult.misfits)
+        }
+
+        activeServerVisit = serverVisitCreateResult.entity
       }
       else {
         l.dev('Found active server visit', activeServerVisit)
@@ -803,6 +809,7 @@ export class QlStatsIntegrator {
           matchParticipation.matchId = match.id
           matchParticipation.playerId = player.id
           matchParticipation.serverId = server.id
+          matchParticipation.serverVisitId = activeServerVisit.id
           // we cannot know the start date thus we just take the date of the medal itself
           matchParticipation.startDate = eventEmitDate
 

@@ -8,7 +8,7 @@ import { WeaponType } from '../../../src/domain/enums/WeaponType'
 import Services from '../../../src/Services'
 import { create, tx } from '../../tools'
 
-describe.only('service/QlStatsIntegrator.ts', function () {
+describe('service/QlStatsIntegrator.ts', function () {
   describe('PLAYER_KILL', function () {
     describe('Server', function () {
       it('should create a new server', async function () {
@@ -935,7 +935,7 @@ describe.only('service/QlStatsIntegrator.ts', function () {
       })
     })
 
-    describe.only('Match', function () {
+    describe('Match', function () {
       it('should create a new match', async function() {
         let qlEvent = {
           "DATA": {
