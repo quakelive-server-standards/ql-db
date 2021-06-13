@@ -616,7 +616,7 @@ export class QlStatsIntegrator {
         }
       }
 
-      // deactivate any match participation of that player on any other servers
+      // deactivate any match participations of the players on any other servers
       let activeKillerMatchParticipationsOnOtherServersResult = await this.matchParticipationLogic.read({
         serverId: { operator: '!=', value: server.id },
         playerId: killer.id,
@@ -634,7 +634,6 @@ export class QlStatsIntegrator {
         }
       }
     
-      // deactivate any match participation of that player on any other servers
       let activeVictimMatchParticipationsOnOtherServersResult = await this.matchParticipationLogic.read({
         serverId: { operator: '!=', value: server.id },
         playerId: victim.id,
@@ -792,83 +791,88 @@ export class QlStatsIntegrator {
         l.dev('Created new active match participation for the victim', victimMatchParticipation)
       }
 
-      let frag = new Frag
+      if (event.mod != ModType.SWITCHTEAM) {
+        let frag = new Frag
 
-      frag.date = eventEmitDate
-      frag.killer = new FragParticipant
-      frag.killer.matchParticipationId = killerMatchParticipation ? killerMatchParticipation.id : null
-      frag.killer.playerId = killer.id
-      frag.killer.serverVisitId = activeKillerServerVisit.id
-      frag.matchId = match ? match.id : null
-      frag.victim = new FragParticipant
-      frag.victim.matchParticipationId = victimMatchParticipation ? victimMatchParticipation.id : null
-      frag.victim.playerId = victim.id
-      frag.victim.serverVisitId = activeVictimServerVisit.id
-      frag.serverId = server.id
-
-      frag.reason = mapModType(event.mod)
-      frag.otherTeamAlive = event.otherTeamAlive
-      frag.otherTeamDead = event.otherTeamDead
-      frag.suicide = event.suicide
-      // event.teamKill
-      frag.teamAlive = event.teamAlive
-      frag.teamDead = event.teamDead
-      frag.time = event.time
-      frag.warmup = warmup
-
-      frag.killer.airborne = event.killer.airborne
-      frag.killer.ammo = event.killer.ammo
-      frag.killer.armor = event.killer.armor
-      frag.killer.bot = event.killer.bot
-      frag.killer.botSkill = event.killer.botSkill
-      frag.killer.health = event.killer.health
-      frag.killer.holdable = event.killer.holdable ? mapHoldableType(event.killer.holdable) : null
-      frag.killer.position = {
-        x: event.killer.position.x,
-        y: event.killer.position.y,
-        z: event.killer.position.z
+        frag.date = eventEmitDate
+        frag.killer = new FragParticipant
+        frag.killer.matchParticipationId = killerMatchParticipation ? killerMatchParticipation.id : null
+        frag.killer.playerId = killer.id
+        frag.killer.serverVisitId = activeKillerServerVisit.id
+        frag.matchId = match ? match.id : null
+        frag.victim = new FragParticipant
+        frag.victim.matchParticipationId = victimMatchParticipation ? victimMatchParticipation.id : null
+        frag.victim.playerId = victim.id
+        frag.victim.serverVisitId = activeVictimServerVisit.id
+        frag.serverId = server.id
+  
+        frag.reason = mapModType(event.mod)
+        frag.otherTeamAlive = event.otherTeamAlive
+        frag.otherTeamDead = event.otherTeamDead
+        frag.suicide = event.suicide
+        // event.teamKill
+        frag.teamAlive = event.teamAlive
+        frag.teamDead = event.teamDead
+        frag.time = event.time
+        frag.warmup = warmup
+  
+        frag.killer.airborne = event.killer.airborne
+        frag.killer.ammo = event.killer.ammo
+        frag.killer.armor = event.killer.armor
+        frag.killer.bot = event.killer.bot
+        frag.killer.botSkill = event.killer.botSkill
+        frag.killer.health = event.killer.health
+        frag.killer.holdable = event.killer.holdable ? mapHoldableType(event.killer.holdable) : null
+        frag.killer.position = {
+          x: event.killer.position.x,
+          y: event.killer.position.y,
+          z: event.killer.position.z
+        }
+        frag.killer.powerUps = event.killer.powerUps ? mapPowerUpType(event.killer.powerUps) : null
+        frag.killer.speed = event.killer.speed
+        // event.killer.submerged
+        frag.killer.team = mapTeamType(event.killer.team)
+        frag.killer.view = {
+          x: event.killer.view.x,
+          y: event.killer.view.y,
+          z: event.killer.view.z
+        }
+        frag.killer.weapon = mapWeaponType(event.killer.weapon)
+  
+        frag.victim.airborne = event.victim.airborne
+        frag.victim.ammo = event.victim.ammo
+        frag.victim.armor = event.victim.armor
+        frag.victim.bot = event.victim.bot
+        frag.victim.botSkill = event.victim.botSkill
+        frag.victim.health = event.victim.health
+        frag.victim.holdable = event.victim.holdable ? mapHoldableType(event.victim.holdable) : null
+        frag.victim.position = {
+          x: event.victim.position.x,
+          y: event.victim.position.y,
+          z: event.victim.position.z
+        }
+        frag.victim.powerUps = event.victim.powerUps ? mapPowerUpType(event.victim.powerUps) : null
+        frag.victim.speed = event.victim.speed
+        // event.victim.submerged
+        frag.victim.team = mapTeamType(event.victim.team)
+        frag.victim.view = {
+          x: event.victim.view.x,
+          y: event.victim.view.y,
+          z: event.victim.view.z
+        }
+        frag.victim.weapon = mapWeaponType(event.victim.weapon)
+  
+        let fragCreateResult = await this.fragLogic.create(frag, tx)
+  
+        if (fragCreateResult.isMisfits()) {
+          throw new MisfitsError(fragCreateResult.misfits)
+        }
+  
+        l.dev('Created the frag', frag)          
       }
-      frag.killer.powerUps = event.killer.powerUps ? mapPowerUpType(event.killer.powerUps) : null
-      frag.killer.speed = event.killer.speed
-      // event.killer.submerged
-      frag.killer.team = mapTeamType(event.killer.team)
-      frag.killer.view = {
-        x: event.killer.view.x,
-        y: event.killer.view.y,
-        z: event.killer.view.z
+      else {
+        l.dev('Not creating a frag because the kill reason is team switching', event)
       }
-      frag.killer.weapon = mapWeaponType(event.killer.weapon)
-
-      frag.victim.airborne = event.victim.airborne
-      frag.victim.ammo = event.victim.ammo
-      frag.victim.armor = event.victim.armor
-      frag.victim.bot = event.victim.bot
-      frag.victim.botSkill = event.victim.botSkill
-      frag.victim.health = event.victim.health
-      frag.victim.holdable = event.victim.holdable ? mapHoldableType(event.victim.holdable) : null
-      frag.victim.position = {
-        x: event.victim.position.x,
-        y: event.victim.position.y,
-        z: event.victim.position.z
-      }
-      frag.victim.powerUps = event.victim.powerUps ? mapPowerUpType(event.victim.powerUps) : null
-      frag.victim.speed = event.victim.speed
-      // event.victim.submerged
-      frag.victim.team = mapTeamType(event.victim.team)
-      frag.victim.view = {
-        x: event.victim.view.x,
-        y: event.victim.view.y,
-        z: event.victim.view.z
-      }
-      frag.victim.weapon = mapWeaponType(event.victim.weapon)
-
-      let fragCreateResult = await this.fragLogic.create(frag, tx)
-
-      if (fragCreateResult.isMisfits()) {
-        throw new MisfitsError(fragCreateResult.misfits)
-      }
-
-      l.dev('Created the frag', frag)
     }
 
     /********************************************/
