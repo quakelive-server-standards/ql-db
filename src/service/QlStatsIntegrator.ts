@@ -671,17 +671,21 @@ export class QlStatsIntegrator {
           }
 
           killerMatchParticipation = matchParticipationCreateResult.entity
+          l.dev('Did not found existing match participation for killer. Created one.', killerMatchParticipation)
         }
         else {
           killerMatchParticipation = matchParticipationsResult.entities[0]
+          l.dev('Found existing match particiation for killer', killerMatchParticipation)
         }
-      }      
+      }
 
       let victimMatchParticipation
       if (match) {
         let matchParticipationsResult = await this.matchParticipationLogic.read({ matchId: match.id, playerId: victim.id }, tx)
 
         if (matchParticipationsResult.entities.length == 0) {
+          l.dev('Did not found existing match participation for victim. Creating one...')
+
           victimMatchParticipation = new MatchParticipation
           victimMatchParticipation.active = true
           victimMatchParticipation.matchId = match.id
@@ -699,24 +703,29 @@ export class QlStatsIntegrator {
           }
 
           victimMatchParticipation = matchParticipationCreateResult.entity
+          l.dev('Did not found existing match participation for victim. Created one.', victimMatchParticipation)
         }
         else {
           victimMatchParticipation = matchParticipationsResult.entities[0]
+          l.dev('Found existing match particiation for victim', victim)
         }
-      }      
+      }
 
       let frag = new Frag
 
       frag.date = eventEmitDate
       frag.killer = new FragParticipant
+      frag.killer.matchParticipationId = killerMatchParticipation ? killerMatchParticipation.id : null
       frag.killer.playerId = killer.id
       frag.killer.serverVisitId = activeKillerServerVisit.id
       frag.matchId = match ? match.id : null
       frag.victim = new FragParticipant
+      frag.victim.matchParticipationId = victimMatchParticipation ? victimMatchParticipation.id : null
       frag.victim.playerId = victim.id
       frag.victim.serverVisitId = activeVictimServerVisit.id
       frag.serverId = server.id
 
+      frag.reason = mapModType(event.mod)
       frag.otherTeamAlive = event.otherTeamAlive
       frag.otherTeamDead = event.otherTeamDead
       frag.suicide = event.suicide
