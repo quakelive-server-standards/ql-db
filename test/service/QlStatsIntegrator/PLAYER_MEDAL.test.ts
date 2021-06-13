@@ -679,12 +679,27 @@ describe('service/QlStatsIntegrator.ts', function() {
 
     describe('Medal', function() {
       it('should create a new medal', async function() {
+        let startDate = new Date
+        await create('server', { ip: '127.0.0.1', port: 27960 })
+        await create('server', { ip: '127.0.0.1', port: 27961 })
+        await create('player', { steamId: '11111111111111111' })
+        await create('player', { steamId: '22222222222222222' })
+        await create('player', { steamId: '33333333333333333' })
+        await create('server_visit', { serverId: 1, playerId: 1 })
+        await create('server_visit', { serverId: 2, playerId: 2 })
+        await create('server_visit', { serverId: 2, playerId: 3 })
+        await create('match', { serverId: 1, guid: '111111111111111111111111111111111111', active: true })
+        await create('match', { serverId: 2, guid: '222222222222222222222222222222222222', active: true })
+        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue })
+        await create('match_participation', { serverId: 2, playerId: 2, serverVisitId: 2, matchId: 2, active: true, startDate: startDate, team: TeamType.Red })
+        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 2, active: true, startDate: startDate, team: TeamType.Red })
+
         let qlEvent = {
           "DATA" : {
-             "MATCH_GUID" : "111111111111111111111111111111111111",
+             "MATCH_GUID" : "222222222222222222222222222222222222",
              "MEDAL" : "FIRSTFRAG",
              "NAME" : "Player",
-             "STEAM_ID" : "11111111111111111",
+             "STEAM_ID" : "33333333333333333",
              "TIME" : 23,
              "TOTAL" : 1,
              "WARMUP" : false
@@ -692,30 +707,37 @@ describe('service/QlStatsIntegrator.ts', function() {
           "TYPE" : "PLAYER_MEDAL"
         }
     
-        let date = new Date
+        let date = new Date(new Date(startDate).setSeconds(startDate.getSeconds() + 1))
         let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
-        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27961, event, tx(), date)
   
         let result = await Services.get().medalLogic.read({}, tx())
   
         expect(result.entities.length).to.equal(1)
         expect(result.entities[0].date).to.deep.equal(date)
-        expect(result.entities[0].matchId).to.equal(1)
-        expect(result.entities[0].matchParticipationId).to.equal(1)
+        expect(result.entities[0].matchId).to.equal(2)
+        expect(result.entities[0].matchParticipationId).to.equal(3)
         expect(result.entities[0].medal).to.equal(MedalType.FirstFrag)
-        expect(result.entities[0].playerId).to.equal(1)
+        expect(result.entities[0].playerId).to.equal(3)
         expect(result.entities[0].roundId).to.be.null
-        expect(result.entities[0].serverId).to.equal(1)
+        expect(result.entities[0].serverId).to.equal(2)
         expect(result.entities[0].warmup).to.equal(false)
       })
 
       it('should create a new medal for warmup', async function() {
+        await create('server', { ip: '127.0.0.1', port: 27960 })
+        await create('server', { ip: '127.0.0.1', port: 27961 })
+        await create('player', { steamId: '11111111111111111' })
+        await create('player', { steamId: '22222222222222222' })
+        await create('server_visit', { serverId: 1, playerId: 1 })
+        await create('server_visit', { serverId: 2, playerId: 2 })
+
         let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "111111111111111111111111111111111111",
              "MEDAL" : "FIRSTFRAG",
              "NAME" : "Player",
-             "STEAM_ID" : "11111111111111111",
+             "STEAM_ID" : "22222222222222222",
              "TIME" : 23,
              "TOTAL" : 1,
              "WARMUP" : true
@@ -725,7 +747,7 @@ describe('service/QlStatsIntegrator.ts', function() {
     
         let date = new Date
         let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
-        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27961, event, tx(), date)
   
         let result = await Services.get().medalLogic.read({}, tx())
   
@@ -734,9 +756,9 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(result.entities[0].matchId).to.be.null
         expect(result.entities[0].matchParticipationId).to.be.null
         expect(result.entities[0].medal).to.equal(MedalType.FirstFrag)
-        expect(result.entities[0].playerId).to.equal(1)
+        expect(result.entities[0].playerId).to.equal(2)
         expect(result.entities[0].roundId).to.be.null
-        expect(result.entities[0].serverId).to.equal(1)
+        expect(result.entities[0].serverId).to.equal(2)
         expect(result.entities[0].warmup).to.equal(true)
       })
     })

@@ -772,7 +772,11 @@ export class QlStatsIntegrator {
       }
       frag.victim.weapon = mapWeaponType(event.victim.weapon)
 
-      await this.fragLogic.create(frag, tx)
+      let fragCreateResult = await this.fragLogic.create(frag, tx)
+
+      if (fragCreateResult.isMisfits()) {
+        throw new MisfitsError(fragCreateResult.misfits)
+      }
     }
 
     /********************************************/
@@ -834,7 +838,11 @@ export class QlStatsIntegrator {
           }
           frag.victim.weapon = mapWeaponType(event.victim.weapon)
   
-          await this.fragLogic.create(frag, tx)  
+          let fragCreateResult = await this.fragLogic.create(frag, tx)
+
+          if (fragCreateResult.isMisfits()) {
+            throw new MisfitsError(fragCreateResult.misfits)
+          }
         }
       }
     }
@@ -948,7 +956,7 @@ export class QlStatsIntegrator {
       // if we have a match then we can try to get the corresponding match participation for the player
       let matchParticipation
       if (match) {
-        let matchParticipationsResult = await this.matchParticipationLogic.read({ matchId: match.id }, tx)
+        let matchParticipationsResult = await this.matchParticipationLogic.read({ matchId: match.id, playerId: player.id }, tx)
 
         if (matchParticipationsResult.entities.length == 0) {
           matchParticipation = new MatchParticipation
