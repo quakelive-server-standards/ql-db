@@ -878,66 +878,361 @@ export class QlStatsIntegrator {
     /*               PLAYER_DEATH               */
     /********************************************/
     else if (event instanceof PlayerDeathEvent) {
+      l.dev('Processing PlayerDeathEvent...')
+
+      let killer
+      if (event.killer) {
+        let killerResult = await this.playerLogic.createOrGet(event.killer.steamId, event.killer.name, eventEmitDate, tx)
+        killer = killerResult.entity
+      }
+
+      let victimResult = await this.playerLogic.createOrGet(event.victim.steamId, event.victim.name, eventEmitDate, tx)
+      let victim = victimResult.entity
+
+      l.dev('Killer', killer)
+      l.dev('Victim', victim)
+
+      // deactivate any match participations of the players on any other servers
+      if (killer) {
+        let activeKillerMatchParticipationsOnOtherServersResult = await this.matchParticipationLogic.read({
+          serverId: { operator: '!=', value: server.id },
+          playerId: killer.id,
+          active: true
+        }, tx)
+  
+        for (let activeMatchParticipation of activeKillerMatchParticipationsOnOtherServersResult.entities) {
+          activeMatchParticipation.active = false
+          let matchParticipationUpdateResult = await this.matchParticipationLogic.update(activeMatchParticipation, tx)
+  
+          l.dev('Deactivated match particiption', matchParticipationUpdateResult.entity)
+  
+          if (matchParticipationUpdateResult.isMisfits()) {
+            throw new MisfitsError(matchParticipationUpdateResult.misfits)
+          }
+        }  
+      }
+
+      let activeVictimMatchParticipationsOnOtherServersResult = await this.matchParticipationLogic.read({
+        serverId: { operator: '!=', value: server.id },
+        playerId: victim.id,
+        active: true
+      }, tx)
+
+      for (let activeMatchParticipation of activeVictimMatchParticipationsOnOtherServersResult.entities) {
+        activeMatchParticipation.active = false
+        let matchParticipationUpdateResult = await this.matchParticipationLogic.update(activeMatchParticipation, tx)
+
+        l.dev('Deactivated match particiption', matchParticipationUpdateResult.entity)
+
+        if (matchParticipationUpdateResult.isMisfits()) {
+          throw new MisfitsError(matchParticipationUpdateResult.misfits)
+        }
+      }
+    
+      // deactivate any server visit on other servers
+      if (killer) {
+        let activeKillerServerVisitsOnOtherServersResult = await this.serverVisitLogic.read({ playerId: killer.id, serverId: { operator: '!=', value: server.id }, active: true }, tx)
+
+        for (let activeServerVisit of activeKillerServerVisitsOnOtherServersResult.entities) {
+          l.dev('Deactivating server visit...', activeServerVisit)
+          activeServerVisit.active = false
+  
+          let serverVisitUpdateResult = await this.serverVisitLogic.update(activeServerVisit, tx)
+  
+          if (serverVisitUpdateResult.isMisfits()) {
+            throw new MisfitsError(serverVisitUpdateResult.misfits)
+          }
+        }  
+      }
+
+      let activeVictimServerVisitsOnOtherServersResult = await this.serverVisitLogic.read({ playerId: victim.id, serverId: { operator: '!=', value: server.id }, active: true }, tx)
+
+      for (let activeServerVisit of activeVictimServerVisitsOnOtherServersResult.entities) {
+        l.dev('Deactivating server visit...', activeServerVisit)
+        activeServerVisit.active = false
+
+        let serverVisitUpdateResult = await this.serverVisitLogic.update(activeServerVisit, tx)
+
+        if (serverVisitUpdateResult.isMisfits()) {
+          throw new MisfitsError(serverVisitUpdateResult.misfits)
+        }
+      }
+
+      // get or create active server visit
+      let activeKillerServerVisit
+      if (killer) {
+        let activeKillerServerVisitResult = await this.serverVisitLogic.getActive(server.id!, killer.id!, tx)
+        activeKillerServerVisit = activeKillerServerVisitResult.entity
+  
+        if (activeKillerServerVisit == undefined) {
+          activeKillerServerVisit = new ServerVisit
+          activeKillerServerVisit.connectDate = eventEmitDate
+          activeKillerServerVisit.active = true
+          activeKillerServerVisit.playerId = killer.id
+          activeKillerServerVisit.serverId = server.id
+  
+          let serverVisitCreateResult = await this.serverVisitLogic.create(activeKillerServerVisit, tx)
+  
+          if (serverVisitCreateResult.isMisfits()) {
+            throw new MisfitsError(serverVisitCreateResult.misfits)
+          }
+  
+          activeKillerServerVisit = serverResult.entity
+          l.dev('There was no active server visit for the killer. Created one.', activeKillerServerVisit)
+        }
+        else {
+          l.dev('Found active server visit for killer', activeKillerServerVisit)
+        }  
+      }
+
+      let activeVictimServerVisitResult = await this.serverVisitLogic.getActive(server.id!, victim.id!, tx)
+      let activeVictimServerVisit = activeVictimServerVisitResult.entity
+
+      if (activeVictimServerVisit == undefined) {
+        activeVictimServerVisit = new ServerVisit
+        activeVictimServerVisit.connectDate = eventEmitDate
+        activeVictimServerVisit.active = true
+        activeVictimServerVisit.playerId = victim.id
+        activeVictimServerVisit.serverId = server.id
+
+        let serverVisitCreateResult = await this.serverVisitLogic.create(activeVictimServerVisit, tx)
+        
+        if (serverVisitCreateResult.isMisfits()) {
+          throw new MisfitsError(serverVisitCreateResult.misfits)
+        }
+        
+        activeVictimServerVisit = serverResult.entity
+        l.dev('There was no active server visit for the victim. Created one.', activeVictimServerVisit)
+      }
+      else {
+        l.dev('Found active server visit for victim', activeVictimServerVisit)
+      }
+
+      // deactivate any match participation on this server which does not reference the current match
+      let activeMatchParticipationsResult = await this.matchParticipationLogic.read({
+        serverId: server.id,
+        active: true,
+        match: {
+          '@filterGlobally': true,
+          guid: { operator: '!=', value: event.matchGuid }
+        }
+      }, tx)
+
+      for (let activeMatchParticipation of activeMatchParticipationsResult.entities) {
+        activeMatchParticipation.active = false
+        let matchParticipationUpdateResult = await this.matchParticipationLogic.update(activeMatchParticipation, tx)
+
+        l.dev('Deactivated match', matchParticipationUpdateResult.entity)
+
+        if (matchParticipationUpdateResult.isMisfits()) {
+          throw new MisfitsError(matchParticipationUpdateResult.misfits)
+        }
+      }      
+
+      // find all active matches on the server and deactivate them if they are not the current active match
+      let activeMatchesResult = await this.matchLogic.read({ serverId: server.id, active: true, guid: { operator: '!=', value: event.matchGuid } }, tx)
+
+      for (let activeMatch of activeMatchesResult.entities) {
+        activeMatch.active = false
+        let matchUpdateResult = await this.matchLogic.update(activeMatch, tx)
+
+        l.dev('Deactivated match', matchUpdateResult.entity)
+
+        if (matchUpdateResult.isMisfits()) {
+          throw new MisfitsError(matchUpdateResult.misfits)
+        }
+      }
+
+      // if we are not in warmup, create or get the match
+      let match
+      if (! event.warmup) {
+        match = await this.createMissingMatch(server.id!, event.matchGuid, event.time, eventEmitDate, tx)
+        l.dev('Match', match)
+      }
+
+      // if we have a match then we can try to get the corresponding match participation for the player
+      let killerMatchParticipation
+      if (killer && activeKillerServerVisit && match) {
+        let matchParticipationsResult = await this.matchParticipationLogic.read({ matchId: match.id, playerId: killer.id }, tx)
+
+        if (matchParticipationsResult.entities.length == 0) {
+          killerMatchParticipation = new MatchParticipation
+          killerMatchParticipation.active = true
+          killerMatchParticipation.matchId = match.id
+          killerMatchParticipation.playerId = killer.id
+          killerMatchParticipation.serverId = server.id
+          killerMatchParticipation.serverVisitId = activeKillerServerVisit.id
+          // we cannot know the start date thus we just take the date of the kill itself
+          killerMatchParticipation.startDate = eventEmitDate
+          killerMatchParticipation.team = mapTeamType(event.killer.team)
+
+          let matchParticipationCreateResult = await this.matchParticipationLogic.create(killerMatchParticipation, tx)
+
+          if (matchParticipationCreateResult.isMisfits()) {
+            throw new MisfitsError(matchParticipationCreateResult.misfits)
+          }
+
+          killerMatchParticipation = matchParticipationCreateResult.entity
+          l.dev('Did not found existing match participation for killer. Created one.', killerMatchParticipation)
+        }
+        else {
+          killerMatchParticipation = matchParticipationsResult.entities[0]
+          l.dev('Found existing match particiation for killer', killerMatchParticipation)
+        }
+      }
+
+      let victimMatchParticipation
+      if (match) {
+        let matchParticipationsResult = await this.matchParticipationLogic.read({ matchId: match.id, playerId: victim.id }, tx)
+
+        if (matchParticipationsResult.entities.length == 0) {
+          l.dev('Did not found existing match participation for victim. Creating one...')
+
+          victimMatchParticipation = new MatchParticipation
+          victimMatchParticipation.active = true
+          victimMatchParticipation.matchId = match.id
+          victimMatchParticipation.playerId = victim.id
+          victimMatchParticipation.serverId = server.id
+          victimMatchParticipation.serverVisitId = activeVictimServerVisit.id
+          // we cannot know the start date thus we just take the date of the kill itself
+          victimMatchParticipation.startDate = eventEmitDate
+          victimMatchParticipation.team = mapTeamType(event.victim.team)
+
+          let matchParticipationCreateResult = await this.matchParticipationLogic.create(victimMatchParticipation, tx)
+
+          if (matchParticipationCreateResult.isMisfits()) {
+            throw new MisfitsError(matchParticipationCreateResult.misfits)
+          }
+
+          victimMatchParticipation = matchParticipationCreateResult.entity
+          l.dev('Did not found existing match participation for victim. Created one.', victimMatchParticipation)
+        }
+        else {
+          victimMatchParticipation = matchParticipationsResult.entities[0]
+          l.dev('Found existing match particiation for victim', victimMatchParticipation)
+        }
+      }
+
+      // if the event denotes a different team for a player than what is stored in the match participation,
+      // then it means that the player switched teams without the server recognizing the PLAYER_SWITCH_TEAM event.
+      // in that case we will deactivate the current match participations and create new ones.
+
+      if (killer && activeKillerServerVisit && killerMatchParticipation && killerMatchParticipation.team != mapTeamType(event.killer.team)) {
+        killerMatchParticipation.active = false
+
+        // TODO: Determine finish date by searching for the last medal or frag
+
+        let matchParticipationUpdateResult = await this.matchParticipationLogic.update(killerMatchParticipation, tx)
+
+        if (matchParticipationUpdateResult.isMisfits()) {
+          throw new MisfitsError(matchParticipationUpdateResult.misfits)
+        }
+
+        l.dev('Deactivated active match participation for killer because the team has changed', matchParticipationUpdateResult.entity)
+
+        killerMatchParticipation = new MatchParticipation
+        killerMatchParticipation.active = true
+        killerMatchParticipation.matchId = match ? match.id : null
+        killerMatchParticipation.playerId = killer.id
+        killerMatchParticipation.roundId = matchParticipationUpdateResult.entity.roundId
+        killerMatchParticipation.serverId = server.id
+        killerMatchParticipation.serverVisitId = activeKillerServerVisit.id
+        killerMatchParticipation.startDate = eventEmitDate
+        killerMatchParticipation.team = mapTeamType(event.killer.team)
+
+        let matchParticipationCreateResult = await this.matchParticipationLogic.create(killerMatchParticipation, tx)
+
+        if (matchParticipationCreateResult.isMisfits()) {
+          throw new MisfitsError(matchParticipationCreateResult.misfits)
+        }
+
+        killerMatchParticipation = matchParticipationCreateResult.entity
+        l.dev('Created new active match participation for the killer', killerMatchParticipation)
+      }
+
+      if (victimMatchParticipation && victimMatchParticipation.team != mapTeamType(event.victim.team)) {
+        victimMatchParticipation.active = false
+
+        // TODO: Determine finish date by searching for the last medal or frag
+
+        let matchParticipationUpdateResult = await this.matchParticipationLogic.update(victimMatchParticipation, tx)
+
+        if (matchParticipationUpdateResult.isMisfits()) {
+          throw new MisfitsError(matchParticipationUpdateResult.misfits)
+        }
+
+        l.dev('Deactivated active match participation for victim because the team has changed', matchParticipationUpdateResult.entity)
+
+        victimMatchParticipation = new MatchParticipation
+        victimMatchParticipation.active = true
+        victimMatchParticipation.matchId = match ? match.id : null
+        victimMatchParticipation.playerId = victim.id
+        victimMatchParticipation.roundId = matchParticipationUpdateResult.entity.roundId
+        victimMatchParticipation.serverId = server.id
+        victimMatchParticipation.serverVisitId = activeVictimServerVisit.id
+        victimMatchParticipation.startDate = eventEmitDate
+        victimMatchParticipation.team = mapTeamType(event.victim.team)
+
+        let matchParticipationCreateResult = await this.matchParticipationLogic.create(victimMatchParticipation, tx)
+
+        if (matchParticipationCreateResult.isMisfits()) {
+          throw new MisfitsError(matchParticipationCreateResult.misfits)
+        }
+
+        victimMatchParticipation = matchParticipationCreateResult.entity
+        l.dev('Created new active match participation for the victim', victimMatchParticipation)
+      }
+
       /**
        * Only handle death events that were not caused by another player because those are already
        * handled in the PlayerKillEvent section
        */
       if (event.killer == null) {
-        let warump = event.warmup
-        let matchesResult = await this.matchLogic.read({ guid: event.matchGuid }, tx)
-        let match = matchesResult.entities.length == 1 ? matchesResult.entities[0] : undefined
-  
-        if (match || warump) {
-          let victimResult = await this.playerLogic.createOrGet(event.victim.steamId, event.victim.name, eventEmitDate, tx)
-          let victim = victimResult.entity
+        let frag = new Frag
 
-          let frag = new Frag
-  
-          frag.date = eventEmitDate
-          frag.killer = new FragParticipant
-          frag.matchId = match ? match.id : null
-          frag.victim = new FragParticipant
-          frag.victim.playerId = victim.id
-          frag.serverId = server.id
-  
-          frag.reason = mapModType(event.mod)
-          frag.otherTeamAlive = event.otherTeamAlive
-          frag.otherTeamDead = event.otherTeamDead
-          frag.suicide = event.suicide
-          // event.teamKill
-          frag.teamAlive = event.teamAlive
-          frag.teamDead = event.teamDead
-          frag.time = event.time
-          frag.warmup = event.warmup
+        frag.date = eventEmitDate
+        frag.matchId = match ? match.id : null
+        frag.victim = new FragParticipant
+        frag.victim.playerId = victim.id
+        frag.serverId = server.id
 
-          frag.victim.airborne = event.victim.airborne
-          frag.victim.ammo = event.victim.ammo
-          frag.victim.armor = event.victim.armor
-          frag.victim.bot = event.victim.bot
-          frag.victim.botSkill = event.victim.botSkill
-          frag.victim.health = event.victim.health
-          frag.victim.holdable = event.victim.holdable ? mapHoldableType(event.victim.holdable) : null
-          frag.victim.position = {
-            x: event.victim.position.x,
-            y: event.victim.position.y,
-            z: event.victim.position.z
-          }
-          frag.victim.powerUps = event.victim.powerUps ? mapPowerUpType(event.victim.powerUps) : null
-          frag.victim.speed = event.victim.speed
-          // event.victim.submerged
-          frag.victim.team = mapTeamType(event.victim.team)
-          frag.victim.view = {
-            x: event.victim.view.x,
-            y: event.victim.view.y,
-            z: event.victim.view.z
-          }
-          frag.victim.weapon = mapWeaponType(event.victim.weapon)
-  
-          let fragCreateResult = await this.fragLogic.create(frag, tx)
+        frag.reason = mapModType(event.mod)
+        frag.otherTeamAlive = event.otherTeamAlive
+        frag.otherTeamDead = event.otherTeamDead
+        frag.suicide = event.suicide
+        // event.teamKill
+        frag.teamAlive = event.teamAlive
+        frag.teamDead = event.teamDead
+        frag.time = event.time
+        frag.warmup = event.warmup
 
-          if (fragCreateResult.isMisfits()) {
-            throw new MisfitsError(fragCreateResult.misfits)
-          }
+        frag.victim.airborne = event.victim.airborne
+        frag.victim.ammo = event.victim.ammo
+        frag.victim.armor = event.victim.armor
+        frag.victim.bot = event.victim.bot
+        frag.victim.botSkill = event.victim.botSkill
+        frag.victim.health = event.victim.health
+        frag.victim.holdable = event.victim.holdable ? mapHoldableType(event.victim.holdable) : null
+        frag.victim.position = {
+          x: event.victim.position.x,
+          y: event.victim.position.y,
+          z: event.victim.position.z
+        }
+        frag.victim.powerUps = event.victim.powerUps ? mapPowerUpType(event.victim.powerUps) : null
+        frag.victim.speed = event.victim.speed
+        // event.victim.submerged
+        frag.victim.team = mapTeamType(event.victim.team)
+        frag.victim.view = {
+          x: event.victim.view.x,
+          y: event.victim.view.y,
+          z: event.victim.view.z
+        }
+        frag.victim.weapon = mapWeaponType(event.victim.weapon)
+
+        let fragCreateResult = await this.fragLogic.create(frag, tx)
+
+        if (fragCreateResult.isMisfits()) {
+          throw new MisfitsError(fragCreateResult.misfits)
         }
       }
     }

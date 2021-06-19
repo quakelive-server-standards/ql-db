@@ -11,10 +11,7 @@ import { Server } from '../server/Server'
 import { ServerVisit } from '../serverVisit/ServerVisit'
 
 /**
- * Quake Live stats event property 'teamkill' is left out because it can be determined.
- * 
- * Quake Live stats event property 'warmup' is left out because it is not known
- * how it works and if this information is not already on another place.
+ * Quake Live stats event property 'teamKill' is left out because it can be determined.
  */
 export class Frag {
   
@@ -24,7 +21,7 @@ export class Frag {
   serverId?: number
 
   date?: Date
-  killer?: FragParticipant
+  killer?: FragParticipant | null
   otherTeamAlive?: number | null
   otherTeamDead?: number | null
   reason?: ReasonType
@@ -41,7 +38,7 @@ export class Frag {
 }
 
 /**
- * Quake Live server stats property 'submerged' is missing because this information is already
+ * Quake Live server stats property 'submerged' is left out because this information is already
  * inside the property 'reason' of class 'Frag'.
  */
 export class FragParticipant {
