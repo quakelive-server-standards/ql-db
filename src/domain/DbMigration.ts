@@ -43,7 +43,8 @@ export default class DbMigration extends PostgresMigration {
     await this.pool.query(`
       CREATE TABLE frag (
         id SERIAL PRIMARY KEY,
-        date TIMESTAMP,        
+        cause VARCHAR(29),
+        date TIMESTAMP,
         killer_airborne BOOLEAN,
         killer_ammo INTEGER,
         killer_armor INTEGER,
@@ -67,7 +68,6 @@ export default class DbMigration extends PostgresMigration {
         match_id INTEGER,
         other_team_alive INTEGER,
         other_team_dead INTEGER,
-        reason VARCHAR(20),
         round_id INTEGER,
         server_id INTEGER,
         suicide BOOLEAN,

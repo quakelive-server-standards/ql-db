@@ -1,6 +1,6 @@
+import { CauseType } from '../enums/CauseType'
 import { HoldableType } from '../enums/HoldableType'
 import { PowerUpType } from '../enums/PowerUpType'
-import { ReasonType } from '../enums/ReasonType'
 import { TeamType } from '../enums/TeamType'
 import { WeaponType } from '../enums/WeaponType'
 import { Match } from '../match/Match'
@@ -24,7 +24,7 @@ export class Frag {
   killer?: FragParticipant | null
   otherTeamAlive?: number | null
   otherTeamDead?: number | null
-  reason?: ReasonType
+  cause?: CauseType
   suicide?: boolean
   teamAlive?: number | null
   teamDead?: number | null

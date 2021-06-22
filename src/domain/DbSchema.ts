@@ -84,6 +84,7 @@ export default {
   'frag': {
     columns: {
       'id': { property: 'id', id: true},
+      'cause': 'cause',
       'date': 'date',
       'killer_airborne': 'killer.airborne',
       'killer_ammo': 'killer.ammo',
@@ -108,7 +109,6 @@ export default {
       'match_id': 'matchId',
       'other_team_alive': 'otherTeamAlive',
       'other_team_dead': 'otherTeamDead',
-      'reason': 'reason',
       'round_id': 'roundId',
       'server_id': 'serverId',
       'suicide': 'suicide',
@@ -197,6 +197,7 @@ export default {
       let frag = new Frag
 
       frag.id = row['id']
+      frag.cause = row['cause']
       frag.date = row['date']
       frag.killer = new FragParticipant
       frag.killer.airborne = row['killer_airborne'],
@@ -226,7 +227,6 @@ export default {
       frag.matchId = row['match_id']
       frag.otherTeamAlive = row['other_team_alive']
       frag.otherTeamDead = row['other_team_dead']
-      frag.reason = row['reason']
       frag.roundId = row['round_id']
       frag.serverId = row['server_id']      
       frag.suicide = row['suicide']
@@ -268,6 +268,7 @@ export default {
         'match_id': frag.matchId,
         'round_id': frag.roundId,
         'server_id': frag.serverId,
+        'cause': frag.cause,
         'date': frag.date,
         'killer_player_id': frag.killer?.playerId,
         'killer_match_participation_id': frag.killer?.matchParticipationId,
@@ -291,7 +292,6 @@ export default {
         'killer_weapon': frag.killer?.weapon,
         'other_team_alive': frag.otherTeamAlive,
         'other_team_dead': frag.otherTeamDead,
-        'reason': frag.reason,
         'suicide': frag.suicide,
         'team_alive': frag.teamAlive,
         'team_dead': frag.teamDead,

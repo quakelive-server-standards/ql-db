@@ -25,6 +25,7 @@
     "knight-validation": "^1.1.0",
     "pg": "^8.5.1",
     "ql-api": "^0.2.0",
+    "ql-stats-model": "^0.1.4",
     "ws": "^7.4.5"
   },
   "devDependencies": {

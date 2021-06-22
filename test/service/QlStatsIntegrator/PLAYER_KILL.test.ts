@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import 'mocha'
 import { PlayerKillEvent } from 'ql-stats-model'
-import { ReasonType } from '../../../src/domain/enums/ReasonType'
+import { ReasonType } from '../../../src/domain/enums/CauseType'
 import { TeamType } from '../../../src/domain/enums/TeamType'
 import { WeaponType } from '../../../src/domain/enums/WeaponType'
 import Services from '../../../src/Services'

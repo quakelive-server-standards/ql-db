@@ -2,11 +2,11 @@ import Log from 'knight-log'
 import { PgTransaction } from 'knight-pg-transaction'
 import { MisfitsError } from 'knight-validation'
 import { GameType as StatsGameType, HoldableType as StatsHoldableType, MatchReportEvent, MatchStartedEvent, MedalType as StatsMedalType, ModType, PlayerConnectEvent, PlayerDeathEvent, PlayerDisconnectEvent, PlayerKillEvent, PlayerMedalEvent, PlayerStatsEvent, PlayerSwitchTeamEvent, PowerUpType as StatsPowerUpType, RoundOverEvent, TeamType as StatsTeamType, WeaponType as StatsWeaponType } from 'ql-stats-model'
+import { CauseType } from '../domain/enums/CauseType'
 import { GameType } from '../domain/enums/GameType'
 import { HoldableType } from '../domain/enums/HoldableType'
 import { MedalType } from '../domain/enums/MedalType'
 import { PowerUpType } from '../domain/enums/PowerUpType'
-import { ReasonType } from '../domain/enums/ReasonType'
 import { TeamType } from '../domain/enums/TeamType'
 import { WeaponType } from '../domain/enums/WeaponType'
 import { FactoryLogic } from '../domain/factory/FactoryLogic'
@@ -805,7 +805,7 @@ export class QlStatsIntegrator {
         frag.victim.serverVisitId = activeVictimServerVisit.id
         frag.serverId = server.id
   
-        frag.reason = mapModType(event.mod)
+        frag.cause = mapModType(event.mod)
         frag.otherTeamAlive = event.otherTeamAlive
         frag.otherTeamDead = event.otherTeamDead
         frag.suicide = event.suicide
@@ -1196,7 +1196,7 @@ export class QlStatsIntegrator {
         frag.victim.playerId = victim.id
         frag.serverId = server.id
 
-        frag.reason = mapModType(event.mod)
+        frag.cause = mapModType(event.mod)
         frag.otherTeamAlive = event.otherTeamAlive
         frag.otherTeamDead = event.otherTeamDead
         frag.suicide = event.suicide
@@ -1845,16 +1845,37 @@ export function mapPowerUpType(statsPowerUps: StatsPowerUpType[]): PowerUpType[]
   return powerUps
 }
 
-export function mapModType(modType: ModType): ReasonType {
+export function mapModType(modType: ModType): CauseType {
   switch (modType) {
-    case ModType.LAVA: return ReasonType.Lava
-    case ModType.LIGHTNING: return ReasonType.Lightning
-    case ModType.PLASMA: return ReasonType.Plasma
-    case ModType.ROCKET: return ReasonType.Rocket
-    case ModType.ROCKET_SPLASH: return ReasonType.RocketSplash
-    case ModType.SLIME: return ReasonType.Slime
-    case ModType.SWITCHTEAM: return ReasonType.SwitchTeam
+    case ModType.BFG: return CauseType.Bfg
+    case ModType.BFG_SPLASH: return CauseType.BfgSlash
+    case ModType.CHAINGUN: return CauseType.ChainGun
+    case ModType.CRUSH: return CauseType.Crush
+    case ModType.FALLING: return CauseType.Falling
+    case ModType.GAUNTLET: return CauseType.Gauntlet
+    case ModType.GRENADE: return CauseType.GrenadeLauncher
+    case ModType.GRENADE_SPLASH: return CauseType.GrenadeSplash
+    case ModType.HMG: return CauseType.HeavyMachineGun
+    case ModType.HURT: return CauseType.Hurt
+    case ModType.KAMIKAZE: return CauseType.Kamikaze
+    case ModType.LAVA: return CauseType.Lava
+    case ModType.LIGHTNING: return CauseType.LightningGun
+    case ModType.MACHINEGUN: return CauseType.MachineGun
+    case ModType.NAILGUN: return CauseType.Nailgun
+    case ModType.PLASMA: return CauseType.PlasmaGun
+    case ModType.PLASMA_SPLASH: return CauseType.PlasmaSplash
+    case ModType.PROXMINE: return CauseType.ProximityMineLauncher
+    case ModType.PROXMINE_SPLASH: return CauseType.ProximityMineSplash
+    case ModType.RAILGUN: return CauseType.Railgun
+    case ModType.ROCKET: return CauseType.RocketLauncher
+    case ModType.ROCKET_SPLASH: return CauseType.RocketSplash
+    case ModType.SHOTGUN: return CauseType.Shotgun
+    case ModType.SLIME: return CauseType.Slime
+    case ModType.TRIGGER_HURT: return CauseType.TriggerHurt
+    case ModType.UNKNOWN: return CauseType.Unknown
   }
+
+  return <any> modType
 }
 
 export function mapTeamType(statsTeamType: StatsTeamType): TeamType {
