@@ -1,8 +1,8 @@
 import { expect } from 'chai'
 import 'mocha'
+import { CauseType } from '../../../src/domain/enums/CauseType'
 import { HoldableType } from '../../../src/domain/enums/HoldableType'
 import { PowerUpType } from '../../../src/domain/enums/PowerUpType'
-import { ReasonType } from '../../../src/domain/enums/ReasonType'
 import { TeamType } from '../../../src/domain/enums/TeamType'
 import { WeaponType } from '../../../src/domain/enums/WeaponType'
 import { Frag, FragParticipant } from '../../../src/domain/frag/Frag'
@@ -28,7 +28,7 @@ describe('domain/frag/FragLogic.ts', function() {
       frag.matchId = 1
       frag.otherTeamAlive = 1
       frag.otherTeamDead = 2
-      frag.reason = ReasonType.Lava
+      frag.cause = CauseType.Lava
       frag.roundId = 1
       frag.serverId = 1
       frag.suicide = true
@@ -97,7 +97,7 @@ describe('domain/frag/FragLogic.ts', function() {
       expect(result.entity.matchId).to.equal(1)
       expect(result.entity.otherTeamAlive).to.equal(1)
       expect(result.entity.otherTeamDead).to.equal(2)
-      expect(result.entity.reason).to.equal(ReasonType.Lava)
+      expect(result.entity.cause).to.equal(CauseType.Lava)
       expect(result.entity.roundId).to.equal(1)
       expect(result.entity.serverId).to.equal(1)
       expect(result.entity.suicide).to.equal(true)
@@ -159,7 +159,7 @@ describe('domain/frag/FragLogic.ts', function() {
         matchId: 1,
         otherTeamAlive: 1,
         otherTeamDead: 2,
-        reason: ReasonType.Lava,
+        reason: CauseType.Lava,
         roundId: 1,
         serverId: 1,
         suicide: true,
@@ -232,7 +232,7 @@ describe('domain/frag/FragLogic.ts', function() {
       expect(result.entities[0].matchId).to.equal(1)
       expect(result.entities[0].otherTeamAlive).to.equal(1)
       expect(result.entities[0].otherTeamDead).to.equal(2)
-      expect(result.entities[0].reason).to.equal(ReasonType.Lava)
+      expect(result.entities[0].cause).to.equal(CauseType.Lava)
       expect(result.entities[0].roundId).to.equal(1)
       expect(result.entities[0].serverId).to.equal(1)
       expect(result.entities[0].suicide).to.equal(true)
@@ -425,7 +425,7 @@ describe('domain/frag/FragLogic.ts', function() {
         matchId: 1,
         otherTeamAlive: 1,
         otherTeamDead: 2,
-        reason: ReasonType.Lava,
+        reason: CauseType.Lava,
         roundId: 1,
         serverId: 1,
         suicide: true,
@@ -495,7 +495,7 @@ describe('domain/frag/FragLogic.ts', function() {
       frag.matchId = 2
       frag.otherTeamAlive = 2
       frag.otherTeamDead = 3
-      frag.reason = ReasonType.Lightning
+      frag.cause = CauseType.LightningGun
       frag.roundId = 2
       frag.serverId = 2
       frag.suicide = false
@@ -564,7 +564,7 @@ describe('domain/frag/FragLogic.ts', function() {
       expect(result.entity.matchId).to.equal(2)
       expect(result.entity.otherTeamAlive).to.equal(2)
       expect(result.entity.otherTeamDead).to.equal(3)
-      expect(result.entity.reason).to.equal(ReasonType.Lightning)
+      expect(result.entity.cause).to.equal(CauseType.LightningGun)
       expect(result.entity.roundId).to.equal(2)
       expect(result.entity.serverId).to.equal(2)
       expect(result.entity.suicide).to.equal(false)
@@ -626,7 +626,7 @@ describe('domain/frag/FragLogic.ts', function() {
         matchId: 1,
         otherTeamAlive: 1,
         otherTeamDead: 2,
-        reason: ReasonType.Lava,
+        reason: CauseType.Lava,
         roundId: 1,
         serverId: 1,
         suicide: true,
@@ -701,7 +701,7 @@ describe('domain/frag/FragLogic.ts', function() {
       expect(result.entity.matchId).to.equal(1)
       expect(result.entity.otherTeamAlive).to.equal(1)
       expect(result.entity.otherTeamDead).to.equal(2)
-      expect(result.entity.reason).to.equal(ReasonType.Lava)
+      expect(result.entity.cause).to.equal(CauseType.Lava)
       expect(result.entity.roundId).to.equal(1)
       expect(result.entity.serverId).to.equal(1)
       expect(result.entity.suicide).to.equal(true)

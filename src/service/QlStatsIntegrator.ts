@@ -660,7 +660,7 @@ export class QlStatsIntegrator {
       // if we have a match then we can try to get the corresponding match participation for the player
       let killerMatchParticipation
       if (match) {
-        let matchParticipationsResult = await this.matchParticipationLogic.read({ matchId: match.id, playerId: killer.id }, tx)
+        let matchParticipationsResult = await this.matchParticipationLogic.read({ matchId: match.id, playerId: killer.id, active: true }, tx)
 
         if (matchParticipationsResult.entities.length == 0) {
           killerMatchParticipation = new MatchParticipation
@@ -686,15 +686,50 @@ export class QlStatsIntegrator {
           killerMatchParticipation = matchParticipationsResult.entities[0]
           l.dev('Found existing match particiation for killer', killerMatchParticipation)
         }
+
+        // if the event denotes a different team for a player than what is stored in the match participation,
+        // then it means that the player switched teams without the server recognizing the PLAYER_SWITCH_TEAM event.
+        // in that case we will deactivate the current match participations and create a new one.
+
+        if (killerMatchParticipation.team != mapTeamType(event.killer.team)) {
+          killerMatchParticipation.active = false
+
+          // TODO: Determine finish date by searching for the last medal or frag
+
+          let matchParticipationUpdateResult = await this.matchParticipationLogic.update(killerMatchParticipation, tx)
+
+          if (matchParticipationUpdateResult.isMisfits()) {
+            throw new MisfitsError(matchParticipationUpdateResult.misfits)
+          }
+
+          l.dev('Deactivated active match participation for killer because the team has changed', matchParticipationUpdateResult.entity)
+
+          killerMatchParticipation = new MatchParticipation
+          killerMatchParticipation.active = true
+          killerMatchParticipation.matchId = match ? match.id : null
+          killerMatchParticipation.playerId = killer.id
+          killerMatchParticipation.roundId = matchParticipationUpdateResult.entity.roundId
+          killerMatchParticipation.serverId = server.id
+          killerMatchParticipation.serverVisitId = activeKillerServerVisit.id
+          killerMatchParticipation.startDate = eventEmitDate
+          killerMatchParticipation.team = mapTeamType(event.killer.team)
+
+          let matchParticipationCreateResult = await this.matchParticipationLogic.create(killerMatchParticipation, tx)
+
+          if (matchParticipationCreateResult.isMisfits()) {
+            throw new MisfitsError(matchParticipationCreateResult.misfits)
+          }
+
+          killerMatchParticipation = matchParticipationCreateResult.entity
+          l.dev('Created new active match participation for the killer', killerMatchParticipation)
+        }
       }
 
       let victimMatchParticipation
       if (match) {
-        let matchParticipationsResult = await this.matchParticipationLogic.read({ matchId: match.id, playerId: victim.id }, tx)
+        let matchParticipationsResult = await this.matchParticipationLogic.read({ matchId: match.id, playerId: victim.id, active: true }, tx)
 
         if (matchParticipationsResult.entities.length == 0) {
-          l.dev('Did not found existing match participation for victim. Creating one...')
-
           victimMatchParticipation = new MatchParticipation
           victimMatchParticipation.active = true
           victimMatchParticipation.matchId = match.id
@@ -718,79 +753,46 @@ export class QlStatsIntegrator {
           victimMatchParticipation = matchParticipationsResult.entities[0]
           l.dev('Found existing match particiation for victim', victimMatchParticipation)
         }
+
+        // if the event denotes a different team for a player than what is stored in the match participation,
+        // then it means that the player switched teams without the server recognizing the PLAYER_SWITCH_TEAM event.
+        // in that case we will deactivate the current match participations and create a new one.
+
+        if (victimMatchParticipation.team != mapTeamType(event.victim.team)) {
+          victimMatchParticipation.active = false
+  
+          // TODO: Determine finish date by searching for the last medal or frag
+  
+          let matchParticipationUpdateResult = await this.matchParticipationLogic.update(victimMatchParticipation, tx)
+  
+          if (matchParticipationUpdateResult.isMisfits()) {
+            throw new MisfitsError(matchParticipationUpdateResult.misfits)
+          }
+  
+          l.dev('Deactivated active match participation for victim because the team has changed', matchParticipationUpdateResult.entity)
+  
+          victimMatchParticipation = new MatchParticipation
+          victimMatchParticipation.active = true
+          victimMatchParticipation.matchId = match ? match.id : null
+          victimMatchParticipation.playerId = victim.id
+          victimMatchParticipation.roundId = matchParticipationUpdateResult.entity.roundId
+          victimMatchParticipation.serverId = server.id
+          victimMatchParticipation.serverVisitId = activeVictimServerVisit.id
+          victimMatchParticipation.startDate = eventEmitDate
+          victimMatchParticipation.team = mapTeamType(event.victim.team)
+  
+          let matchParticipationCreateResult = await this.matchParticipationLogic.create(victimMatchParticipation, tx)
+  
+          if (matchParticipationCreateResult.isMisfits()) {
+            throw new MisfitsError(matchParticipationCreateResult.misfits)
+          }
+  
+          victimMatchParticipation = matchParticipationCreateResult.entity
+          l.dev('Created new active match participation for the victim', victimMatchParticipation)
+        }  
       }
 
-      // if the event denotes a different team for a player than what is stored in the match participation,
-      // then it means that the player switched teams without the server recognizing the PLAYER_SWITCH_TEAM event.
-      // in that case we will deactivate the current match participations and create new ones.
-
-      if (killerMatchParticipation && killerMatchParticipation.team != mapTeamType(event.killer.team)) {
-        killerMatchParticipation.active = false
-
-        // TODO: Determine finish date by searching for the last medal or frag
-
-        let matchParticipationUpdateResult = await this.matchParticipationLogic.update(killerMatchParticipation, tx)
-
-        if (matchParticipationUpdateResult.isMisfits()) {
-          throw new MisfitsError(matchParticipationUpdateResult.misfits)
-        }
-
-        l.dev('Deactivated active match participation for killer because the team has changed', matchParticipationUpdateResult.entity)
-
-        killerMatchParticipation = new MatchParticipation
-        killerMatchParticipation.active = true
-        killerMatchParticipation.matchId = match ? match.id : null
-        killerMatchParticipation.playerId = killer.id
-        killerMatchParticipation.roundId = matchParticipationUpdateResult.entity.roundId
-        killerMatchParticipation.serverId = server.id
-        killerMatchParticipation.serverVisitId = activeKillerServerVisit.id
-        killerMatchParticipation.startDate = eventEmitDate
-        killerMatchParticipation.team = mapTeamType(event.killer.team)
-
-        let matchParticipationCreateResult = await this.matchParticipationLogic.create(killerMatchParticipation, tx)
-
-        if (matchParticipationCreateResult.isMisfits()) {
-          throw new MisfitsError(matchParticipationCreateResult.misfits)
-        }
-
-        killerMatchParticipation = matchParticipationCreateResult.entity
-        l.dev('Created new active match participation for the killer', killerMatchParticipation)
-      }
-
-      if (victimMatchParticipation && victimMatchParticipation.team != mapTeamType(event.victim.team)) {
-        victimMatchParticipation.active = false
-
-        // TODO: Determine finish date by searching for the last medal or frag
-
-        let matchParticipationUpdateResult = await this.matchParticipationLogic.update(victimMatchParticipation, tx)
-
-        if (matchParticipationUpdateResult.isMisfits()) {
-          throw new MisfitsError(matchParticipationUpdateResult.misfits)
-        }
-
-        l.dev('Deactivated active match participation for victim because the team has changed', matchParticipationUpdateResult.entity)
-
-        victimMatchParticipation = new MatchParticipation
-        victimMatchParticipation.active = true
-        victimMatchParticipation.matchId = match ? match.id : null
-        victimMatchParticipation.playerId = victim.id
-        victimMatchParticipation.roundId = matchParticipationUpdateResult.entity.roundId
-        victimMatchParticipation.serverId = server.id
-        victimMatchParticipation.serverVisitId = activeVictimServerVisit.id
-        victimMatchParticipation.startDate = eventEmitDate
-        victimMatchParticipation.team = mapTeamType(event.victim.team)
-
-        let matchParticipationCreateResult = await this.matchParticipationLogic.create(victimMatchParticipation, tx)
-
-        if (matchParticipationCreateResult.isMisfits()) {
-          throw new MisfitsError(matchParticipationCreateResult.misfits)
-        }
-
-        victimMatchParticipation = matchParticipationCreateResult.entity
-        l.dev('Created new active match participation for the victim', victimMatchParticipation)
-      }
-
-      if (event.mod != ModType.SWITCHTEAM) {
+      if (event.mod != ModType.SWITCHTEAM && ! event.suicide) {
         let frag = new Frag
 
         frag.date = eventEmitDate
