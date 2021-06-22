@@ -1385,6 +1385,132 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[1].team).to.equal(TeamType.Blue)
       })
 
+      it('(player kills player) should create new match participations if the existing ones for that match are inactive', async function () {
+        let startDate = new Date
+        await create('server', { ip: '127.0.0.1', port: 27960 })
+        await create('player', { steamId: '11111111111111111' })
+        await create('player', { steamId: '22222222222222222' })
+        await create('server_visit', { serverId: 1, playerId: 1 })
+        await create('server_visit', { serverId: 1, playerId: 2 })
+        await create('match', { serverId: 1, guid: '111111111111111111111111111111111111', active: true })
+        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: false, startDate: startDate, team: TeamType.Red })
+        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: false, startDate: startDate, team: TeamType.Blue })
+
+        let qlEvent = {
+          "DATA": {
+            "KILLER": {
+              "AIRBORNE": false,
+              "AMMO": 13,
+              "ARMOR": 35,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 110,
+              "HOLDABLE": null,
+              "NAME": "Player1",
+              "POSITION": {
+                "X": 230.1467590332031,
+                "Y": -1341.296630859375,
+                "Z": 217.125
+              },
+              "POWERUPS": null,
+              "SPEED": 296.3669732147966,
+              "STEAM_ID": "11111111111111111",
+              "SUBMERGED": false,
+              "TEAM": 1,
+              "VIEW": {
+                "X": 13.5406494140625,
+                "Y": -15.7818603515625,
+                "Z": 0
+              },
+              "WEAPON": "ROCKET"
+            },
+            "MATCH_GUID": "111111111111111111111111111111111111",
+            "MOD": "ROCKET_SPLASH",
+            "OTHER_TEAM_ALIVE": null,
+            "OTHER_TEAM_DEAD": null,
+            "ROUND": null,
+            "SUICIDE": false,
+            "TEAMKILL": false,
+            "TEAM_ALIVE": null,
+            "TEAM_DEAD": null,
+            "TIME": 60,
+            "VICTIM": {
+              "AIRBORNE": false,
+              "AMMO": 32,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 16,
+              "HOLDABLE": null,
+              "NAME": "Player2",
+              "POSITION": {
+                "X": 391.0954284667969,
+                "Y": -1384.875,
+                "Z": 217.1261596679688
+              },
+              "POWERUPS": null,
+              "SPEED": 260.6889759608181,
+              "STEAM_ID": "22222222222222222",
+              "STREAK": 0,
+              "SUBMERGED": false,
+              "TEAM": 2,
+              "VIEW": {
+                "X": 5.2349853515625,
+                "Y": 144.1900634765625,
+                "Z": 0
+              },
+              "WEAPON": "PLASMA"
+            },
+            "WARMUP": false
+          },
+          "TYPE": "PLAYER_DEATH"
+        }
+
+        let date = new Date(new Date(startDate).setSeconds(startDate.getSeconds() + 1))
+        let event = PlayerDeathEvent.fromQl(qlEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+
+        let result = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
+
+        expect(result.entities.length).to.equal(4)
+        expect(result.entities[0].active).to.equal(false)
+        expect(result.entities[0].finishDate).to.be.null
+        expect(result.entities[0].matchId).to.equal(1)
+        expect(result.entities[0].playerId).to.equal(1)
+        expect(result.entities[0].roundId).to.be.null
+        expect(result.entities[0].serverId).to.equal(1)
+        expect(result.entities[0].startDate).to.deep.equal(startDate)
+        expect(result.entities[0].statsId).to.be.null
+        expect(result.entities[0].team).to.equal(TeamType.Red)
+        expect(result.entities[1].active).to.equal(false)
+        expect(result.entities[1].finishDate).to.be.null
+        expect(result.entities[1].matchId).to.equal(1)
+        expect(result.entities[1].playerId).to.equal(2)
+        expect(result.entities[1].roundId).to.be.null
+        expect(result.entities[1].serverId).to.equal(1)
+        expect(result.entities[1].startDate).to.deep.equal(startDate)
+        expect(result.entities[1].statsId).to.be.null
+        expect(result.entities[1].team).to.equal(TeamType.Blue)
+        expect(result.entities[2].active).to.equal(true)
+        expect(result.entities[2].finishDate).to.be.null
+        expect(result.entities[2].matchId).to.equal(1)
+        expect(result.entities[2].playerId).to.equal(1)
+        expect(result.entities[2].roundId).to.be.null
+        expect(result.entities[2].serverId).to.equal(1)
+        expect(result.entities[2].startDate).to.deep.equal(date)
+        expect(result.entities[2].statsId).to.be.null
+        expect(result.entities[2].team).to.equal(TeamType.Red)
+        expect(result.entities[3].active).to.equal(true)
+        expect(result.entities[3].finishDate).to.be.null
+        expect(result.entities[3].matchId).to.equal(1)
+        expect(result.entities[3].playerId).to.equal(2)
+        expect(result.entities[3].roundId).to.be.null
+        expect(result.entities[3].serverId).to.equal(1)
+        expect(result.entities[3].startDate).to.deep.equal(date)
+        expect(result.entities[3].statsId).to.be.null
+        expect(result.entities[3].team).to.equal(TeamType.Blue)
+      })
+
       it('(player kills player) should not create a new match participation', async function () {
         let startDate = new Date
         await create('server', { ip: '127.0.0.1', port: 27960 })

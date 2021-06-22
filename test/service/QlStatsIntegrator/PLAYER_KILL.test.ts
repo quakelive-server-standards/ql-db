@@ -7,7 +7,7 @@ import { WeaponType } from '../../../src/domain/enums/WeaponType'
 import Services from '../../../src/Services'
 import { create, tx } from '../../tools'
 
-describe.only('service/QlStatsIntegrator.ts', function () {
+describe('service/QlStatsIntegrator.ts', function () {
   describe('PLAYER_KILL', function () {
     describe('Server', function () {
       it('(player kills player) should create a new server', async function () {

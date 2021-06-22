@@ -1055,7 +1055,7 @@ export class QlStatsIntegrator {
       // if we have a match then we can try to get the corresponding match participation for the player
       let killerMatchParticipation
       if (killer && activeKillerServerVisit && match) {
-        let matchParticipationsResult = await this.matchParticipationLogic.read({ matchId: match.id, playerId: killer.id }, tx)
+        let matchParticipationsResult = await this.matchParticipationLogic.read({ matchId: match.id, playerId: killer.id, active: true }, tx)
 
         if (matchParticipationsResult.entities.length == 0) {
           killerMatchParticipation = new MatchParticipation
@@ -1085,7 +1085,7 @@ export class QlStatsIntegrator {
 
       let victimMatchParticipation
       if (match) {
-        let matchParticipationsResult = await this.matchParticipationLogic.read({ matchId: match.id, playerId: victim.id }, tx)
+        let matchParticipationsResult = await this.matchParticipationLogic.read({ matchId: match.id, playerId: victim.id, active: true }, tx)
 
         if (matchParticipationsResult.entities.length == 0) {
           l.dev('Did not found existing match participation for victim. Creating one...')
