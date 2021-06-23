@@ -5700,86 +5700,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.count).to.equal(0)
       })
 
-      it('(player kills player) should not create a new frag if the reason is switching the team', async function () {
-        let qlEvent = {
-          "DATA": {
-            "KILLER": {
-              "AIRBORNE": false,
-              "AMMO": 0,
-              "ARMOR": 0,
-              "BOT": false,
-              "BOT_SKILL": null,
-              "HEALTH": 0,
-              "HOLDABLE": null,
-              "NAME": "Player1",
-              "POSITION": {
-                "X": -366.9644470214844,
-                "Y": -487.6138610839844,
-                "Z": 416.125
-              },
-              "POWERUPS": null,
-              "SPEED": 0,
-              "STEAM_ID": "11111111111111111",
-              "SUBMERGED": false,
-              "TEAM": 0,
-              "VIEW": {
-                "X": 9.5635986328125,
-                "Y": -9.8931884765625,
-                "Z": 0
-              },
-              "WEAPON": "OTHER_WEAPON"
-            },
-            "MATCH_GUID": "111111111111111111111111111111111111",
-            "MOD": "SWITCHTEAM",
-            "OTHER_TEAM_ALIVE": null,
-            "OTHER_TEAM_DEAD": null,
-            "ROUND": null,
-            "SUICIDE": true,
-            "TEAMKILL": false,
-            "TEAM_ALIVE": null,
-            "TEAM_DEAD": null,
-            "TIME": 27726,
-            "VICTIM": {
-              "AIRBORNE": false,
-              "AMMO": 24,
-              "ARMOR": 0,
-              "BOT": false,
-              "BOT_SKILL": null,
-              "HEALTH": 100,
-              "HOLDABLE": null,
-              "NAME": "Player2",
-              "POSITION": {
-                "X": -366.9644470214844,
-                "Y": -487.6138610839844,
-                "Z": 416.125
-              },
-              "POWERUPS": null,
-              "SPEED": 0,
-              "STEAM_ID": "22222222222222222",
-              "STREAK": 0,
-              "SUBMERGED": false,
-              "TEAM": 0,
-              "VIEW": {
-                "X": 9.5635986328125,
-                "Y": -9.8931884765625,
-                "Z": 0
-              },
-              "WEAPON": "ROCKET"
-            },
-            "WARMUP": true
-          },
-          "TYPE": "PLAYER_DEATH"
-        }
-
-        let date = new Date
-        let event = PlayerDeathEvent.fromQl(qlEvent['DATA'])
-        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27961, event, tx(), date)
-
-        let result = await Services.get().fragLogic.count({}, tx())
-
-        expect(result.count).to.equal(0)
-      })
-
       it('(player kills itself) should create a new frag', async function () {
         let startDate = new Date
         await create('server', { ip: '127.0.0.1', port: 27960 })
@@ -6041,6 +5961,166 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].victim.view.z).to.equal(0)
         expect(result.entities[0].victim.weapon).to.equal(WeaponType.RocketLauncher)
         expect(result.entities[0].warmup).to.equal(true)
+      })
+
+      it('(player kills itself) should not create a new frag if the reason is switching the team', async function () {
+        let qlEvent = {
+          "DATA": {
+            "KILLER": {
+              "AIRBORNE": false,
+              "AMMO": 0,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 0,
+              "HOLDABLE": null,
+              "NAME": "Player1",
+              "POSITION": {
+                "X": -366.9644470214844,
+                "Y": -487.6138610839844,
+                "Z": 416.125
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "11111111111111111",
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 9.5635986328125,
+                "Y": -9.8931884765625,
+                "Z": 0
+              },
+              "WEAPON": "OTHER_WEAPON"
+            },
+            "MATCH_GUID": "111111111111111111111111111111111111",
+            "MOD": "SWITCHTEAM",
+            "OTHER_TEAM_ALIVE": null,
+            "OTHER_TEAM_DEAD": null,
+            "ROUND": null,
+            "SUICIDE": true,
+            "TEAMKILL": false,
+            "TEAM_ALIVE": null,
+            "TEAM_DEAD": null,
+            "TIME": 27726,
+            "VICTIM": {
+              "AIRBORNE": false,
+              "AMMO": 24,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 100,
+              "HOLDABLE": null,
+              "NAME": "Player2",
+              "POSITION": {
+                "X": -366.9644470214844,
+                "Y": -487.6138610839844,
+                "Z": 416.125
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "22222222222222222",
+              "STREAK": 0,
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 9.5635986328125,
+                "Y": -9.8931884765625,
+                "Z": 0
+              },
+              "WEAPON": "ROCKET"
+            },
+            "WARMUP": false
+          },
+          "TYPE": "PLAYER_DEATH"
+        }
+
+        let date = new Date
+        let event = PlayerDeathEvent.fromQl(qlEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27961, event, tx(), date)
+
+        let result = await Services.get().fragLogic.count({}, tx())
+
+        expect(result.count).to.equal(0)
+      })
+
+      it('(player kills itself) should not create a new frag if the reason is switching the team in warmup', async function () {
+        let qlEvent = {
+          "DATA": {
+            "KILLER": {
+              "AIRBORNE": false,
+              "AMMO": 0,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 0,
+              "HOLDABLE": null,
+              "NAME": "Player1",
+              "POSITION": {
+                "X": -366.9644470214844,
+                "Y": -487.6138610839844,
+                "Z": 416.125
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "11111111111111111",
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 9.5635986328125,
+                "Y": -9.8931884765625,
+                "Z": 0
+              },
+              "WEAPON": "OTHER_WEAPON"
+            },
+            "MATCH_GUID": "111111111111111111111111111111111111",
+            "MOD": "SWITCHTEAM",
+            "OTHER_TEAM_ALIVE": null,
+            "OTHER_TEAM_DEAD": null,
+            "ROUND": null,
+            "SUICIDE": true,
+            "TEAMKILL": false,
+            "TEAM_ALIVE": null,
+            "TEAM_DEAD": null,
+            "TIME": 27726,
+            "VICTIM": {
+              "AIRBORNE": false,
+              "AMMO": 24,
+              "ARMOR": 0,
+              "BOT": false,
+              "BOT_SKILL": null,
+              "HEALTH": 100,
+              "HOLDABLE": null,
+              "NAME": "Player2",
+              "POSITION": {
+                "X": -366.9644470214844,
+                "Y": -487.6138610839844,
+                "Z": 416.125
+              },
+              "POWERUPS": null,
+              "SPEED": 0,
+              "STEAM_ID": "22222222222222222",
+              "STREAK": 0,
+              "SUBMERGED": false,
+              "TEAM": 0,
+              "VIEW": {
+                "X": 9.5635986328125,
+                "Y": -9.8931884765625,
+                "Z": 0
+              },
+              "WEAPON": "ROCKET"
+            },
+            "WARMUP": true
+          },
+          "TYPE": "PLAYER_DEATH"
+        }
+
+        let date = new Date
+        let event = PlayerDeathEvent.fromQl(qlEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27961, event, tx(), date)
+
+        let result = await Services.get().fragLogic.count({}, tx())
+
+        expect(result.count).to.equal(0)
       })
 
       it('(player killed by environment) should create a new frag', async function () {
