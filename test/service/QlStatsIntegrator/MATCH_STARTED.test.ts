@@ -20,7 +20,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "INFECTED": 0,
             "INSTAGIB": 0,
             "MAP": "toxicity",
-            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
@@ -71,7 +71,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "INFECTED": 0,
             "INSTAGIB": 0,
             "MAP": "toxicity",
-            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
@@ -121,7 +121,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "INFECTED": 0,
             "INSTAGIB": 0,
             "MAP": "toxicity",
-            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
@@ -172,7 +172,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "INFECTED": 0,
             "INSTAGIB": 0,
             "MAP": "toxicity",
-            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
@@ -222,7 +222,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "INFECTED": 0,
             "INSTAGIB": 0,
             "MAP": "toxicity",
-            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
@@ -271,7 +271,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "INFECTED": 0,
             "INSTAGIB": 0,
             "MAP": "toxicity",
-            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
@@ -320,7 +320,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "INFECTED": 0,
             "INSTAGIB": 0,
             "MAP": "toxicity",
-            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
@@ -368,7 +368,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "INFECTED": 0,
             "INSTAGIB": 0,
             "MAP": "toxicity",
-            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
@@ -420,7 +420,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "INFECTED": 0,
             "INSTAGIB": 0,
             "MAP": "toxicity",
-            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
@@ -467,7 +467,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "INFECTED": 0,
             "INSTAGIB": 0,
             "MAP": "toxicity",
-            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
@@ -513,7 +513,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "INFECTED": 0,
             "INSTAGIB": 0,
             "MAP": "toxicity",
-            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
@@ -546,12 +546,12 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(result.entities.length).to.equal(2)
         expect(result.entities[0].firstSeen).to.deep.equal(date)
         expect(result.entities[0].model).to.be.null
-        expect(result.entities[0].name).to.equal('Player2')
-        expect(result.entities[0].steamId).to.equal('22222222222222222')
+        expect(result.entities[0].name).to.equal('Player1')
+        expect(result.entities[0].steamId).to.equal('11111111111111111')
         expect(result.entities[1].firstSeen).to.deep.equal(date)
         expect(result.entities[1].model).to.be.null
-        expect(result.entities[1].name).to.equal('Player1')
-        expect(result.entities[1].steamId).to.equal('11111111111111111')
+        expect(result.entities[1].name).to.equal('Player2')
+        expect(result.entities[1].steamId).to.equal('22222222222222222')
       })
 
       it('should not create new players', async function() {
@@ -568,7 +568,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "INFECTED": 0,
             "INSTAGIB": 0,
             "MAP": "toxicity",
-            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
@@ -601,12 +601,12 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(result.entities.length).to.equal(2)
         expect(result.entities[0].firstSeen).to.deep.equal(date)
         expect(result.entities[0].model).to.be.null
-        expect(result.entities[0].name).to.equal('Player2')
-        expect(result.entities[0].steamId).to.equal('22222222222222222')
+        expect(result.entities[0].name).to.equal('Player1')
+        expect(result.entities[0].steamId).to.equal('11111111111111111')
         expect(result.entities[1].firstSeen).to.deep.equal(date)
         expect(result.entities[1].model).to.be.null
-        expect(result.entities[1].name).to.equal('Player1')
-        expect(result.entities[1].steamId).to.equal('11111111111111111')
+        expect(result.entities[1].name).to.equal('Player2')
+        expect(result.entities[1].steamId).to.equal('22222222222222222')
       })
 
       it('should update the player names', async function() {
@@ -623,7 +623,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "INFECTED": 0,
             "INSTAGIB": 0,
             "MAP": "toxicity",
-            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
@@ -656,12 +656,12 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(result.entities.length).to.equal(2)
         expect(result.entities[0].firstSeen).to.deep.equal(date)
         expect(result.entities[0].model).to.be.null
-        expect(result.entities[0].name).to.equal('Player2')
-        expect(result.entities[0].steamId).to.equal('22222222222222222')
+        expect(result.entities[0].name).to.equal('Player1')
+        expect(result.entities[0].steamId).to.equal('11111111111111111')
         expect(result.entities[1].firstSeen).to.deep.equal(date)
         expect(result.entities[1].model).to.be.null
-        expect(result.entities[1].name).to.equal('Player1')
-        expect(result.entities[1].steamId).to.equal('11111111111111111')
+        expect(result.entities[1].name).to.equal('Player2')
+        expect(result.entities[1].steamId).to.equal('22222222222222222')
       })
 
       it('should set the first seen dates', async function() {
@@ -678,7 +678,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "INFECTED": 0,
             "INSTAGIB": 0,
             "MAP": "toxicity",
-            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
@@ -711,12 +711,12 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(result.entities.length).to.equal(2)
         expect(result.entities[0].firstSeen).to.deep.equal(date)
         expect(result.entities[0].model).to.be.null
-        expect(result.entities[0].name).to.equal('Player2')
-        expect(result.entities[0].steamId).to.equal('22222222222222222')
+        expect(result.entities[0].name).to.equal('Player1')
+        expect(result.entities[0].steamId).to.equal('11111111111111111')
         expect(result.entities[1].firstSeen).to.deep.equal(date)
         expect(result.entities[1].model).to.be.null
-        expect(result.entities[1].name).to.equal('Player1')
-        expect(result.entities[1].steamId).to.equal('11111111111111111')
+        expect(result.entities[1].name).to.equal('Player2')
+        expect(result.entities[1].steamId).to.equal('22222222222222222')
       })
     })
 
@@ -732,7 +732,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "INFECTED": 0,
             "INSTAGIB": 0,
             "MAP": "toxicity",
-            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
@@ -793,7 +793,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "INFECTED": 0,
             "INSTAGIB": 0,
             "MAP": "toxicity",
-            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
@@ -858,7 +858,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "INFECTED": 0,
             "INSTAGIB": 0,
             "MAP": "toxicity",
-            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
@@ -922,7 +922,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "INFECTED": 0,
             "INSTAGIB": 0,
             "MAP": "toxicity",
-            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
@@ -968,7 +968,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(result.entities[0].exitMessage).to.be.null
         expect(result.entities[0].factoryId).to.equal(1)
         expect(result.entities[0].finishDate).to.be.null
-        expect(result.entities[0].guid).to.equal('66fe025a-63ff-4852-96bd-9102411e9fb0')
+        expect(result.entities[0].guid).to.equal('111111111111111111111111111111111111')
         expect(result.entities[0].length).to.be.null
         expect(result.entities[0].mapId).to.equal(1)
         expect(result.entities[0].restarted).to.be.null
@@ -980,7 +980,7 @@ describe('service/QlStatsIntegrator.ts', function() {
 
       it('should inactivate any former matches on the same server', async function() {
         await create('server', { ip: '127.0.0.1', port: 27960 })
-        await create('match', { serverId: 1, active: true, guid: '66fe025a-63ff-4852-96bd-9102411e9fb1' })
+        await create('match', { serverId: 1, active: true, guid: '111111111111111111111111111111111111' })
 
         let qlEvent = {
           "DATA": {
@@ -992,7 +992,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "INFECTED": 0,
             "INSTAGIB": 0,
             "MAP": "toxicity",
-            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MATCH_GUID": "222222222222222222222222222222222222",
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
@@ -1040,7 +1040,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "INFECTED": 0,
             "INSTAGIB": 0,
             "MAP": "toxicity",
-            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MATCH_GUID": "111111111111111111111111111111111111",
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
@@ -1095,8 +1095,13 @@ describe('service/QlStatsIntegrator.ts', function() {
 
       it('should inactivate any former match participations on the same server', async function() {
         await create('server', { ip: '127.0.0.1', port: 27960 })
-        await create('match_participation', { serverId: 1, active: true, startDate: new Date, team: TeamType.Blue })
-        await create('match_participation', { serverId: 1, active: true, startDate: new Date, team: TeamType.Red })
+        await create('player', { steamId: '11111111111111111' })
+        await create('player', { steamId: '22222222222222222' })
+        await create('server_visit', { serverId: 1, playerId: 1 })
+        await create('server_visit', { serverId: 1, playerId: 2 })
+        await create('match', { serverId: 1, guid: '111111111111111111111111111111111111', active: true })
+        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: new Date, team: TeamType.Blue })
+        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 1, matchId: 1, active: true, startDate: new Date, team: TeamType.Red })
 
         let qlEvent = {
           "DATA": {
@@ -1108,7 +1113,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "INFECTED": 0,
             "INSTAGIB": 0,
             "MAP": "toxicity",
-            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MATCH_GUID": "222222222222222222222222222222222222",
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
@@ -1152,10 +1157,17 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('player', { steamId: '11111111111111111' })
         await create('player', { steamId: '22222222222222222' })
         await create('player', { steamId: '33333333333333333' })
-        await create('match_participation', { playerId: 1, serverId: 2, active: true, startDate: new Date, team: TeamType.Red })
-        await create('match_participation', { playerId: 2, serverId: 3, active: true, startDate: new Date, team: TeamType.Blue })
-        await create('match_participation', { playerId: 3, serverId: 1, active: true, startDate: new Date, team: TeamType.Blue })
-        await create('match_participation', { playerId: 3, serverId: 2, active: true, startDate: new Date, team: TeamType.Blue })
+        await create('server_visit', { serverId: 2, playerId: 1 })
+        await create('server_visit', { serverId: 3, playerId: 2 })
+        await create('server_visit', { serverId: 1, playerId: 3 })
+        await create('server_visit', { serverId: 2, playerId: 3 })
+        await create('match', { serverId: 2, guid: '111111111111111111111111111111111111', active: true })
+        await create('match', { serverId: 3, guid: '222222222222222222222222222222222222', active: true })
+        await create('match', { serverId: 1, guid: '333333333333333333333333333333333333', active: true })
+        await create('match_participation', { playerId: 1, serverId: 2, serverVisitId: 1, matchId: 1, active: true, startDate: new Date, team: TeamType.Red })
+        await create('match_participation', { playerId: 2, serverId: 3, serverVisitId: 2, matchId: 2, active: true, startDate: new Date, team: TeamType.Blue })
+        await create('match_participation', { playerId: 3, serverId: 1, serverVisitId: 3, matchId: 3, active: true, startDate: new Date, team: TeamType.Blue })
+        await create('match_participation', { playerId: 3, serverId: 2, serverVisitId: 4, matchId: 1, active: true, startDate: new Date, team: TeamType.Blue })
 
         let qlEvent = {
           "DATA": {
@@ -1167,7 +1179,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "INFECTED": 0,
             "INSTAGIB": 0,
             "MAP": "toxicity",
-            "MATCH_GUID": "66fe025a-63ff-4852-96bd-9102411e9fb0",
+            "MATCH_GUID": "444444444444444444444444444444444444",
             "MERCY_LIMIT": 0,
             "PLAYERS": [
               {
@@ -1200,7 +1212,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(result.entities.length).to.equal(6)
         expect(result.entities[0].active).to.equal(false)
         expect(result.entities[1].active).to.equal(false)
-        expect(result.entities[2].active).to.equal(true)
+        expect(result.entities[2].active).to.equal(false)
         expect(result.entities[3].active).to.equal(true)
         expect(result.entities[4].active).to.equal(true)
         expect(result.entities[5].active).to.equal(true)
