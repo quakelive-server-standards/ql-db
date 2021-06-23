@@ -24,5 +24,6 @@ export enum CauseType {
   Shotgun = 'Shotgun',
   Slime = 'Slime',
   TriggerHurt = 'Trigger hurt',
+  Water = 'Water',
   Unknown = 'Unknown'
 }

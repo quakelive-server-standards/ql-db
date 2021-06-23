@@ -1880,6 +1880,7 @@ export function mapModType(modType: ModType): CauseType {
     case ModType.SHOTGUN: return CauseType.Shotgun
     case ModType.SLIME: return CauseType.Slime
     case ModType.TRIGGER_HURT: return CauseType.TriggerHurt
+    case ModType.WATER: return CauseType.Water
     case ModType.UNKNOWN: return CauseType.Unknown
   }
 

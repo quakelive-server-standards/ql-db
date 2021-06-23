@@ -10,9 +10,6 @@ import { Round } from '../round/Round'
 import { Server } from '../server/Server'
 import { ServerVisit } from '../serverVisit/ServerVisit'
 
-/**
- * Quake Live stats event property 'teamKill' is left out because it can be determined.
- */
 export class Frag {
   
   id?: number
@@ -22,13 +19,21 @@ export class Frag {
 
   cause?: CauseType
   date?: Date
+  /**
+   * Is true for the following CauseType values: Crush, Falling, Hurt, Lava, Slime, TriggerHurt, Water, Unknown
+   */
   environment?: boolean
   killer?: FragParticipant | null
   otherTeamAlive?: number | null
   otherTeamDead?: number | null
+  /**
+   * Is true for the CauseType and if the player killed itself either through a weapon
+   * or by entering the console command kill.
+   */
   suicide?: boolean
   teamAlive?: number | null
   teamDead?: number | null
+  teamKill?: boolean
   time?: number
   victim?: FragParticipant
   warmup?: boolean
