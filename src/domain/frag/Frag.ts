@@ -20,11 +20,12 @@ export class Frag {
   roundId?: number | null
   serverId?: number
 
+  cause?: CauseType
   date?: Date
+  environment?: boolean
   killer?: FragParticipant | null
   otherTeamAlive?: number | null
   otherTeamDead?: number | null
-  cause?: CauseType
   suicide?: boolean
   teamAlive?: number | null
   teamDead?: number | null

@@ -1,7 +1,7 @@
 import Log from 'knight-log'
 import { PgTransaction } from 'knight-pg-transaction'
 import { MisfitsError } from 'knight-validation'
-import { GameType as StatsGameType, HoldableType as StatsHoldableType, MatchReportEvent, MatchStartedEvent, MedalType as StatsMedalType, ModType, PlayerConnectEvent, PlayerDeathEvent, PlayerDisconnectEvent, PlayerKillEvent, PlayerMedalEvent, PlayerStatsEvent, PlayerSwitchTeamEvent, PowerUpType as StatsPowerUpType, RoundOverEvent, TeamType as StatsTeamType, WeaponType as StatsWeaponType } from 'ql-stats-model'
+import { GameType as StatsGameType, HoldableType as StatsHoldableType, isEnvironment, MatchReportEvent, MatchStartedEvent, MedalType as StatsMedalType, ModType, PlayerConnectEvent, PlayerDeathEvent, PlayerDisconnectEvent, PlayerKillEvent, PlayerMedalEvent, PlayerStatsEvent, PlayerSwitchTeamEvent, PowerUpType as StatsPowerUpType, RoundOverEvent, TeamType as StatsTeamType, WeaponType as StatsWeaponType } from 'ql-stats-model'
 import { CauseType } from '../domain/enums/CauseType'
 import { GameType } from '../domain/enums/GameType'
 import { HoldableType } from '../domain/enums/HoldableType'
@@ -795,9 +795,9 @@ export class QlStatsIntegrator {
       if (event.mod != ModType.SWITCHTEAM && ! event.suicide) {
         let frag = new Frag
 
-        frag.date = eventEmitDate
-  
         frag.cause = mapModType(event.mod)
+        frag.date = eventEmitDate
+        frag.environment = false
         frag.matchId = match ? match.id : null
         frag.otherTeamAlive = event.otherTeamAlive
         frag.otherTeamDead = event.otherTeamDead
@@ -1196,9 +1196,9 @@ export class QlStatsIntegrator {
       if (event.suicide && event.mod != ModType.SWITCHTEAM || event.killer == null) {
         let frag = new Frag
 
-        frag.date = eventEmitDate
-        
         frag.cause = mapModType(event.mod)
+        frag.date = eventEmitDate
+        frag.environment = isEnvironment(event.mod)
         frag.matchId = match ? match.id : null
         frag.otherTeamAlive = event.otherTeamAlive
         frag.otherTeamDead = event.otherTeamDead

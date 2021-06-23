@@ -45,6 +45,7 @@ export default class DbMigration extends PostgresMigration {
         id SERIAL PRIMARY KEY,
         cause VARCHAR(29),
         date TIMESTAMP,
+        environment BOOLEAN,
         killer_airborne BOOLEAN,
         killer_ammo INTEGER,
         killer_armor INTEGER,

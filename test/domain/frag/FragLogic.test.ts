@@ -26,6 +26,7 @@ describe('domain/frag/FragLogic.ts', function() {
 
       frag.cause = CauseType.Lava
       frag.date = now
+      frag.environment = false
       frag.matchId = 1
       frag.otherTeamAlive = 1
       frag.otherTeamDead = 2
@@ -95,6 +96,7 @@ describe('domain/frag/FragLogic.ts', function() {
       expect(result.entity.id).to.equal(1)
       expect(result.entity.cause).to.equal(CauseType.Lava)
       expect(result.entity.date).to.deep.equal(now)
+      expect(result.entity.environment).to.equal(false)
       expect(result.entity.matchId).to.equal(1)
       expect(result.entity.otherTeamAlive).to.equal(1)
       expect(result.entity.otherTeamDead).to.equal(2)
@@ -157,6 +159,7 @@ describe('domain/frag/FragLogic.ts', function() {
       await create('frag', {
         cause: CauseType.Lava,
         date: now,
+        environment: false,
         matchId: 1,
         otherTeamAlive: 1,
         otherTeamDead: 2,
@@ -230,6 +233,7 @@ describe('domain/frag/FragLogic.ts', function() {
       expect(result.entities[0].id).to.equal(1)
       expect(result.entities[0].cause).to.equal(CauseType.Lava)
       expect(result.entities[0].date).to.deep.equal(now)
+      expect(result.entities[0].environment).to.equal(false)
       expect(result.entities[0].matchId).to.equal(1)
       expect(result.entities[0].otherTeamAlive).to.equal(1)
       expect(result.entities[0].otherTeamDead).to.equal(2)
@@ -423,6 +427,7 @@ describe('domain/frag/FragLogic.ts', function() {
       await create('frag', {
         cause: CauseType.Lava,
         date: date1,
+        environment: false,
         matchId: 1,
         otherTeamAlive: 1,
         otherTeamDead: 2,
@@ -492,6 +497,7 @@ describe('domain/frag/FragLogic.ts', function() {
       let frag = new Frag
       frag.id = 1
       frag.date = date2
+      frag.environment = true
       frag.matchId = 2
       frag.otherTeamAlive = 2
       frag.otherTeamDead = 3
@@ -562,6 +568,7 @@ describe('domain/frag/FragLogic.ts', function() {
       expect(result.entity.id).to.equal(1)
       expect(result.entity.cause).to.equal(CauseType.LightningGun)
       expect(result.entity.date).to.deep.equal(date2)
+      expect(result.entity.environment).to.equal(true)
       expect(result.entity.matchId).to.equal(2)
       expect(result.entity.otherTeamAlive).to.equal(2)
       expect(result.entity.otherTeamDead).to.equal(3)
@@ -624,6 +631,7 @@ describe('domain/frag/FragLogic.ts', function() {
       await create('frag', {
         cause: CauseType.Lava,
         date: now,
+        environment: false,
         matchId: 1,
         otherTeamAlive: 1,
         otherTeamDead: 2,
@@ -698,6 +706,7 @@ describe('domain/frag/FragLogic.ts', function() {
       expect(result.isValue()).to.be.true
       expect(result.entity.id).to.equal(1)
       expect(result.entity.date).to.deep.equal(now)
+      expect(result.entity.environment).to.equal(false)
       expect(result.entity.matchId).to.equal(1)
       expect(result.entity.otherTeamAlive).to.equal(1)
       expect(result.entity.otherTeamDead).to.equal(2)

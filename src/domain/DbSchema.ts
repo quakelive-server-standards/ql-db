@@ -86,6 +86,7 @@ export default {
       'id': { property: 'id', id: true},
       'cause': 'cause',
       'date': 'date',
+      'environment': 'environment',
       'killer_airborne': 'killer.airborne',
       'killer_ammo': 'killer.ammo',
       'killer_armor': 'killer.armor',
@@ -199,6 +200,7 @@ export default {
       frag.id = row['id']
       frag.cause = row['cause']
       frag.date = row['date']
+      frag.environment = row['environment']
 
       if (row['killer_airborne'] != null || 
           row['killer_ammo'] != null ||
@@ -293,9 +295,7 @@ export default {
     instanceToRow: (frag: Frag) => {
       return {
         'id': frag.id,
-        'match_id': frag.matchId,
-        'round_id': frag.roundId,
-        'server_id': frag.serverId,
+        'environment': frag.environment,
         'cause': frag.cause,
         'date': frag.date,
         'killer_player_id': frag.killer?.playerId,
@@ -318,8 +318,11 @@ export default {
         'killer_view_y': frag.killer?.view?.y,
         'killer_view_z': frag.killer?.view?.z,
         'killer_weapon': frag.killer?.weapon,
+        'match_id': frag.matchId,
         'other_team_alive': frag.otherTeamAlive,
         'other_team_dead': frag.otherTeamDead,
+        'round_id': frag.roundId,
+        'server_id': frag.serverId,
         'suicide': frag.suicide,
         'team_alive': frag.teamAlive,
         'team_dead': frag.teamDead,

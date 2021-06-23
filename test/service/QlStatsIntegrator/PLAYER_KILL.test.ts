@@ -1148,7 +1148,7 @@ describe('service/QlStatsIntegrator.ts', function () {
       })
 
       it('(player kills itself) should set the first seen date', async function () {
-        await create('player', { name: 'Player1', steamId: '11111111111111111', model: 'sarge' })
+        await create('player', { name: 'Player', steamId: '11111111111111111', model: 'sarge' })
 
         let qlEvent = {
           "DATA": {
@@ -1534,7 +1534,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[5].disconnectDate).to.be.null
       })
 
-      it('(player kills ifself) should create a new server visit', async function () {
+      it('(player kills itself) should create a new server visit', async function () {
         await create('player', { name: 'Player1', steamId: '11111111111111111', model: 'sarge' })
 
         let qlEvent = {
@@ -2465,7 +2465,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               },
               "WEAPON": "ROCKET"
             },
-            "MATCH_GUID": "222222222222222222222222222222222222",
+            "MATCH_GUID": "333333333333333333333333333333333333",
             "MOD": "ROCKET_SPLASH",
             "OTHER_TEAM_ALIVE": null,
             "OTHER_TEAM_DEAD": null,
@@ -3719,7 +3719,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               },
               "POWERUPS": null,
               "SPEED": 531.7309587563997,
-              "STEAM_ID": "11111111111111111",
+              "STEAM_ID": "22222222222222222",
               "SUBMERGED": false,
               "TEAM": 2,
               "VIEW": {
@@ -3729,7 +3729,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               },
               "WEAPON": "ROCKET"
             },
-            "MATCH_GUID": "222222222222222222222222222222222222",
+            "MATCH_GUID": "333333333333333333333333333333333333",
             "MOD": "ROCKET_SPLASH",
             "OTHER_TEAM_ALIVE": null,
             "OTHER_TEAM_DEAD": null,
@@ -3755,7 +3755,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               },
               "POWERUPS": null,
               "SPEED": 531.7309587563997,
-              "STEAM_ID": "11111111111111111",
+              "STEAM_ID": "22222222222222222",
               "STREAK": 0,
               "SUBMERGED": false,
               "TEAM": 2,
@@ -3850,7 +3850,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               },
               "WEAPON": "ROCKET"
             },
-            "MATCH_GUID": "111111111111111111111111111111111111",
+            "MATCH_GUID": "222222222222222222222222222222222222",
             "MOD": "ROCKET_SPLASH",
             "OTHER_TEAM_ALIVE": null,
             "OTHER_TEAM_DEAD": null,
@@ -4159,6 +4159,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities.length).to.equal(1)
         expect(result.entities[0].cause).to.equal(CauseType.RocketSplash)
         expect(result.entities[0].date).to.deep.equal(date)
+        expect(result.entities[0].environment).to.equal(false)
         expect(result.entities[0].killer.airborne).to.equal(false)
         expect(result.entities[0].killer.ammo).to.equal(0)
         expect(result.entities[0].killer.armor).to.equal(0)
@@ -4305,6 +4306,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities.length).to.equal(1)
         expect(result.entities[0].cause).to.equal(CauseType.RocketSplash)
         expect(result.entities[0].date).to.deep.equal(date)
+        expect(result.entities[0].environment).to.equal(false)
         expect(result.entities[0].killer.airborne).to.equal(false)
         expect(result.entities[0].killer.ammo).to.equal(0)
         expect(result.entities[0].killer.armor).to.equal(0)

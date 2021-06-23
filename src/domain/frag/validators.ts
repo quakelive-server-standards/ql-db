@@ -1,5 +1,5 @@
 import { PgTransaction } from 'knight-pg-transaction'
-import { Absent, Exists, Required, TypeOf, Validator } from 'knight-validation'
+import { Absent, Exists, Misfit, Required, TypeOf, Validator } from 'knight-validation'
 import { MatchLogic } from '../match/MatchLogic'
 import { MatchParticipationLogic } from '../matchParticipation/MatchParticipationLogic'
 import { PlayerLogic } from '../player/PlayerLogic'
@@ -41,9 +41,15 @@ export class FragValidator extends Validator {
       let result = await serverLogic.count({ id: frag.serverId }, tx)
       return result.count == 1
     }))
+    
+    this.add('cause', new Required)
+    // this.add('cause', new Enum(CauseType))
 
     this.add('date', new Required)
     this.add('date', new TypeOf(Date))
+
+    this.add('environment', new Required)
+    this.add('environment', new TypeOf('boolean'))
 
     this.add('killer', new FragParticipantValidator(playerLogic, matchParticipationLogic, serverVisitLogic, tx), async (frag: Frag) => frag.killer != undefined)
     this.add('otherTeamAlive', new TypeOf('number'))
@@ -63,6 +69,12 @@ export class FragValidator extends Validator {
     
     this.add('warmup', new Required)
     this.add('warmup', new TypeOf('boolean'))
+
+    this.add(['environment', 'suicide'], 'JustOneCanBeTrue', async (frag: Frag) => {
+      if (frag.environment && frag.suicide) {
+        return new Misfit
+      }
+    })
   }
 }
 
