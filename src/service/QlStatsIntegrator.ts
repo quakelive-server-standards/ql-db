@@ -1352,37 +1352,37 @@ export class QlStatsIntegrator {
       }
 
       // if we have a match then we can try to get the corresponding match participation for the player
-      let matchParticipation
+      let activeMatchParticipation
       if (match) {
-        let matchParticipationsResult = await this.matchParticipationLogic.read({ matchId: match.id, playerId: player.id }, tx)
+        let activeMatchParticipationsResult = await this.matchParticipationLogic.read({ matchId: match.id, playerId: player.id, active: true }, tx)
 
-        if (matchParticipationsResult.entities.length == 0) {
-          matchParticipation = new MatchParticipation
-          matchParticipation.active = true
-          matchParticipation.matchId = match.id
-          matchParticipation.playerId = player.id
-          matchParticipation.serverId = server.id
-          matchParticipation.serverVisitId = activeServerVisit.id
+        if (activeMatchParticipationsResult.entities.length == 0) {
+          activeMatchParticipation = new MatchParticipation
+          activeMatchParticipation.active = true
+          activeMatchParticipation.matchId = match.id
+          activeMatchParticipation.playerId = player.id
+          activeMatchParticipation.serverId = server.id
+          activeMatchParticipation.serverVisitId = activeServerVisit.id
           // we cannot know the start date thus we just take the date of the medal itself
-          matchParticipation.startDate = eventEmitDate
+          activeMatchParticipation.startDate = eventEmitDate
 
-          let matchParticipationCreateResult = await this.matchParticipationLogic.create(matchParticipation, tx)
+          let matchParticipationCreateResult = await this.matchParticipationLogic.create(activeMatchParticipation, tx)
 
           if (matchParticipationCreateResult.isMisfits()) {
             throw new MisfitsError(matchParticipationCreateResult.misfits)
           }
 
-          matchParticipation = matchParticipationCreateResult.entity
+          activeMatchParticipation = matchParticipationCreateResult.entity
         }
         else {
-          matchParticipation = matchParticipationsResult.entities[0]
+          activeMatchParticipation = activeMatchParticipationsResult.entities[0]
         }
       }
 
       let medal = new Medal
 
       medal.matchId = match ? match.id : null
-      medal.matchParticipationId = matchParticipation ? matchParticipation.id : null
+      medal.matchParticipationId = activeMatchParticipation ? activeMatchParticipation.id : null
       medal.playerId = player.id
       medal.serverId = server.id
       medal.serverVisitId = activeServerVisit.id

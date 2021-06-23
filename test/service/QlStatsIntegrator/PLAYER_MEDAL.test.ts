@@ -535,7 +535,67 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(result.entities[0].startDate).to.deep.equal(startDate)
         expect(result.entities[0].statsId).to.be.null
         expect(result.entities[0].team).to.equal(TeamType.Blue)
-      })  
+      })
+
+      it('should create a new match participation if the existing one for that match is inactive', async function () {
+        let startDate = new Date
+        await create('server', { ip: '127.0.0.1', port: 27960 })
+        await create('player', { steamId: '11111111111111111' })
+        await create('player', { steamId: '22222222222222222' })
+        await create('server_visit', { serverId: 1, playerId: 1 })
+        await create('server_visit', { serverId: 1, playerId: 2 })
+        await create('match', { serverId: 1, guid: '111111111111111111111111111111111111', active: true })
+        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: false, startDate: startDate, team: TeamType.Red })
+        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: false, startDate: startDate, team: TeamType.Blue })
+
+        let qlEvent = {
+          "DATA" : {
+            "MATCH_GUID" : "111111111111111111111111111111111111",
+            "MEDAL" : "FIRSTFRAG",
+            "NAME" : "Player",
+            "STEAM_ID" : "22222222222222222",
+            "TIME" : 23,
+            "TOTAL" : 1,
+            "WARMUP" : false
+         },
+         "TYPE" : "PLAYER_MEDAL"
+       }
+
+        let date = new Date(new Date(startDate).setSeconds(startDate.getSeconds() + 1))
+        let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
+        await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
+
+        let result = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
+
+        expect(result.entities.length).to.equal(3)
+        expect(result.entities[0].active).to.equal(false)
+        expect(result.entities[0].finishDate).to.be.null
+        expect(result.entities[0].matchId).to.equal(1)
+        expect(result.entities[0].playerId).to.equal(1)
+        expect(result.entities[0].roundId).to.be.null
+        expect(result.entities[0].serverId).to.equal(1)
+        expect(result.entities[0].startDate).to.deep.equal(startDate)
+        expect(result.entities[0].statsId).to.be.null
+        expect(result.entities[0].team).to.equal(TeamType.Red)
+        expect(result.entities[1].active).to.equal(false)
+        expect(result.entities[1].finishDate).to.be.null
+        expect(result.entities[1].matchId).to.equal(1)
+        expect(result.entities[1].playerId).to.equal(2)
+        expect(result.entities[1].roundId).to.be.null
+        expect(result.entities[1].serverId).to.equal(1)
+        expect(result.entities[1].startDate).to.deep.equal(startDate)
+        expect(result.entities[1].statsId).to.be.null
+        expect(result.entities[1].team).to.equal(TeamType.Blue)
+        expect(result.entities[2].active).to.equal(true)
+        expect(result.entities[2].finishDate).to.be.null
+        expect(result.entities[2].matchId).to.equal(1)
+        expect(result.entities[2].playerId).to.equal(2)
+        expect(result.entities[2].roundId).to.be.null
+        expect(result.entities[2].serverId).to.equal(1)
+        expect(result.entities[2].startDate).to.deep.equal(date)
+        expect(result.entities[2].statsId).to.be.null
+        expect(result.entities[2].team).to.be.null
+      })
 
       it('should not create a new match participation for warmup', async function() {
         let qlEvent = {
