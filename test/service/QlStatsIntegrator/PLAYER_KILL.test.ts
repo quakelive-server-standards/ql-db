@@ -1147,7 +1147,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].steamId).to.equal('11111111111111111')
       })
 
-      it('(player kills itself) should set the first seen dates', async function () {
+      it('(player kills itself) should set the first seen date', async function () {
         await create('player', { name: 'Player1', steamId: '11111111111111111', model: 'sarge' })
 
         let qlEvent = {

@@ -689,7 +689,7 @@ export class QlStatsIntegrator {
 
         // if the event denotes a different team for a player than what is stored in the match participation,
         // then it means that the player switched teams without the server recognizing the PLAYER_SWITCH_TEAM event.
-        // in that case we will deactivate the current match participations and create a new one.
+        // in that case we will deactivate the current match participation and create a new one.
 
         if (killerMatchParticipation.team != mapTeamType(event.killer.team)) {
           killerMatchParticipation.active = false
@@ -756,7 +756,7 @@ export class QlStatsIntegrator {
 
         // if the event denotes a different team for a player than what is stored in the match participation,
         // then it means that the player switched teams without the server recognizing the PLAYER_SWITCH_TEAM event.
-        // in that case we will deactivate the current match participations and create a new one.
+        // in that case we will deactivate the current match participation and create a new one.
 
         if (victimMatchParticipation.team != mapTeamType(event.victim.team)) {
           victimMatchParticipation.active = false
@@ -796,20 +796,12 @@ export class QlStatsIntegrator {
         let frag = new Frag
 
         frag.date = eventEmitDate
-        frag.killer = new FragParticipant
-        frag.killer.matchParticipationId = killerMatchParticipation ? killerMatchParticipation.id : null
-        frag.killer.playerId = killer.id
-        frag.killer.serverVisitId = activeKillerServerVisit.id
-        frag.matchId = match ? match.id : null
-        frag.victim = new FragParticipant
-        frag.victim.matchParticipationId = victimMatchParticipation ? victimMatchParticipation.id : null
-        frag.victim.playerId = victim.id
-        frag.victim.serverVisitId = activeVictimServerVisit.id
-        frag.serverId = server.id
   
         frag.cause = mapModType(event.mod)
+        frag.matchId = match ? match.id : null
         frag.otherTeamAlive = event.otherTeamAlive
         frag.otherTeamDead = event.otherTeamDead
+        frag.serverId = server.id
         frag.suicide = event.suicide
         // event.teamKill
         frag.teamAlive = event.teamAlive
@@ -817,6 +809,7 @@ export class QlStatsIntegrator {
         frag.time = event.time
         frag.warmup = event.warmup
   
+        frag.killer = new FragParticipant
         frag.killer.airborne = event.killer.airborne
         frag.killer.ammo = event.killer.ammo
         frag.killer.armor = event.killer.armor
@@ -824,12 +817,15 @@ export class QlStatsIntegrator {
         frag.killer.botSkill = event.killer.botSkill
         frag.killer.health = event.killer.health
         frag.killer.holdable = event.killer.holdable ? mapHoldableType(event.killer.holdable) : null
+        frag.killer.matchParticipationId = killerMatchParticipation ? killerMatchParticipation.id : null
+        frag.killer.playerId = killer.id
         frag.killer.position = {
           x: event.killer.position.x,
           y: event.killer.position.y,
           z: event.killer.position.z
         }
         frag.killer.powerUps = event.killer.powerUps ? mapPowerUpType(event.killer.powerUps) : null
+        frag.killer.serverVisitId = activeKillerServerVisit.id
         frag.killer.speed = event.killer.speed
         // event.killer.submerged
         frag.killer.team = mapTeamType(event.killer.team)
@@ -840,6 +836,7 @@ export class QlStatsIntegrator {
         }
         frag.killer.weapon = mapWeaponType(event.killer.weapon)
   
+        frag.victim = new FragParticipant
         frag.victim.airborne = event.victim.airborne
         frag.victim.ammo = event.victim.ammo
         frag.victim.armor = event.victim.armor
@@ -847,12 +844,15 @@ export class QlStatsIntegrator {
         frag.victim.botSkill = event.victim.botSkill
         frag.victim.health = event.victim.health
         frag.victim.holdable = event.victim.holdable ? mapHoldableType(event.victim.holdable) : null
+        frag.victim.matchParticipationId = victimMatchParticipation ? victimMatchParticipation.id : null
+        frag.victim.playerId = victim.id
         frag.victim.position = {
           x: event.victim.position.x,
           y: event.victim.position.y,
           z: event.victim.position.z
         }
         frag.victim.powerUps = event.victim.powerUps ? mapPowerUpType(event.victim.powerUps) : null
+        frag.victim.serverVisitId = activeVictimServerVisit.id
         frag.victim.speed = event.victim.speed
         // event.victim.submerged
         frag.victim.team = mapTeamType(event.victim.team)
@@ -1081,6 +1081,43 @@ export class QlStatsIntegrator {
           killerMatchParticipation = matchParticipationsResult.entities[0]
           l.dev('Found existing match particiation for killer', killerMatchParticipation)
         }
+
+        // if the event denotes a different team for a player than what is stored in the match participation,
+        // then it means that the player switched teams without the server recognizing the PLAYER_SWITCH_TEAM event.
+        // in that case we will deactivate the current match participation and create a new one.
+
+        if (activeKillerServerVisit && killerMatchParticipation && killerMatchParticipation.team != mapTeamType(event.killer.team)) {
+          killerMatchParticipation.active = false
+
+          // TODO: Determine finish date by searching for the last medal or frag
+
+          let matchParticipationUpdateResult = await this.matchParticipationLogic.update(killerMatchParticipation, tx)
+
+          if (matchParticipationUpdateResult.isMisfits()) {
+            throw new MisfitsError(matchParticipationUpdateResult.misfits)
+          }
+
+          l.dev('Deactivated active match participation for killer because the team has changed', matchParticipationUpdateResult.entity)
+
+          killerMatchParticipation = new MatchParticipation
+          killerMatchParticipation.active = true
+          killerMatchParticipation.matchId = match ? match.id : null
+          killerMatchParticipation.playerId = killer.id
+          killerMatchParticipation.roundId = matchParticipationUpdateResult.entity.roundId
+          killerMatchParticipation.serverId = server.id
+          killerMatchParticipation.serverVisitId = activeKillerServerVisit.id
+          killerMatchParticipation.startDate = eventEmitDate
+          killerMatchParticipation.team = mapTeamType(event.killer.team)
+
+          let matchParticipationCreateResult = await this.matchParticipationLogic.create(killerMatchParticipation, tx)
+
+          if (matchParticipationCreateResult.isMisfits()) {
+            throw new MisfitsError(matchParticipationCreateResult.misfits)
+          }
+
+          killerMatchParticipation = matchParticipationCreateResult.entity
+          l.dev('Created new active match participation for the killer', killerMatchParticipation)
+        }
       }
 
       let victimMatchParticipation
@@ -1113,94 +1150,59 @@ export class QlStatsIntegrator {
           victimMatchParticipation = matchParticipationsResult.entities[0]
           l.dev('Found existing match particiation for victim', victimMatchParticipation)
         }
-      }
 
-      // if the event denotes a different team for a player than what is stored in the match participation,
-      // then it means that the player switched teams without the server recognizing the PLAYER_SWITCH_TEAM event.
-      // in that case we will deactivate the current match participations and create new ones.
+        // if the event denotes a different team for a player than what is stored in the match participation,
+        // then it means that the player switched teams without the server recognizing the PLAYER_SWITCH_TEAM event.
+        // in that case we will deactivate the current match participation and create a new one.
 
-      if (killer && activeKillerServerVisit && killerMatchParticipation && killerMatchParticipation.team != mapTeamType(event.killer.team)) {
-        killerMatchParticipation.active = false
-
-        // TODO: Determine finish date by searching for the last medal or frag
-
-        let matchParticipationUpdateResult = await this.matchParticipationLogic.update(killerMatchParticipation, tx)
-
-        if (matchParticipationUpdateResult.isMisfits()) {
-          throw new MisfitsError(matchParticipationUpdateResult.misfits)
+        if (victimMatchParticipation && victimMatchParticipation.team != mapTeamType(event.victim.team)) {
+          victimMatchParticipation.active = false
+  
+          // TODO: Determine finish date by searching for the last medal or frag
+  
+          let matchParticipationUpdateResult = await this.matchParticipationLogic.update(victimMatchParticipation, tx)
+  
+          if (matchParticipationUpdateResult.isMisfits()) {
+            throw new MisfitsError(matchParticipationUpdateResult.misfits)
+          }
+  
+          l.dev('Deactivated active match participation for victim because the team has changed', matchParticipationUpdateResult.entity)
+  
+          victimMatchParticipation = new MatchParticipation
+          victimMatchParticipation.active = true
+          victimMatchParticipation.matchId = match ? match.id : null
+          victimMatchParticipation.playerId = victim.id
+          victimMatchParticipation.roundId = matchParticipationUpdateResult.entity.roundId
+          victimMatchParticipation.serverId = server.id
+          victimMatchParticipation.serverVisitId = activeVictimServerVisit.id
+          victimMatchParticipation.startDate = eventEmitDate
+          victimMatchParticipation.team = mapTeamType(event.victim.team)
+  
+          let matchParticipationCreateResult = await this.matchParticipationLogic.create(victimMatchParticipation, tx)
+  
+          if (matchParticipationCreateResult.isMisfits()) {
+            throw new MisfitsError(matchParticipationCreateResult.misfits)
+          }
+  
+          victimMatchParticipation = matchParticipationCreateResult.entity
+          l.dev('Created new active match participation for the victim', victimMatchParticipation)
         }
-
-        l.dev('Deactivated active match participation for killer because the team has changed', matchParticipationUpdateResult.entity)
-
-        killerMatchParticipation = new MatchParticipation
-        killerMatchParticipation.active = true
-        killerMatchParticipation.matchId = match ? match.id : null
-        killerMatchParticipation.playerId = killer.id
-        killerMatchParticipation.roundId = matchParticipationUpdateResult.entity.roundId
-        killerMatchParticipation.serverId = server.id
-        killerMatchParticipation.serverVisitId = activeKillerServerVisit.id
-        killerMatchParticipation.startDate = eventEmitDate
-        killerMatchParticipation.team = mapTeamType(event.killer.team)
-
-        let matchParticipationCreateResult = await this.matchParticipationLogic.create(killerMatchParticipation, tx)
-
-        if (matchParticipationCreateResult.isMisfits()) {
-          throw new MisfitsError(matchParticipationCreateResult.misfits)
-        }
-
-        killerMatchParticipation = matchParticipationCreateResult.entity
-        l.dev('Created new active match participation for the killer', killerMatchParticipation)
-      }
-
-      if (victimMatchParticipation && victimMatchParticipation.team != mapTeamType(event.victim.team)) {
-        victimMatchParticipation.active = false
-
-        // TODO: Determine finish date by searching for the last medal or frag
-
-        let matchParticipationUpdateResult = await this.matchParticipationLogic.update(victimMatchParticipation, tx)
-
-        if (matchParticipationUpdateResult.isMisfits()) {
-          throw new MisfitsError(matchParticipationUpdateResult.misfits)
-        }
-
-        l.dev('Deactivated active match participation for victim because the team has changed', matchParticipationUpdateResult.entity)
-
-        victimMatchParticipation = new MatchParticipation
-        victimMatchParticipation.active = true
-        victimMatchParticipation.matchId = match ? match.id : null
-        victimMatchParticipation.playerId = victim.id
-        victimMatchParticipation.roundId = matchParticipationUpdateResult.entity.roundId
-        victimMatchParticipation.serverId = server.id
-        victimMatchParticipation.serverVisitId = activeVictimServerVisit.id
-        victimMatchParticipation.startDate = eventEmitDate
-        victimMatchParticipation.team = mapTeamType(event.victim.team)
-
-        let matchParticipationCreateResult = await this.matchParticipationLogic.create(victimMatchParticipation, tx)
-
-        if (matchParticipationCreateResult.isMisfits()) {
-          throw new MisfitsError(matchParticipationCreateResult.misfits)
-        }
-
-        victimMatchParticipation = matchParticipationCreateResult.entity
-        l.dev('Created new active match participation for the victim', victimMatchParticipation)
       }
 
       /**
        * Only handle death events that were not caused by another player because those are already
        * handled in the PlayerKillEvent section
        */
-      if (event.killer == null) {
+      if (event.suicide && event.mod != ModType.SWITCHTEAM || event.killer == null) {
         let frag = new Frag
 
         frag.date = eventEmitDate
-        frag.matchId = match ? match.id : null
-        frag.victim = new FragParticipant
-        frag.victim.playerId = victim.id
-        frag.serverId = server.id
-
+        
         frag.cause = mapModType(event.mod)
+        frag.matchId = match ? match.id : null
         frag.otherTeamAlive = event.otherTeamAlive
         frag.otherTeamDead = event.otherTeamDead
+        frag.serverId = server.id
         frag.suicide = event.suicide
         // event.teamKill
         frag.teamAlive = event.teamAlive
@@ -1208,19 +1210,23 @@ export class QlStatsIntegrator {
         frag.time = event.time
         frag.warmup = event.warmup
 
+        frag.victim = new FragParticipant
         frag.victim.airborne = event.victim.airborne
         frag.victim.ammo = event.victim.ammo
         frag.victim.armor = event.victim.armor
         frag.victim.bot = event.victim.bot
         frag.victim.botSkill = event.victim.botSkill
-        frag.victim.health = event.victim.health
+        frag.victim.health = event.killer ? event.killer.health : event.victim.health
         frag.victim.holdable = event.victim.holdable ? mapHoldableType(event.victim.holdable) : null
+        frag.victim.matchParticipationId = victimMatchParticipation ? victimMatchParticipation.id : null
+        frag.victim.playerId = victim.id
         frag.victim.position = {
           x: event.victim.position.x,
           y: event.victim.position.y,
           z: event.victim.position.z
         }
         frag.victim.powerUps = event.victim.powerUps ? mapPowerUpType(event.victim.powerUps) : null
+        frag.victim.serverVisitId = activeVictimServerVisit.id
         frag.victim.speed = event.victim.speed
         // event.victim.submerged
         frag.victim.team = mapTeamType(event.victim.team)

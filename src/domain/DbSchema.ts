@@ -199,31 +199,58 @@ export default {
       frag.id = row['id']
       frag.cause = row['cause']
       frag.date = row['date']
-      frag.killer = new FragParticipant
-      frag.killer.airborne = row['killer_airborne'],
-      frag.killer.ammo = row['killer_ammo'],
-      frag.killer.armor = row['killer_armor'],
-      frag.killer.bot = row['killer_bot'],
-      frag.killer.botSkill = row['killer_bot_skill'],
-      frag.killer.health = row['killer_health'],
-      frag.killer.holdable = row['killer_holdable'],
-      frag.killer.matchParticipationId = row['killer_match_participation_id'],
-      frag.killer.playerId = row['killer_player_id'],
-      frag.killer.position = {
-        x: row['killer_position_x'],
-        y: row['killer_position_y'],
-        z: row['killer_position_z']
+
+      if (row['killer_airborne'] != null || 
+          row['killer_ammo'] != null ||
+          row['killer_armor'] != null ||
+          row['killer_bot'] != null ||
+          row['killer_bot_skill'] != null ||
+          row['killer_health'] != null ||
+          row['killer_holdable'] != null ||
+          row['killer_match_participation_id'] != null ||
+          row['killer_player_id'] != null ||
+          row['killer_position_x'] != null ||
+          row['killer_position_y'] != null ||
+          row['killer_position_z'] != null ||
+          row['killer_power_ups'] != null ||
+          row['killer_speed'] != null ||
+          row['killer_team'] != null ||
+          row['killer_view_x'] != null ||
+          row['killer_view_y'] != null ||
+          row['killer_view_z'] != null ||
+          row['killer_weapon'] != null
+        ) {
+
+        frag.killer = new FragParticipant
+        frag.killer.airborne = row['killer_airborne'],
+        frag.killer.ammo = row['killer_ammo'],
+        frag.killer.armor = row['killer_armor'],
+        frag.killer.bot = row['killer_bot'],
+        frag.killer.botSkill = row['killer_bot_skill'],
+        frag.killer.health = row['killer_health'],
+        frag.killer.holdable = row['killer_holdable'],
+        frag.killer.matchParticipationId = row['killer_match_participation_id'],
+        frag.killer.playerId = row['killer_player_id'],
+        frag.killer.position = {
+          x: row['killer_position_x'],
+          y: row['killer_position_y'],
+          z: row['killer_position_z'],
+        }
+        frag.killer.powerUps = row['killer_power_ups'] ? JSON.parse(row['killer_power_ups']) : row['killer_power_ups'],
+        frag.killer.serverVisitId = row['killer_server_visit_id']
+        frag.killer.speed = row['killer_speed'],
+        frag.killer.team = row['killer_team'],
+        frag.killer.view = {
+          x: row['killer_view_x'],
+          y: row['killer_view_y'],
+          z: row['killer_view_z'],
+        }
+        frag.killer.weapon = row['killer_weapon']
       }
-      frag.killer.powerUps = row['killer_power_ups'] ? JSON.parse(row['killer_power_ups']) : row['killer_power_ups'],
-      frag.killer.serverVisitId = row['killer_server_visit_id']
-      frag.killer.speed = row['killer_speed'],
-      frag.killer.team = row['killer_team'],
-      frag.killer.view = {
-        x: row['killer_view_x'],
-        y: row['killer_view_y'],
-        z: row['killer_view_z']
+      else {
+        frag.killer = null
       }
-      frag.killer.weapon = row['killer_weapon']
+
       frag.matchId = row['match_id']
       frag.otherTeamAlive = row['other_team_alive']
       frag.otherTeamDead = row['other_team_dead']
@@ -233,6 +260,7 @@ export default {
       frag.teamAlive = row['team_alive']
       frag.teamDead = row['team_dead']
       frag.time = row['time']
+
       frag.victim = new FragParticipant
       frag.victim.airborne = row['victim_airborne'],
       frag.victim.ammo = row['victim_ammo'],

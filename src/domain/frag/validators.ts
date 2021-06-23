@@ -45,7 +45,7 @@ export class FragValidator extends Validator {
     this.add('date', new Required)
     this.add('date', new TypeOf(Date))
 
-    this.add('killer', new FragParticipantValidator(playerLogic, matchParticipationLogic, serverVisitLogic, tx))
+    this.add('killer', new FragParticipantValidator(playerLogic, matchParticipationLogic, serverVisitLogic, tx), async (frag: Frag) => frag.killer != undefined)
     this.add('otherTeamAlive', new TypeOf('number'))
     this.add('otherTeamDead', new TypeOf('number'))
     
