@@ -13,7 +13,6 @@ import { Player } from './player/Player'
 import { Round } from './round/Round'
 import { Server } from './server/Server'
 import { ServerVisit } from './serverVisit/ServerVisit'
-import { Stats } from './stats/Stats'
 
 export default {
   'change': {
@@ -519,16 +518,185 @@ export default {
   'match_participation': {
     columns: {
       'id': { property: 'id', id: true},
+      'aborted': 'aborted',
+      'active': 'active',
+      'blue_flag_pickups': 'blueFlagPickups',
+      'damage_dealt': 'damageDealt',
+      'damage_taken': 'damageTaken',
+      'death_count': 'deathCount',
+      'finish_date': 'finishDate',
+      'holy_shits': 'holyShits',
+      'kill_count': 'killCount',
       'match_id': 'matchId',
+      'max_streak': 'maxStreak',
+      'medal_stats_accuracy': 'medalsStats.accuracy',
+      'medal_stats_assists': 'medalsStats.assists',
+      'medal_stats_captures': 'medalsStats.captures',
+      'medal_stats_combo_kill': 'medalsStats.comboKill',
+      'medal_stats_defends': 'medalsStats.defends',
+      'medal_stats_excellent': 'medalsStats.excellent',
+      'medal_stats_first_frag': 'medalsStats.firstFrag',
+      'medal_stats_headshot': 'medalsStats.headshot',
+      'medal_stats_humiliation': 'medalsStats.humiliation',
+      'medal_stats_impressive': 'medalsStats.impressive',
+      'medal_stats_midair': 'medalsStats.midair',
+      'medal_stats_perfect': 'medalsStats.perfect',
+      'medal_stats_perforated': 'medalsStats.perforated',
+      'medal_stats_quad_god': 'medalsStats.quadGod',
+      'medal_stats_rampage': 'medalsStats.rampage',
+      'medal_stats_revenge': 'medalsStats.revenge',
+      'neutral_flag_pickups': 'neutralFlagPickups',
+      'pickup_stats_ammo': 'pickupStats.ammo',
+      'pickup_stats_armor': 'pickupStats.armor',
+      'pickup_stats_armor_regeneration': 'pickupStats.armorRegeneration',
+      'pickup_stats_battle_suit': 'pickupStats.battleSuit',
+      'pickup_stats_doubler': 'pickupStats.doubler',
+      'pickup_stats_flight': 'pickupStats.flight',
+      'pickup_stats_green_armor': 'pickupStats.greenArmor',
+      'pickup_stats_guard': 'pickupStats.guard',
+      'pickup_stats_haste': 'pickupStats.haste',
+      'pickup_stats_health': 'pickupStats.health',
+      'pickup_stats_invisibility': 'pickupStats.invisibility',
+      'pickup_stats_invulnerability': 'pickupStats.invulnerability',
+      'pickup_stats_kamikaze': 'pickupStats.kamikaze',
+      'pickup_stats_medkit': 'pickupStats.medkit',
+      'pickup_stats_mega_health': 'pickupStats.megaHealth',
+      'pickup_stats_other_holdable': 'pickupStats.otherHoldable',
+      'pickup_stats_other_power_up': 'pickupStats.otherPowerUp',
+      'pickup_stats_portal': 'pickupStats.portal',
+      'pickup_stats_quad_damage': 'pickupStats.quadDamage',
+      'pickup_stats_red_armor': 'pickupStats.redArmor',
+      'pickup_stats_regeneration': 'pickupStats.regeneration',
+      'pickup_stats_scout': 'pickupStats.scout',
+      'pickup_stats_teleporter': 'pickupStats.teleporter',
+      'pickup_stats_yellow_armor': 'pickupStats.yellowArmor',
+      'play_time': 'playTime',
       'player_id': 'playerId',
+      'rank': 'rank',
+      'red_flag_pickups': 'redFlagPickups',
       'round_id': 'roundId',
+      'score': 'score',
       'server_id': 'serverId',
       'server_visit_id': 'serverVisitId',
-      'stats_id': 'statsId',
-      'active': 'active',
-      'finish_date': 'finishDate',
       'start_date': 'startDate',
-      'team': 'team'
+      'team': 'team',
+      'team_join_time': 'teamJoinTime',
+      'team_rank': 'teamRank',
+      'tied_rank': 'tiedRank',
+      'tied_team_rank': 'tiedTeamRank',
+      'warmup': 'warmup',
+      'bfg_deaths': 'bfg.deaths',
+      'bfg_damage_given': 'bfg.damageGiven',
+      'bfg_damage_received': 'bfg.damageReceived',
+      'bfg_hits': 'bfg.hits',
+      'bfg_kills': 'bfg.kills',
+      'bfg_p': 'bfg.p',
+      'bfg_shots': 'bfg.shots',
+      'bfg_t': 'bfg.t',
+      'chain_gun_deaths': 'chainGun.deaths',
+      'chain_gun_damage_given': 'chainGun.damageGiven',
+      'chain_gun_damage_received': 'chainGun.damageReceived',
+      'chain_gun_hits': 'chainGun.hits',
+      'chain_gun_kills': 'chainGun.kills',
+      'chain_gun_p': 'chainGun.p',
+      'chain_gun_shots': 'chainGun.shots',
+      'chain_gun_t': 'chainGun.t',
+      'gauntlet_deaths': 'gauntlet.deaths',
+      'gauntlet_damage_given': 'gauntlet.damageGiven',
+      'gauntlet_damage_received': 'gauntlet.damageReceived',
+      'gauntlet_hits': 'gauntlet.hits',
+      'gauntlet_kills': 'gauntlet.kills',
+      'gauntlet_p': 'gauntlet.p',
+      'gauntlet_shots': 'gauntlet.shots',
+      'gauntlet_t': 'gauntlet.t',
+      'grenade_launcher_deaths': 'grenadeLauncher.deaths',
+      'grenade_launcher_damage_given': 'grenadeLauncher.damageGiven',
+      'grenade_launcher_damage_received': 'grenadeLauncher.damageReceived',
+      'grenade_launcher_hits': 'grenadeLauncher.hits',
+      'grenade_launcher_kills': 'grenadeLauncher.kills',
+      'grenade_launcher_p': 'grenadeLauncher.p',
+      'grenade_launcher_shots': 'grenadeLauncher.shots',
+      'grenade_launcher_t': 'grenadeLauncher.t',
+      'heavy_machine_gun_deaths': 'heavyMachineGun.deaths',
+      'heavy_machine_gun_damage_given': 'heavyMachineGun.damageGiven',
+      'heavy_machine_gun_damage_received': 'heavyMachineGun.damageReceived',
+      'heavy_machine_gun_hits': 'heavyMachineGun.hits',
+      'heavy_machine_gun_kills': 'heavyMachineGun.kills',
+      'heavy_machine_gun_p': 'heavyMachineGun.p',
+      'heavy_machine_gun_shots': 'heavyMachineGun.shots',
+      'heavy_machine_gun_t': 'heavyMachineGun.t',
+      'lightning_gun_deaths': 'lightningGun.deaths',
+      'lightning_gun_damage_given': 'lightningGun.damageGiven',
+      'lightning_gun_damage_received': 'lightningGun.damageReceived',
+      'lightning_gun_hits': 'lightningGun.hits',
+      'lightning_gun_kills': 'lightningGun.kills',
+      'lightning_gun_p': 'lightningGun.p',
+      'lightning_gun_shots': 'lightningGun.shots',
+      'lightning_gun_t': 'lightningGun.t',
+      'machine_gun_deaths': 'machineGun.deaths',
+      'machine_gun_damage_given': 'machineGun.damageGiven',
+      'machine_gun_damage_received': 'machineGun.damageReceived',
+      'machine_gun_hits': 'machineGun.hits',
+      'machine_gun_kills': 'machineGun.kills',
+      'machine_gun_p': 'machineGun.p',
+      'machine_gun_shots': 'machineGun.shots',
+      'machine_gun_t': 'machineGun.t',
+      'nail_gun_deaths': 'nailGun.deaths',
+      'nail_gun_damage_given': 'nailGun.damageGiven',
+      'nail_gun_damage_received': 'nailGun.damageReceived',
+      'nail_gun_hits': 'nailGun.hits',
+      'nail_gun_kills': 'nailGun.kills',
+      'nail_gun_p': 'nailGun.p',
+      'nail_gun_shots': 'nailGun.shots',
+      'nail_gun_t': 'nailGun.t',
+      'other_weapon_deaths': 'otherWeapon.deaths',
+      'other_weapon_damage_given': 'otherWeapon.damageGiven',
+      'other_weapon_damage_received': 'otherWeapon.damageReceived',
+      'other_weapon_hits': 'otherWeapon.hits',
+      'other_weapon_kills': 'otherWeapon.kills',
+      'other_weapon_p': 'otherWeapon.p',
+      'other_weapon_shots': 'otherWeapon.shots',
+      'other_weapon_t': 'otherWeapon.t',
+      'plasma_gun_deaths': 'plasmaGun.deaths',
+      'plasma_gun_damage_given': 'plasmaGun.damageGiven',
+      'plasma_gun_damage_received': 'plasmaGun.damageReceived',
+      'plasma_gun_hits': 'plasmaGun.hits',
+      'plasma_gun_kills': 'plasmaGun.kills',
+      'plasma_gun_p': 'plasmaGun.p',
+      'plasma_gun_shots': 'plasmaGun.shots',
+      'plasma_gun_t': 'plasmaGun.t',
+      'proximity_launcher_deaths': 'proximityLauncher.deaths',
+      'proximity_launcher_damage_given': 'proximityLauncher.damageGiven',
+      'proximity_launcher_damage_received': 'proximityLauncher.damageReceived',
+      'proximity_launcher_hits': 'proximityLauncher.hits',
+      'proximity_launcher_kills': 'proximityLauncher.kills',
+      'proximity_launcher_p': 'proximityLauncher.p',
+      'proximity_launcher_shots': 'proximityLauncher.shots',
+      'proximity_launcher_t': 'proximityLauncher.t',
+      'railgun_deaths': 'railgun.deaths',
+      'railgun_damage_given': 'railgun.damageGiven',
+      'railgun_damage_received': 'railgun.damageReceived',
+      'railgun_hits': 'railgun.hits',
+      'railgun_kills': 'railgun.kills',
+      'railgun_p': 'railgun.p',
+      'railgun_shots': 'railgun.shots',
+      'railgun_t': 'railgun.t',
+      'rocket_launcher_deaths': 'rocketLauncher.deaths',
+      'rocket_launcher_damage_given': 'rocketLauncher.damageGiven',
+      'rocket_launcher_damage_received': 'rocketLauncher.damageReceived',
+      'rocket_launcher_hits': 'rocketLauncher.hits',
+      'rocket_launcher_kills': 'rocketLauncher.kills',
+      'rocket_launcher_p': 'rocketLauncher.p',
+      'rocket_launcher_shots': 'rocketLauncher.shots',
+      'rocket_launcher_t': 'rocketLauncher.t',
+      'shotgun_deaths': 'shotgun.deaths',
+      'shotgun_damage_given': 'shotgun.damageGiven',
+      'shotgun_damage_received': 'shotgun.damageReceived',
+      'shotgun_hits': 'shotgun.hits',
+      'shotgun_kills': 'shotgun.kills',
+      'shotgun_p': 'shotgun.p',
+      'shotgun_shots': 'shotgun.shots',
+      'shotgun_t': 'shotgun.t',
     },
     relationships: {
       'deaths': {
@@ -578,44 +746,442 @@ export default {
         thisId: 'server_visit_id',
         otherTable: 'server_visit',
         otherId: 'id'
-      },
-      'stats': {
-        manyToOne: true,
-        thisId: 'stats_id',
-        otherTable: 'stats',
-        otherId: 'id'
       }
     },
     rowToInstance: (row: any) => {
       let matchParticipation = new MatchParticipation
 
       matchParticipation.id = row['id']
+      matchParticipation.aborted = row['aborted']
       matchParticipation.active = row['active']
+      matchParticipation.blueFlagPickups = row['blue_flag_pickups']
+      matchParticipation.damageDealt = row['damage_dealt']
+      matchParticipation.damageTaken = row['damage_taken']
+      matchParticipation.deathCount = row['death_count']
       matchParticipation.finishDate = row['finish_date']
+      matchParticipation.holyShits = row['holy_shits']
+      matchParticipation.killCount = row['kill_count']
       matchParticipation.matchId = row['match_id']
+      matchParticipation.maxStreak = row['max_streak']
+      matchParticipation.neutralFlagPickups = row['neutral_flag_pickups']
+      matchParticipation.playTime = row['play_time']
       matchParticipation.playerId = row['player_id']
+      matchParticipation.rank = row['rank']
+      matchParticipation.redFlagPickups = row['red_flag_pickups']
       matchParticipation.roundId = row['round_id']
+      matchParticipation.score = row['score']
       matchParticipation.serverId = row['server_id']
       matchParticipation.serverVisitId = row['server_visit_id']
       matchParticipation.startDate = row['start_date']
-      matchParticipation.statsId = row['stats_id']
+      matchParticipation.teamJoinTime = row['team_join_time']
       matchParticipation.team = row['team']
+      matchParticipation.teamRank = row['team_rank']
+      matchParticipation.tiedRank = row['tied_rank']
+      matchParticipation.tiedTeamRank = row['tied_team_rank']
+      matchParticipation.warmup = row['warmup']
+
+      matchParticipation.medalStats =  {
+        'accuracy': row['medal_stats_accuracy'],
+        'assists': row['medal_stats_assists'],
+        'captures': row['medal_stats_captures'],
+        'comboKill': row['medal_stats_combo_kill'],
+        'defends': row['medal_stats_defends'],
+        'excellent': row['medal_stats_excellent'],
+        'firstFrag': row['medal_stats_first_frag'],
+        'headshot': row['medal_stats_headshot'],
+        'humiliation': row['medal_stats_humiliation'],
+        'impressive': row['medal_stats_impressive'],
+        'midair': row['medal_stats_midair'],
+        'perfect': row['medal_stats_perfect'],
+        'perforated': row['medal_stats_perforated'],
+        'quadGod': row['medal_stats_quad_god'],
+        'rampage': row['medal_stats_rampage'],
+        'revenge': row['medal_stats_revenge']
+      }
+      
+      matchParticipation.pickupStats = {
+        'ammo': row['pickup_stats_ammo'],
+        'armor': row['pickup_stats_armor'],
+        'armorRegeneration': row['pickup_stats_armor_regeneration'],
+        'battleSuit': row['pickup_stats_battle_suit'],
+        'doubler': row['pickup_stats_doubler'],
+        'flight': row['pickup_stats_flight'],
+        'greenArmor': row['pickup_stats_green_armor'],
+        'guard': row['pickup_stats_guard'],
+        'haste': row['pickup_stats_haste'],
+        'health': row['pickup_stats_health'],
+        'invisibility': row['pickup_stats_invisibility'],
+        'invulnerability': row['pickup_stats_invulnerability'],
+        'kamikaze': row['pickup_stats_kamikaze'],
+        'medkit': row['pickup_stats_medkit'],
+        'megaHealth': row['pickup_stats_mega_health'],
+        'otherHoldable': row['pickup_stats_other_holdable'],
+        'otherPowerUp': row['pickup_stats_other_power_up'],
+        'portal': row['pickup_stats_portal'],
+        'quadDamage': row['pickup_stats_quad_damage'],
+        'redArmor': row['pickup_stats_red_armor'],
+        'regeneration': row['pickup_stats_regeneration'],
+        'scout': row['pickup_stats_scout'],
+        'teleporter': row['pickup_stats_teleporter'],
+        'yellowArmor': row['pickup_stats_yellow_armor']
+      }
+
+      matchParticipation.bfg = {
+        'damageGiven': row['bfg_damage_given'],
+        'damageReceived': row['bfg_damage_received'],
+        'deaths': row['bfg_deaths'],
+        'hits': row['bfg_hits'],
+        'kills': row['bfg_kills'],
+        'p': row['bfg_p'],
+        'shots': row['bfg_shots'],
+        't': row['bfg_t']
+      }
+
+      matchParticipation.chainGun = {
+        'damageGiven': row['chain_gun_damage_given'],
+        'damageReceived': row['chain_gun_damage_received'],
+        'deaths': row['chain_gun_deaths'],
+        'hits': row['chain_gun_hits'],
+        'kills': row['chain_gun_kills'],
+        'p': row['chain_gun_p'],
+        'shots': row['chain_gun_shots'],
+        't': row['chain_gun_t']
+      }
+
+      matchParticipation.gauntlet = {
+        'damageGiven': row['gauntlet_damage_given'],
+        'damageReceived': row['gauntlet_damage_received'],
+        'deaths': row['gauntlet_deaths'],
+        'hits': row['gauntlet_hits'],
+        'kills': row['gauntlet_kills'],
+        'p': row['gauntlet_p'],
+        'shots': row['gauntlet_shots'],
+        't': row['gauntlet_t']
+      }
+
+      matchParticipation.grenadeLauncher = {
+        'damageGiven': row['grenade_launcher_damage_given'],
+        'damageReceived': row['grenade_launcher_damage_received'],
+        'deaths': row['grenade_launcher_deaths'],
+        'hits': row['grenade_launcher_hits'],
+        'kills': row['grenade_launcher_kills'],
+        'p': row['grenade_launcher_p'],
+        'shots': row['grenade_launcher_shots'],
+        't': row['grenade_launcher_t']
+      }
+
+      matchParticipation.heavyMachineGun = {
+        'damageGiven': row['heavy_machine_gun_damage_given'],
+        'damageReceived': row['heavy_machine_gun_damage_received'],
+        'deaths': row['heavy_machine_gun_deaths'],
+        'hits': row['heavy_machine_gun_hits'],
+        'kills': row['heavy_machine_gun_kills'],
+        'p': row['heavy_machine_gun_p'],
+        'shots': row['heavy_machine_gun_shots'],
+        't': row['heavy_machine_gun_t']
+      }
+
+      matchParticipation.lightningGun = {
+        'damageGiven': row['lightning_gun_damage_given'],
+        'damageReceived': row['lightning_gun_damage_received'],
+        'deaths': row['lightning_gun_deaths'],
+        'hits': row['lightning_gun_hits'],
+        'kills': row['lightning_gun_kills'],
+        'p': row['lightning_gun_p'],
+        'shots': row['lightning_gun_shots'],
+        't': row['lightning_gun_t']
+      }
+
+      matchParticipation.machineGun = {
+        'damageGiven': row['machine_gun_damage_given'],
+        'damageReceived': row['machine_gun_damage_received'],
+        'deaths': row['machine_gun_deaths'],
+        'hits': row['machine_gun_hits'],
+        'kills': row['machine_gun_kills'],
+        'p': row['machine_gun_p'],
+        'shots': row['machine_gun_shots'],
+        't': row['machine_gun_t']
+      }
+
+      matchParticipation.nailGun = {
+        'damageGiven': row['nail_gun_damage_given'],
+        'damageReceived': row['nail_gun_damage_received'],
+        'deaths': row['nail_gun_deaths'],
+        'hits': row['nail_gun_hits'],
+        'kills': row['nail_gun_kills'],
+        'p': row['nail_gun_p'],
+        'shots': row['nail_gun_shots'],
+        't': row['nail_gun_t']
+      }
+
+      matchParticipation.otherWeapon = {
+        'damageGiven': row['other_weapon_damage_given'],
+        'damageReceived': row['other_weapon_damage_received'],
+        'deaths': row['other_weapon_deaths'],
+        'hits': row['other_weapon_hits'],
+        'kills': row['other_weapon_kills'],
+        'p': row['other_weapon_p'],
+        'shots': row['other_weapon_shots'],
+        't': row['other_weapon_t']
+      }
+
+      matchParticipation.plasmaGun = {
+        'damageGiven': row['plasma_gun_damage_given'],
+        'damageReceived': row['plasma_gun_damage_received'],
+        'deaths': row['plasma_gun_deaths'],
+        'hits': row['plasma_gun_hits'],
+        'kills': row['plasma_gun_kills'],
+        'p': row['plasma_gun_p'],
+        'shots': row['plasma_gun_shots'],
+        't': row['plasma_gun_t']
+      }
+
+      matchParticipation.proximityLauncher = {
+        'damageGiven': row['proximity_launcher_damage_given'],
+        'damageReceived': row['proximity_launcher_damage_received'],
+        'deaths': row['proximity_launcher_deaths'],
+        'hits': row['proximity_launcher_hits'],
+        'kills': row['proximity_launcher_kills'],
+        'p': row['proximity_launcher_p'],
+        'shots': row['proximity_launcher_shots'],
+        't': row['proximity_launcher_t']
+      }
+
+      matchParticipation.railgun = {
+        'damageGiven': row['railgun_damage_given'],
+        'damageReceived': row['railgun_damage_received'],
+        'deaths': row['railgun_deaths'],
+        'hits': row['railgun_hits'],
+        'kills': row['railgun_kills'],
+        'p': row['railgun_p'],
+        'shots': row['railgun_shots'],
+        't': row['railgun_t']
+      }
+
+      matchParticipation.rocketLauncher = {
+        'damageGiven': row['rocket_launcher_damage_given'],
+        'damageReceived': row['rocket_launcher_damage_received'],
+        'deaths': row['rocket_launcher_deaths'],
+        'hits': row['rocket_launcher_hits'],
+        'kills': row['rocket_launcher_kills'],
+        'p': row['rocket_launcher_p'],
+        'shots': row['rocket_launcher_shots'],
+        't': row['rocket_launcher_t']
+      }
+
+      matchParticipation.shotgun = {
+        'damageGiven': row['shotgun_damage_given'],
+        'damageReceived': row['shotgun_damage_received'],
+        'deaths': row['shotgun_deaths'],
+        'hits': row['shotgun_hits'],
+        'kills': row['shotgun_kills'],
+        'p': row['shotgun_p'],
+        'shots': row['shotgun_shots'],
+        't': row['shotgun_t']
+      }
 
       return matchParticipation
     },
     instanceToRow: (matchParticipation: MatchParticipation) => {
       return {
         'id': matchParticipation.id,
+
+        'aborted': matchParticipation.aborted,
         'active': matchParticipation.active,
+        'blue_flag_pickups': matchParticipation.blueFlagPickups,
+        'damage_dealt': matchParticipation.damageDealt,
+        'damage_taken': matchParticipation.damageTaken,
+        'death_count': matchParticipation.deathCount,
         'finish_date': matchParticipation.finishDate,
+        'holy_shits': matchParticipation.holyShits,
+        'kill_count': matchParticipation.killCount,
         'match_id': matchParticipation.matchId,
+        'max_streak': matchParticipation.maxStreak,
+        'neutral_flag_pickups': matchParticipation.neutralFlagPickups,
+        'other_weapon': matchParticipation.otherWeapon,
+        'play_time': matchParticipation.playTime,
         'player_id': matchParticipation.playerId,
+        'rank': matchParticipation.rank,
+        'red_flag_pickups': matchParticipation.redFlagPickups,
         'round_id': matchParticipation.roundId,
+        'score': matchParticipation.score,
         'server_id': matchParticipation.serverId,
         'server_visit_id': matchParticipation.serverVisitId,
         'start_date': matchParticipation.startDate,
-        'stats_id': matchParticipation.statsId,
-        'team': matchParticipation.team
+        'team': matchParticipation.team,
+        'team_join_time': matchParticipation.teamJoinTime,
+        'team_rank': matchParticipation.teamRank,
+        'tied_rank': matchParticipation.tiedRank,
+        'tied_team_rank': matchParticipation.tiedTeamRank,
+        'warmup': matchParticipation.warmup,
+
+        'medal_stats_accuracy': matchParticipation.medalStats?.accuracy,
+        'medal_stats_assists': matchParticipation.medalStats?.assists,
+        'medal_stats_captures': matchParticipation.medalStats?.captures,
+        'medal_stats_combo_kill': matchParticipation.medalStats?.comboKill,
+        'medal_stats_defends': matchParticipation.medalStats?.defends,
+        'medal_stats_excellent': matchParticipation.medalStats?.excellent,
+        'medal_stats_first_frag': matchParticipation.medalStats?.firstFrag,
+        'medal_stats_headshot': matchParticipation.medalStats?.headshot,
+        'medal_stats_humiliation': matchParticipation.medalStats?.humiliation,
+        'medal_stats_impressive': matchParticipation.medalStats?.impressive,
+        'medal_stats_midair': matchParticipation.medalStats?.midair,
+        'medal_stats_perfect': matchParticipation.medalStats?.perfect,
+        'medal_stats_perforated': matchParticipation.medalStats?.perforated,
+        'medal_stats_quad_god': matchParticipation.medalStats?.quadGod,
+        'medal_stats_rampage': matchParticipation.medalStats?.rampage,
+        'medal_stats_revenge': matchParticipation.medalStats?.revenge,
+
+        'pickup_stats_ammo': matchParticipation.pickupStats?.ammo,
+        'pickup_stats_armor': matchParticipation.pickupStats?.armor,
+        'pickup_stats_armor_regeneration': matchParticipation.pickupStats?.armorRegeneration,
+        'pickup_stats_battle_suit': matchParticipation.pickupStats?.battleSuit,
+        'pickup_stats_doubler': matchParticipation.pickupStats?.doubler,
+        'pickup_stats_flight': matchParticipation.pickupStats?.flight,
+        'pickup_stats_green_armor': matchParticipation.pickupStats?.greenArmor,
+        'pickup_stats_guard': matchParticipation.pickupStats?.guard,
+        'pickup_stats_haste': matchParticipation.pickupStats?.haste,
+        'pickup_stats_health': matchParticipation.pickupStats?.health,
+        'pickup_stats_invisibility': matchParticipation.pickupStats?.invisibility,
+        'pickup_stats_invulnerability': matchParticipation.pickupStats?.invulnerability,
+        'pickup_stats_kamikaze': matchParticipation.pickupStats?.kamikaze,
+        'pickup_stats_medkit': matchParticipation.pickupStats?.medkit,
+        'pickup_stats_mega_health': matchParticipation.pickupStats?.megaHealth,
+        'pickup_stats_other_holdable': matchParticipation.pickupStats?.otherHoldable,
+        'pickup_stats_other_power_up': matchParticipation.pickupStats?.otherPowerUp,
+        'pickup_stats_portal': matchParticipation.pickupStats?.portal,
+        'pickup_stats_quad_damage': matchParticipation.pickupStats?.quadDamage,
+        'pickup_stats_red_armor': matchParticipation.pickupStats?.redArmor,
+        'pickup_stats_regeneration': matchParticipation.pickupStats?.regeneration,
+        'pickup_stats_scout': matchParticipation.pickupStats?.scout,
+        'pickup_stats_teleporter': matchParticipation.pickupStats?.teleporter,
+        'pickup_stats_yellow_armor': matchParticipation.pickupStats?.yellowArmor,
+
+        'bfg_damage_given': matchParticipation.bfg?.damageGiven,
+        'bfg_damage_received': matchParticipation.bfg?.damageReceived,
+        'bfg_deaths': matchParticipation.bfg?.deaths,
+        'bfg_hits': matchParticipation.bfg?.hits,
+        'bfg_kills': matchParticipation.bfg?.kills,
+        'bfg_p': matchParticipation.bfg?.p,
+        'bfg_shots': matchParticipation.bfg?.shots,
+        'bfg_t': matchParticipation.bfg?.t,
+
+        'chain_gun_damage_given': matchParticipation.chainGun?.damageGiven,
+        'chain_gun_damage_received': matchParticipation.chainGun?.damageReceived,
+        'chain_gun_deaths': matchParticipation.chainGun?.deaths,
+        'chain_gun_hits': matchParticipation.chainGun?.hits,
+        'chain_gun_kills': matchParticipation.chainGun?.kills,
+        'chain_gun_p': matchParticipation.chainGun?.p,
+        'chain_gun_shots': matchParticipation.chainGun?.shots,
+        'chain_gun_t': matchParticipation.chainGun?.t,
+
+        'gauntlet_damage_given': matchParticipation.gauntlet?.damageGiven,
+        'gauntlet_damage_received': matchParticipation.gauntlet?.damageReceived,
+        'gauntlet_deaths': matchParticipation.gauntlet?.deaths,
+        'gauntlet_hits': matchParticipation.gauntlet?.hits,
+        'gauntlet_kills': matchParticipation.gauntlet?.kills,
+        'gauntlet_p': matchParticipation.gauntlet?.p,
+        'gauntlet_shots': matchParticipation.gauntlet?.shots,
+        'gauntlet_t': matchParticipation.gauntlet?.t,
+
+        'grenade_launcher_damage_given': matchParticipation.grenadeLauncher?.damageGiven,
+        'grenade_launcher_damage_received': matchParticipation.grenadeLauncher?.damageReceived,
+        'grenade_launcher_deaths': matchParticipation.grenadeLauncher?.deaths,
+        'grenade_launcher_hits': matchParticipation.grenadeLauncher?.hits,
+        'grenade_launcher_kills': matchParticipation.grenadeLauncher?.kills,
+        'grenade_launcher_p': matchParticipation.grenadeLauncher?.p,
+        'grenade_launcher_shots': matchParticipation.grenadeLauncher?.shots,
+        'grenade_launcher_t': matchParticipation.grenadeLauncher?.t,
+
+        'heavy_machine_gun_damage_given': matchParticipation.heavyMachineGun?.damageGiven,
+        'heavy_machine_gun_damage_received': matchParticipation.heavyMachineGun?.damageReceived,
+        'heavy_machine_gun_deaths': matchParticipation.heavyMachineGun?.deaths,
+        'heavy_machine_gun_hits': matchParticipation.heavyMachineGun?.hits,
+        'heavy_machine_gun_kills': matchParticipation.heavyMachineGun?.kills,
+        'heavy_machine_gun_p': matchParticipation.heavyMachineGun?.p,
+        'heavy_machine_gun_shots': matchParticipation.heavyMachineGun?.shots,
+        'heavy_machine_gun_t': matchParticipation.heavyMachineGun?.t,
+
+        'lightning_gun_damage_given': matchParticipation.lightningGun?.damageGiven,
+        'lightning_gun_damage_received': matchParticipation.lightningGun?.damageReceived,
+        'lightning_gun_deaths': matchParticipation.lightningGun?.deaths,
+        'lightning_gun_hits': matchParticipation.lightningGun?.hits,
+        'lightning_gun_kills': matchParticipation.lightningGun?.kills,
+        'lightning_gun_p': matchParticipation.lightningGun?.p,
+        'lightning_gun_shots': matchParticipation.lightningGun?.shots,
+        'lightning_gun_t': matchParticipation.lightningGun?.t,
+
+        'machine_gun_damage_given': matchParticipation.machineGun?.damageGiven,
+        'machine_gun_damage_received': matchParticipation.machineGun?.damageReceived,
+        'machine_gun_deaths': matchParticipation.machineGun?.deaths,
+        'machine_gun_hits': matchParticipation.machineGun?.hits,
+        'machine_gun_kills': matchParticipation.machineGun?.kills,
+        'machine_gun_p': matchParticipation.machineGun?.p,
+        'machine_gun_shots': matchParticipation.machineGun?.shots,
+        'machine_gun_t': matchParticipation.machineGun?.t,
+
+        'nail_gun_damage_given': matchParticipation.nailGun?.damageGiven,
+        'nail_gun_damage_received': matchParticipation.nailGun?.damageReceived,
+        'nail_gun_deaths': matchParticipation.nailGun?.deaths,
+        'nail_gun_hits': matchParticipation.nailGun?.hits,
+        'nail_gun_kills': matchParticipation.nailGun?.kills,
+        'nail_gun_p': matchParticipation.nailGun?.p,
+        'nail_gun_shots': matchParticipation.nailGun?.shots,
+        'nail_gun_t': matchParticipation.nailGun?.t,
+
+        'other_weapon_damage_given': matchParticipation.otherWeapon?.damageGiven,
+        'other_weapon_damage_received': matchParticipation.otherWeapon?.damageReceived,
+        'other_weapon_deaths': matchParticipation.otherWeapon?.deaths,
+        'other_weapon_hits': matchParticipation.otherWeapon?.hits,
+        'other_weapon_kills': matchParticipation.otherWeapon?.kills,
+        'other_weapon_p': matchParticipation.otherWeapon?.p,
+        'other_weapon_shots': matchParticipation.otherWeapon?.shots,
+        'other_weapon_t': matchParticipation.otherWeapon?.t,
+
+        'plasma_gun_damage_given': matchParticipation.plasmaGun?.damageGiven,
+        'plasma_gun_damage_received': matchParticipation.plasmaGun?.damageReceived,
+        'plasma_gun_deaths': matchParticipation.plasmaGun?.deaths,
+        'plasma_gun_hits': matchParticipation.plasmaGun?.hits,
+        'plasma_gun_kills': matchParticipation.plasmaGun?.kills,
+        'plasma_gun_p': matchParticipation.plasmaGun?.p,
+        'plasma_gun_shots': matchParticipation.plasmaGun?.shots,
+        'plasma_gun_t': matchParticipation.plasmaGun?.t,
+
+        'proximity_launcher_damage_given': matchParticipation.proximityLauncher?.damageGiven,
+        'proximity_launcher_damage_received': matchParticipation.proximityLauncher?.damageReceived,
+        'proximity_launcher_deaths': matchParticipation.proximityLauncher?.deaths,
+        'proximity_launcher_hits': matchParticipation.proximityLauncher?.hits,
+        'proximity_launcher_kills': matchParticipation.proximityLauncher?.kills,
+        'proximity_launcher_p': matchParticipation.proximityLauncher?.p,
+        'proximity_launcher_shots': matchParticipation.proximityLauncher?.shots,
+        'proximity_launcher_t': matchParticipation.proximityLauncher?.t,
+
+        'railgun_damage_given': matchParticipation.railgun?.damageGiven,
+        'railgun_damage_received': matchParticipation.railgun?.damageReceived,
+        'railgun_deaths': matchParticipation.railgun?.deaths,
+        'railgun_hits': matchParticipation.railgun?.hits,
+        'railgun_kills': matchParticipation.railgun?.kills,
+        'railgun_p': matchParticipation.railgun?.p,
+        'railgun_shots': matchParticipation.railgun?.shots,
+        'railgun_t': matchParticipation.railgun?.t,
+
+        'rocket_launcher_damage_given': matchParticipation.rocketLauncher?.damageGiven,
+        'rocket_launcher_damage_received': matchParticipation.rocketLauncher?.damageReceived,
+        'rocket_launcher_deaths': matchParticipation.rocketLauncher?.deaths,
+        'rocket_launcher_hits': matchParticipation.rocketLauncher?.hits,
+        'rocket_launcher_kills': matchParticipation.rocketLauncher?.kills,
+        'rocket_launcher_p': matchParticipation.rocketLauncher?.p,
+        'rocket_launcher_shots': matchParticipation.rocketLauncher?.shots,
+        'rocket_launcher_t': matchParticipation.rocketLauncher?.t,
+
+        'shotgun_damage_given': matchParticipation.shotgun?.damageGiven,
+        'shotgun_damage_received': matchParticipation.shotgun?.damageReceived,
+        'shotgun_deaths': matchParticipation.shotgun?.deaths,
+        'shotgun_hits': matchParticipation.shotgun?.hits,
+        'shotgun_kills': matchParticipation.shotgun?.kills,
+        'shotgun_p': matchParticipation.shotgun?.p,
+        'shotgun_shots': matchParticipation.shotgun?.shots,
+        'shotgun_t': matchParticipation.shotgun?.t
       }
     }
   },
@@ -880,12 +1446,6 @@ export default {
         thisId: 'id',
         otherTable: 'server_visit',
         otherId: 'server_id'
-      },
-      'stats': {
-        oneToMany: true,
-        thisId: 'id',
-        otherTable: 'stats',
-        otherId: 'server_id'
       }
     },
     rowToInstance: (row: any) => {
@@ -955,12 +1515,6 @@ export default {
         thisId: 'server_id',
         otherTable: 'server',
         otherId: 'id'
-      },
-      'stats': {
-        oneToMany: true,
-        thisId: 'id',
-        otherTable: 'stats',
-        otherId: 'server_visit_id'
       }
     },
     rowToInstance: (row: any) => {
@@ -983,658 +1537,6 @@ export default {
         'active': serverVisit.active,
         'player_id': serverVisit.playerId,
         'server_id': serverVisit.serverId,
-      }
-    }
-  },
-
-  'stats': {
-    columns: {
-      'id': { property: 'id', id: true},
-      'match_id': 'matchId',
-      'match_participation_id': 'matchParticipationId',
-      'player_id': 'playerId',
-      'round_id': 'roundId',
-      'server_id': 'serverId',
-      'server_visit_id': 'serverId',
-      'aborted': 'aborted',
-      'blue_flag_pickups': 'blueFlagPickups',
-      'damage_dealt': 'damageDealt',
-      'damage_taken': 'damageTaken',
-      'date': 'date',
-      'deaths': 'deaths',
-      'holy_shits': 'holyShits',
-      'kills': 'kills',
-      'max_streak': 'maxStreak',
-      'medal_accuracy': 'medals.accuracy',
-      'medal_assists': 'medals.assists',
-      'medal_captures': 'medals.captures',
-      'medal_combo_kill': 'medals.comboKill',
-      'medal_defends': 'medals.defends',
-      'medal_excellent': 'medals.excellent',
-      'medal_first_frag': 'medals.firstFrag',
-      'medal_headshot': 'medals.headshot',
-      'medal_humiliation': 'medals.humiliation',
-      'medal_impressive': 'medals.impressive',
-      'medal_midair': 'medals.midair',
-      'medal_perfect': 'medals.perfect',
-      'medal_perforated': 'medals.perforated',
-      'medal_quad_god': 'medals.quadGod',
-      'medal_rampage': 'medals.rampage',
-      'medal_revenge': 'medals.revenge',
-      'neutral_flag_pickups': 'neutralFlagPickups',
-      'pickup_ammo': 'pickup.ammo',
-      'pickup_armor': 'pickup.armor',
-      'pickup_armor_regeneration': 'pickup.armorRegeneration',
-      'pickup_battle_suit': 'pickup.battleSuit',
-      'pickup_doubler': 'pickup.doubler',
-      'pickup_flight': 'pickup.flight',
-      'pickup_green_armor': 'pickup.greenArmor',
-      'pickup_guard': 'pickup.guard',
-      'pickup_haste': 'pickup.haste',
-      'pickup_health': 'pickup.health',
-      'pickup_invisibility': 'pickup.invisibility',
-      'pickup_invulnerability': 'pickup.invulnerability',
-      'pickup_kamikaze': 'pickup.kamikaze',
-      'pickup_medkit': 'pickup.medkit',
-      'pickup_mega_health': 'pickup.megaHealth',
-      'pickup_other_holdable': 'pickup.otherHoldable',
-      'pickup_other_power_up': 'pickup.otherPowerUp',
-      'pickup_portal': 'pickup.portal',
-      'pickup_quad_damage': 'pickup.quadDamage',
-      'pickup_red_armor': 'pickup.redArmor',
-      'pickup_regeneration': 'pickup.regeneration',
-      'pickup_scout': 'pickup.scout',
-      'pickup_teleporter': 'pickup.teleporter',
-      'pickup_yellow_armor': 'pickup.yellowArmor',
-      'play_time': 'playTime',
-      'rank': 'rank',
-      'red_flag_pickups': 'redFlagPickups',
-      'score': 'score',
-      'team_join_time': 'teamJoinTime',
-      'team_rank': 'teamRank',
-      'tied_rank': 'tiedRank',
-      'tied_team_rank': 'tiedTeamRank',
-      'warmup': 'warmup',
-      'bfg_deaths': 'bfg.deaths',
-      'bfg_damage_given': 'bfg.damageGiven',
-      'bfg_damage_received': 'bfg.damageReceived',
-      'bfg_hits': 'bfg.hits',
-      'bfg_kills': 'bfg.kills',
-      'bfg_p': 'bfg.p',
-      'bfg_shots': 'bfg.shots',
-      'bfg_t': 'bfg.t',
-      'chain_gun_deaths': 'chainGun.deaths',
-      'chain_gun_damage_given': 'chainGun.damageGiven',
-      'chain_gun_damage_received': 'chainGun.damageReceived',
-      'chain_gun_hits': 'chainGun.hits',
-      'chain_gun_kills': 'chainGun.kills',
-      'chain_gun_p': 'chainGun.p',
-      'chain_gun_shots': 'chainGun.shots',
-      'chain_gun_t': 'chainGun.t',
-      'gauntlet_deaths': 'gauntlet.deaths',
-      'gauntlet_damage_given': 'gauntlet.damageGiven',
-      'gauntlet_damage_received': 'gauntlet.damageReceived',
-      'gauntlet_hits': 'gauntlet.hits',
-      'gauntlet_kills': 'gauntlet.kills',
-      'gauntlet_p': 'gauntlet.p',
-      'gauntlet_shots': 'gauntlet.shots',
-      'gauntlet_t': 'gauntlet.t',
-      'grenade_launcher_deaths': 'grenadeLauncher.deaths',
-      'grenade_launcher_damage_given': 'grenadeLauncher.damageGiven',
-      'grenade_launcher_damage_received': 'grenadeLauncher.damageReceived',
-      'grenade_launcher_hits': 'grenadeLauncher.hits',
-      'grenade_launcher_kills': 'grenadeLauncher.kills',
-      'grenade_launcher_p': 'grenadeLauncher.p',
-      'grenade_launcher_shots': 'grenadeLauncher.shots',
-      'grenade_launcher_t': 'grenadeLauncher.t',
-      'heavy_machine_gun_deaths': 'heavyMachineGun.deaths',
-      'heavy_machine_gun_damage_given': 'heavyMachineGun.damageGiven',
-      'heavy_machine_gun_damage_received': 'heavyMachineGun.damageReceived',
-      'heavy_machine_gun_hits': 'heavyMachineGun.hits',
-      'heavy_machine_gun_kills': 'heavyMachineGun.kills',
-      'heavy_machine_gun_p': 'heavyMachineGun.p',
-      'heavy_machine_gun_shots': 'heavyMachineGun.shots',
-      'heavy_machine_gun_t': 'heavyMachineGun.t',
-      'lightning_gun_deaths': 'lightningGun.deaths',
-      'lightning_gun_damage_given': 'lightningGun.damageGiven',
-      'lightning_gun_damage_received': 'lightningGun.damageReceived',
-      'lightning_gun_hits': 'lightningGun.hits',
-      'lightning_gun_kills': 'lightningGun.kills',
-      'lightning_gun_p': 'lightningGun.p',
-      'lightning_gun_shots': 'lightningGun.shots',
-      'lightning_gun_t': 'lightningGun.t',
-      'machine_gun_deaths': 'machineGun.deaths',
-      'machine_gun_damage_given': 'machineGun.damageGiven',
-      'machine_gun_damage_received': 'machineGun.damageReceived',
-      'machine_gun_hits': 'machineGun.hits',
-      'machine_gun_kills': 'machineGun.kills',
-      'machine_gun_p': 'machineGun.p',
-      'machine_gun_shots': 'machineGun.shots',
-      'machine_gun_t': 'machineGun.t',
-      'nail_gun_deaths': 'nailGun.deaths',
-      'nail_gun_damage_given': 'nailGun.damageGiven',
-      'nail_gun_damage_received': 'nailGun.damageReceived',
-      'nail_gun_hits': 'nailGun.hits',
-      'nail_gun_kills': 'nailGun.kills',
-      'nail_gun_p': 'nailGun.p',
-      'nail_gun_shots': 'nailGun.shots',
-      'nail_gun_t': 'nailGun.t',
-      'other_weapon_deaths': 'otherWeapon.deaths',
-      'other_weapon_damage_given': 'otherWeapon.damageGiven',
-      'other_weapon_damage_received': 'otherWeapon.damageReceived',
-      'other_weapon_hits': 'otherWeapon.hits',
-      'other_weapon_kills': 'otherWeapon.kills',
-      'other_weapon_p': 'otherWeapon.p',
-      'other_weapon_shots': 'otherWeapon.shots',
-      'other_weapon_t': 'otherWeapon.t',
-      'plasma_gun_deaths': 'plasmaGun.deaths',
-      'plasma_gun_damage_given': 'plasmaGun.damageGiven',
-      'plasma_gun_damage_received': 'plasmaGun.damageReceived',
-      'plasma_gun_hits': 'plasmaGun.hits',
-      'plasma_gun_kills': 'plasmaGun.kills',
-      'plasma_gun_p': 'plasmaGun.p',
-      'plasma_gun_shots': 'plasmaGun.shots',
-      'plasma_gun_t': 'plasmaGun.t',
-      'proximity_launcher_deaths': 'proximityLauncher.deaths',
-      'proximity_launcher_damage_given': 'proximityLauncher.damageGiven',
-      'proximity_launcher_damage_received': 'proximityLauncher.damageReceived',
-      'proximity_launcher_hits': 'proximityLauncher.hits',
-      'proximity_launcher_kills': 'proximityLauncher.kills',
-      'proximity_launcher_p': 'proximityLauncher.p',
-      'proximity_launcher_shots': 'proximityLauncher.shots',
-      'proximity_launcher_t': 'proximityLauncher.t',
-      'railgun_deaths': 'railgun.deaths',
-      'railgun_damage_given': 'railgun.damageGiven',
-      'railgun_damage_received': 'railgun.damageReceived',
-      'railgun_hits': 'railgun.hits',
-      'railgun_kills': 'railgun.kills',
-      'railgun_p': 'railgun.p',
-      'railgun_shots': 'railgun.shots',
-      'railgun_t': 'railgun.t',
-      'rocket_launcher_deaths': 'rocketLauncher.deaths',
-      'rocket_launcher_damage_given': 'rocketLauncher.damageGiven',
-      'rocket_launcher_damage_received': 'rocketLauncher.damageReceived',
-      'rocket_launcher_hits': 'rocketLauncher.hits',
-      'rocket_launcher_kills': 'rocketLauncher.kills',
-      'rocket_launcher_p': 'rocketLauncher.p',
-      'rocket_launcher_shots': 'rocketLauncher.shots',
-      'rocket_launcher_t': 'rocketLauncher.t',
-      'shotgun_deaths': 'shotgun.deaths',
-      'shotgun_damage_given': 'shotgun.damageGiven',
-      'shotgun_damage_received': 'shotgun.damageReceived',
-      'shotgun_hits': 'shotgun.hits',
-      'shotgun_kills': 'shotgun.kills',
-      'shotgun_p': 'shotgun.p',
-      'shotgun_shots': 'shotgun.shots',
-      'shotgun_t': 'shotgun.t',
-    },
-    relationships: {
-      'match': {
-        manyToOne: true,
-        thisId: 'match_id',
-        otherTable: 'match',
-        otherId: 'id'
-      },
-      'matchParticipation': {
-        manyToOne: true,
-        thisId: 'match_participation_id',
-        otherTable: 'match_participation',
-        otherId: 'id'
-      },
-      'player': {
-        manyToOne: true,
-        thisId: 'player_id',
-        otherTable: 'player',
-        otherId: 'id'
-      },
-      'round': {
-        manyToOne: true,
-        thisId: 'round_id',
-        otherTable: 'round',
-        otherId: 'id'
-      },
-      'server': {
-        manyToOne: true,
-        thisId: 'server_id',
-        otherTable: 'server',
-        otherId: 'id'
-      },
-      'serverVisit': {
-        manyToOne: true,
-        thisId: 'server_visit_id',
-        otherTable: 'server_visit',
-        otherId: 'id'
-      }
-    },
-    rowToInstance: (row: any) => {
-      let stats = new Stats
-
-      stats.id = row['id']
-      stats.aborted = row['aborted']
-      stats.blueFlagPickups = row['blue_flag_pickups']
-      stats.damageDealt = row['damage_dealt']
-      stats.damageTaken = row['damage_taken']
-      stats.date = row['date']
-      stats.deaths = row['deaths']
-      stats.holyShits = row['holy_shits']
-      stats.kills = row['kills']
-      stats.matchId = row['match_id']
-      stats.matchParticipationId = row['match_participation_id']
-      stats.maxStreak = row['max_streak']
-      stats.neutralFlagPickups = row['neutral_flag_pickups']
-      stats.playTime = row['play_time']
-      stats.playerId = row['player_id']
-      stats.rank = row['rank']
-      stats.redFlagPickups = row['red_flag_pickups']
-      stats.roundId = row['round_id']
-      stats.score = row['score']
-      stats.serverId = row['server_id']
-      stats.serverVisitId = row['server_visit_id']
-      stats.teamJoinTime = row['team_join_time']
-      stats.teamRank = row['team_rank']
-      stats.tiedRank = row['tied_rank']
-      stats.tiedTeamRank = row['tied_team_rank']
-      stats.warmup = row['warmup']
-      
-      stats.medals =  {
-        'accuracy': row['medal_accuracy'],
-        'assists': row['medal_assists'],
-        'captures': row['medal_captures'],
-        'comboKill': row['medal_combo_kill'],
-        'defends': row['medal_defends'],
-        'excellent': row['medal_excellent'],
-        'firstFrag': row['medal_first_frag'],
-        'headshot': row['medal_headshot'],
-        'humiliation': row['medal_humiliation'],
-        'impressive': row['medal_impressive'],
-        'midair': row['medal_midair'],
-        'perfect': row['medal_perfect'],
-        'perforated': row['medal_perforated'],
-        'quadGod': row['medal_quad_god'],
-        'rampage': row['medal_rampage'],
-        'revenge': row['medal_revenge']
-      }
-      
-      stats.pickups = {
-        'ammo': row['pickup_ammo'],
-        'armor': row['pickup_armor'],
-        'armorRegeneration': row['pickup_armor_regeneration'],
-        'battleSuit': row['pickup_battle_suit'],
-        'doubler': row['pickup_doubler'],
-        'flight': row['pickup_flight'],
-        'greenArmor': row['pickup_green_armor'],
-        'guard': row['pickup_guard'],
-        'haste': row['pickup_haste'],
-        'health': row['pickup_health'],
-        'invisibility': row['pickup_invisibility'],
-        'invulnerability': row['pickup_invulnerability'],
-        'kamikaze': row['pickup_kamikaze'],
-        'medkit': row['pickup_medkit'],
-        'megaHealth': row['pickup_mega_health'],
-        'otherHoldable': row['pickup_other_holdable'],
-        'otherPowerUp': row['pickup_other_power_up'],
-        'portal': row['pickup_portal'],
-        'quadDamage': row['pickup_quad_damage'],
-        'redArmor': row['pickup_red_armor'],
-        'regeneration': row['pickup_regeneration'],
-        'scout': row['pickup_scout'],
-        'teleporter': row['pickup_teleporter'],
-        'yellowArmor': row['pickup_yellow_armor']
-      }
-
-      stats.bfg = {
-        'damageGiven': row['bfg_damage_given'],
-        'damageReceived': row['bfg_damage_received'],
-        'deaths': row['bfg_deaths'],
-        'hits': row['bfg_hits'],
-        'kills': row['bfg_kills'],
-        'p': row['bfg_p'],
-        'shots': row['bfg_shots'],
-        't': row['bfg_t']
-      }
-
-      stats.chainGun = {
-        'damageGiven': row['chain_gun_damage_given'],
-        'damageReceived': row['chain_gun_damage_received'],
-        'deaths': row['chain_gun_deaths'],
-        'hits': row['chain_gun_hits'],
-        'kills': row['chain_gun_kills'],
-        'p': row['chain_gun_p'],
-        'shots': row['chain_gun_shots'],
-        't': row['chain_gun_t']
-      }
-
-      stats.gauntlet = {
-        'damageGiven': row['gauntlet_damage_given'],
-        'damageReceived': row['gauntlet_damage_received'],
-        'deaths': row['gauntlet_deaths'],
-        'hits': row['gauntlet_hits'],
-        'kills': row['gauntlet_kills'],
-        'p': row['gauntlet_p'],
-        'shots': row['gauntlet_shots'],
-        't': row['gauntlet_t']
-      }
-
-      stats.grenadeLauncher = {
-        'damageGiven': row['grenade_launcher_damage_given'],
-        'damageReceived': row['grenade_launcher_damage_received'],
-        'deaths': row['grenade_launcher_deaths'],
-        'hits': row['grenade_launcher_hits'],
-        'kills': row['grenade_launcher_kills'],
-        'p': row['grenade_launcher_p'],
-        'shots': row['grenade_launcher_shots'],
-        't': row['grenade_launcher_t']
-      }
-
-      stats.heavyMachineGun = {
-        'damageGiven': row['heavy_machine_gun_damage_given'],
-        'damageReceived': row['heavy_machine_gun_damage_received'],
-        'deaths': row['heavy_machine_gun_deaths'],
-        'hits': row['heavy_machine_gun_hits'],
-        'kills': row['heavy_machine_gun_kills'],
-        'p': row['heavy_machine_gun_p'],
-        'shots': row['heavy_machine_gun_shots'],
-        't': row['heavy_machine_gun_t']
-      }
-
-      stats.lightningGun = {
-        'damageGiven': row['lightning_gun_damage_given'],
-        'damageReceived': row['lightning_gun_damage_received'],
-        'deaths': row['lightning_gun_deaths'],
-        'hits': row['lightning_gun_hits'],
-        'kills': row['lightning_gun_kills'],
-        'p': row['lightning_gun_p'],
-        'shots': row['lightning_gun_shots'],
-        't': row['lightning_gun_t']
-      }
-
-      stats.machineGun = {
-        'damageGiven': row['machine_gun_damage_given'],
-        'damageReceived': row['machine_gun_damage_received'],
-        'deaths': row['machine_gun_deaths'],
-        'hits': row['machine_gun_hits'],
-        'kills': row['machine_gun_kills'],
-        'p': row['machine_gun_p'],
-        'shots': row['machine_gun_shots'],
-        't': row['machine_gun_t']
-      }
-
-      stats.nailGun = {
-        'damageGiven': row['nail_gun_damage_given'],
-        'damageReceived': row['nail_gun_damage_received'],
-        'deaths': row['nail_gun_deaths'],
-        'hits': row['nail_gun_hits'],
-        'kills': row['nail_gun_kills'],
-        'p': row['nail_gun_p'],
-        'shots': row['nail_gun_shots'],
-        't': row['nail_gun_t']
-      }
-
-      stats.otherWeapon = {
-        'damageGiven': row['other_weapon_damage_given'],
-        'damageReceived': row['other_weapon_damage_received'],
-        'deaths': row['other_weapon_deaths'],
-        'hits': row['other_weapon_hits'],
-        'kills': row['other_weapon_kills'],
-        'p': row['other_weapon_p'],
-        'shots': row['other_weapon_shots'],
-        't': row['other_weapon_t']
-      }
-
-      stats.plasmaGun = {
-        'damageGiven': row['plasma_gun_damage_given'],
-        'damageReceived': row['plasma_gun_damage_received'],
-        'deaths': row['plasma_gun_deaths'],
-        'hits': row['plasma_gun_hits'],
-        'kills': row['plasma_gun_kills'],
-        'p': row['plasma_gun_p'],
-        'shots': row['plasma_gun_shots'],
-        't': row['plasma_gun_t']
-      }
-
-      stats.proximityLauncher = {
-        'damageGiven': row['proximity_launcher_damage_given'],
-        'damageReceived': row['proximity_launcher_damage_received'],
-        'deaths': row['proximity_launcher_deaths'],
-        'hits': row['proximity_launcher_hits'],
-        'kills': row['proximity_launcher_kills'],
-        'p': row['proximity_launcher_p'],
-        'shots': row['proximity_launcher_shots'],
-        't': row['proximity_launcher_t']
-      }
-
-      stats.railgun = {
-        'damageGiven': row['railgun_damage_given'],
-        'damageReceived': row['railgun_damage_received'],
-        'deaths': row['railgun_deaths'],
-        'hits': row['railgun_hits'],
-        'kills': row['railgun_kills'],
-        'p': row['railgun_p'],
-        'shots': row['railgun_shots'],
-        't': row['railgun_t']
-      }
-
-      stats.rocketLauncher = {
-        'damageGiven': row['rocket_launcher_damage_given'],
-        'damageReceived': row['rocket_launcher_damage_received'],
-        'deaths': row['rocket_launcher_deaths'],
-        'hits': row['rocket_launcher_hits'],
-        'kills': row['rocket_launcher_kills'],
-        'p': row['rocket_launcher_p'],
-        'shots': row['rocket_launcher_shots'],
-        't': row['rocket_launcher_t']
-      }
-
-      stats.shotgun = {
-        'damageGiven': row['shotgun_damage_given'],
-        'damageReceived': row['shotgun_damage_received'],
-        'deaths': row['shotgun_deaths'],
-        'hits': row['shotgun_hits'],
-        'kills': row['shotgun_kills'],
-        'p': row['shotgun_p'],
-        'shots': row['shotgun_shots'],
-        't': row['shotgun_t']
-      }
-
-      return stats
-    },
-    instanceToRow: (stats: Stats) => {
-      return {
-        'id': stats.id,
-        'aborted': stats.aborted,
-        'blue_flag_pickups': stats.blueFlagPickups,
-        'damage_dealt': stats.damageDealt,
-        'damage_taken': stats.damageTaken,
-        'date': stats.date,
-        'deaths': stats.deaths,
-        'holy_shits': stats.holyShits,
-        'kills': stats.kills,
-        'match_id': stats.matchId,
-        'match_participation_id': stats.matchParticipationId,
-        'max_streak': stats.maxStreak,
-        'neutral_flag_pickups': stats.neutralFlagPickups,
-        'other_weapon': stats.otherWeapon,
-        'play_time': stats.playTime,
-        'player_id': stats.playerId,
-        'rank': stats.rank,
-        'red_flag_pickups': stats.redFlagPickups,
-        'round_id': stats.roundId,
-        'score': stats.score,
-        'server_id': stats.serverId,
-        'server_visit_id': stats.serverVisitId,
-        'team_join_time': stats.teamJoinTime,
-        'team_rank': stats.teamRank,
-        'tied_rank': stats.tiedRank,
-        'tied_team_rank': stats.tiedTeamRank,
-        'warmup': stats.warmup,
-
-        'medal_accuracy': stats.medals?.accuracy,
-        'medal_assists': stats.medals?.assists,
-        'medal_captures': stats.medals?.captures,
-        'medal_combo_kill': stats.medals?.comboKill,
-        'medal_defends': stats.medals?.defends,
-        'medal_excellent': stats.medals?.excellent,
-        'medal_first_frag': stats.medals?.firstFrag,
-        'medal_headshot': stats.medals?.headshot,
-        'medal_humiliation': stats.medals?.humiliation,
-        'medal_impressive': stats.medals?.impressive,
-        'medal_midair': stats.medals?.midair,
-        'medal_perfect': stats.medals?.perfect,
-        'medal_perforated': stats.medals?.perforated,
-        'medal_quad_god': stats.medals?.quadGod,
-        'medal_rampage': stats.medals?.rampage,
-        'medal_revenge': stats.medals?.revenge,
-
-        'pickup_ammo': stats.pickups?.ammo,
-        'pickup_armor': stats.pickups?.armor,
-        'pickup_armor_regeneration': stats.pickups?.armorRegeneration,
-        'pickup_battle_suit': stats.pickups?.battleSuit,
-        'pickup_doubler': stats.pickups?.doubler,
-        'pickup_flight': stats.pickups?.flight,
-        'pickup_green_armor': stats.pickups?.greenArmor,
-        'pickup_guard': stats.pickups?.guard,
-        'pickup_haste': stats.pickups?.haste,
-        'pickup_health': stats.pickups?.health,
-        'pickup_invisibility': stats.pickups?.invisibility,
-        'pickup_invulnerability': stats.pickups?.invulnerability,
-        'pickup_kamikaze': stats.pickups?.kamikaze,
-        'pickup_medkit': stats.pickups?.medkit,
-        'pickup_mega_health': stats.pickups?.megaHealth,
-        'pickup_other_holdable': stats.pickups?.otherHoldable,
-        'pickup_other_power_up': stats.pickups?.otherPowerUp,
-        'pickup_portal': stats.pickups?.portal,
-        'pickup_quad_damage': stats.pickups?.quadDamage,
-        'pickup_red_armor': stats.pickups?.redArmor,
-        'pickup_regeneration': stats.pickups?.regeneration,
-        'pickup_scout': stats.pickups?.scout,
-        'pickup_teleporter': stats.pickups?.teleporter,
-        'pickup_yellow_armor': stats.pickups?.yellowArmor,
-
-        'bfg_damage_given': stats.bfg?.damageGiven,
-        'bfg_damage_received': stats.bfg?.damageReceived,
-        'bfg_deaths': stats.bfg?.deaths,
-        'bfg_hits': stats.bfg?.hits,
-        'bfg_kills': stats.bfg?.kills,
-        'bfg_p': stats.bfg?.p,
-        'bfg_shots': stats.bfg?.shots,
-        'bfg_t': stats.bfg?.t,
-
-        'chain_gun_damage_given': stats.chainGun?.damageGiven,
-        'chain_gun_damage_received': stats.chainGun?.damageReceived,
-        'chain_gun_deaths': stats.chainGun?.deaths,
-        'chain_gun_hits': stats.chainGun?.hits,
-        'chain_gun_kills': stats.chainGun?.kills,
-        'chain_gun_p': stats.chainGun?.p,
-        'chain_gun_shots': stats.chainGun?.shots,
-        'chain_gun_t': stats.chainGun?.t,
-
-        'gauntlet_damage_given': stats.gauntlet?.damageGiven,
-        'gauntlet_damage_received': stats.gauntlet?.damageReceived,
-        'gauntlet_deaths': stats.gauntlet?.deaths,
-        'gauntlet_hits': stats.gauntlet?.hits,
-        'gauntlet_kills': stats.gauntlet?.kills,
-        'gauntlet_p': stats.gauntlet?.p,
-        'gauntlet_shots': stats.gauntlet?.shots,
-        'gauntlet_t': stats.gauntlet?.t,
-
-        'grenade_launcher_damage_given': stats.grenadeLauncher?.damageGiven,
-        'grenade_launcher_damage_received': stats.grenadeLauncher?.damageReceived,
-        'grenade_launcher_deaths': stats.grenadeLauncher?.deaths,
-        'grenade_launcher_hits': stats.grenadeLauncher?.hits,
-        'grenade_launcher_kills': stats.grenadeLauncher?.kills,
-        'grenade_launcher_p': stats.grenadeLauncher?.p,
-        'grenade_launcher_shots': stats.grenadeLauncher?.shots,
-        'grenade_launcher_t': stats.grenadeLauncher?.t,
-
-        'heavy_machine_gun_damage_given': stats.heavyMachineGun?.damageGiven,
-        'heavy_machine_gun_damage_received': stats.heavyMachineGun?.damageReceived,
-        'heavy_machine_gun_deaths': stats.heavyMachineGun?.deaths,
-        'heavy_machine_gun_hits': stats.heavyMachineGun?.hits,
-        'heavy_machine_gun_kills': stats.heavyMachineGun?.kills,
-        'heavy_machine_gun_p': stats.heavyMachineGun?.p,
-        'heavy_machine_gun_shots': stats.heavyMachineGun?.shots,
-        'heavy_machine_gun_t': stats.heavyMachineGun?.t,
-
-        'lightning_gun_damage_given': stats.lightningGun?.damageGiven,
-        'lightning_gun_damage_received': stats.lightningGun?.damageReceived,
-        'lightning_gun_deaths': stats.lightningGun?.deaths,
-        'lightning_gun_hits': stats.lightningGun?.hits,
-        'lightning_gun_kills': stats.lightningGun?.kills,
-        'lightning_gun_p': stats.lightningGun?.p,
-        'lightning_gun_shots': stats.lightningGun?.shots,
-        'lightning_gun_t': stats.lightningGun?.t,
-
-        'machine_gun_damage_given': stats.machineGun?.damageGiven,
-        'machine_gun_damage_received': stats.machineGun?.damageReceived,
-        'machine_gun_deaths': stats.machineGun?.deaths,
-        'machine_gun_hits': stats.machineGun?.hits,
-        'machine_gun_kills': stats.machineGun?.kills,
-        'machine_gun_p': stats.machineGun?.p,
-        'machine_gun_shots': stats.machineGun?.shots,
-        'machine_gun_t': stats.machineGun?.t,
-
-        'nail_gun_damage_given': stats.nailGun?.damageGiven,
-        'nail_gun_damage_received': stats.nailGun?.damageReceived,
-        'nail_gun_deaths': stats.nailGun?.deaths,
-        'nail_gun_hits': stats.nailGun?.hits,
-        'nail_gun_kills': stats.nailGun?.kills,
-        'nail_gun_p': stats.nailGun?.p,
-        'nail_gun_shots': stats.nailGun?.shots,
-        'nail_gun_t': stats.nailGun?.t,
-
-        'other_weapon_damage_given': stats.otherWeapon?.damageGiven,
-        'other_weapon_damage_received': stats.otherWeapon?.damageReceived,
-        'other_weapon_deaths': stats.otherWeapon?.deaths,
-        'other_weapon_hits': stats.otherWeapon?.hits,
-        'other_weapon_kills': stats.otherWeapon?.kills,
-        'other_weapon_p': stats.otherWeapon?.p,
-        'other_weapon_shots': stats.otherWeapon?.shots,
-        'other_weapon_t': stats.otherWeapon?.t,
-
-        'plasma_gun_damage_given': stats.plasmaGun?.damageGiven,
-        'plasma_gun_damage_received': stats.plasmaGun?.damageReceived,
-        'plasma_gun_deaths': stats.plasmaGun?.deaths,
-        'plasma_gun_hits': stats.plasmaGun?.hits,
-        'plasma_gun_kills': stats.plasmaGun?.kills,
-        'plasma_gun_p': stats.plasmaGun?.p,
-        'plasma_gun_shots': stats.plasmaGun?.shots,
-        'plasma_gun_t': stats.plasmaGun?.t,
-
-        'proximity_launcher_damage_given': stats.proximityLauncher?.damageGiven,
-        'proximity_launcher_damage_received': stats.proximityLauncher?.damageReceived,
-        'proximity_launcher_deaths': stats.proximityLauncher?.deaths,
-        'proximity_launcher_hits': stats.proximityLauncher?.hits,
-        'proximity_launcher_kills': stats.proximityLauncher?.kills,
-        'proximity_launcher_p': stats.proximityLauncher?.p,
-        'proximity_launcher_shots': stats.proximityLauncher?.shots,
-        'proximity_launcher_t': stats.proximityLauncher?.t,
-
-        'railgun_damage_given': stats.railgun?.damageGiven,
-        'railgun_damage_received': stats.railgun?.damageReceived,
-        'railgun_deaths': stats.railgun?.deaths,
-        'railgun_hits': stats.railgun?.hits,
-        'railgun_kills': stats.railgun?.kills,
-        'railgun_p': stats.railgun?.p,
-        'railgun_shots': stats.railgun?.shots,
-        'railgun_t': stats.railgun?.t,
-
-        'rocket_launcher_damage_given': stats.rocketLauncher?.damageGiven,
-        'rocket_launcher_damage_received': stats.rocketLauncher?.damageReceived,
-        'rocket_launcher_deaths': stats.rocketLauncher?.deaths,
-        'rocket_launcher_hits': stats.rocketLauncher?.hits,
-        'rocket_launcher_kills': stats.rocketLauncher?.kills,
-        'rocket_launcher_p': stats.rocketLauncher?.p,
-        'rocket_launcher_shots': stats.rocketLauncher?.shots,
-        'rocket_launcher_t': stats.rocketLauncher?.t,
-
-        'shotgun_damage_given': stats.shotgun?.damageGiven,
-        'shotgun_damage_received': stats.shotgun?.damageReceived,
-        'shotgun_deaths': stats.shotgun?.deaths,
-        'shotgun_hits': stats.shotgun?.hits,
-        'shotgun_kills': stats.shotgun?.kills,
-        'shotgun_p': stats.shotgun?.p,
-        'shotgun_shots': stats.shotgun?.shots,
-        'shotgun_t': stats.shotgun?.t
       }
     }
   }

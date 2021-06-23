@@ -18,7 +18,6 @@ describe('domain/medal/validators.ts', function() {
       await create('round')
       await create('server')
       await create('server_visit')
-      await create('stats')
 
       let validator = new MedalValidator(
         Services.get().matchLogic,
@@ -59,7 +58,6 @@ describe('domain/medal/validators.ts', function() {
       await create('round')
       await create('server')
       await create('server_visit')
-      await create('stats')
 
       await create('match')
       await create('match_participation')

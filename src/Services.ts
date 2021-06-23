@@ -19,7 +19,6 @@ import { PlayerLogic } from './domain/player/PlayerLogic'
 import { RoundLogic } from './domain/round/RoundLogic'
 import { ServerLogic } from './domain/server/ServerLogic'
 import { ServerVisitLogic } from './domain/serverVisit/ServerVisitLogic'
-import { StatsLogic } from './domain/stats/StatsLogic'
 import instantiator from './Instantiator'
 import { QlStatsIntegrator } from './service/QlStatsIntegrator'
 
@@ -59,7 +58,6 @@ export default class Services {
   roundLogic = new RoundLogic
   serverLogic = new ServerLogic
   serverVisitLogic = new ServerVisitLogic
-  statsLogic = new StatsLogic
 
   qlStatsIntegrator = new QlStatsIntegrator
 
@@ -97,7 +95,6 @@ export default class Services {
     this.matchParticipationLogic.roundLogic = this.roundLogic
     this.matchParticipationLogic.serverLogic = this.serverLogic
     this.matchParticipationLogic.serverVisitLogic = this.serverVisitLogic
-    this.matchParticipationLogic.statsLogic = this.statsLogic
 
     this.medalLogic.changeLogic = this.changeLogic
     this.medalLogic.matchLogic = this.matchLogic
@@ -119,14 +116,6 @@ export default class Services {
     this.serverVisitLogic.playerLogic = this.playerLogic
     this.serverVisitLogic.serverLogic = this.serverLogic
 
-    this.statsLogic.changeLogic = this.changeLogic
-    this.statsLogic.matchLogic = this.matchLogic
-    this.statsLogic.matchParticipationLogic = this.matchParticipationLogic
-    this.statsLogic.playerLogic = this.playerLogic
-    this.statsLogic.roundLogic = this.roundLogic
-    this.statsLogic.serverLogic = this.serverLogic
-    this.statsLogic.serverVisitLogic = this.serverVisitLogic
-
     this.qlStatsIntegrator.factoryLogic = this.factoryLogic
     this.qlStatsIntegrator.fragLogic = this.fragLogic
     this.qlStatsIntegrator.mapLogic = this.mapLogic
@@ -137,7 +126,6 @@ export default class Services {
     this.qlStatsIntegrator.roundLogic = this.roundLogic
     this.qlStatsIntegrator.serverLogic = this.serverLogic
     this.qlStatsIntegrator.serverVisitLogic = this.serverVisitLogic
-    this.qlStatsIntegrator.statsLogic = this.statsLogic
   }
 
   async startDb() {

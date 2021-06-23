@@ -2605,7 +2605,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].roundId).to.be.null
         expect(result.entities[0].serverId).to.equal(1)
         expect(result.entities[0].startDate).to.deep.equal(date)
-        expect(result.entities[0].statsId).to.be.null
         expect(result.entities[0].team).to.equal(TeamType.Red)
         expect(result.entities[1].active).to.equal(true)
         expect(result.entities[1].finishDate).to.be.null
@@ -2614,7 +2613,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[1].roundId).to.be.null
         expect(result.entities[1].serverId).to.equal(1)
         expect(result.entities[1].startDate).to.deep.equal(date)
-        expect(result.entities[1].statsId).to.be.null
         expect(result.entities[1].team).to.equal(TeamType.Blue)
       })
 
@@ -2713,7 +2711,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].roundId).to.be.null
         expect(result.entities[0].serverId).to.equal(1)
         expect(result.entities[0].startDate).to.deep.equal(startDate)
-        expect(result.entities[0].statsId).to.be.null
         expect(result.entities[0].team).to.equal(TeamType.Red)
         expect(result.entities[1].active).to.equal(false)
         expect(result.entities[1].finishDate).to.be.null
@@ -2722,7 +2719,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[1].roundId).to.be.null
         expect(result.entities[1].serverId).to.equal(1)
         expect(result.entities[1].startDate).to.deep.equal(startDate)
-        expect(result.entities[1].statsId).to.be.null
         expect(result.entities[1].team).to.equal(TeamType.Blue)
         expect(result.entities[2].active).to.equal(true)
         expect(result.entities[2].finishDate).to.be.null
@@ -2731,7 +2727,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[2].roundId).to.be.null
         expect(result.entities[2].serverId).to.equal(1)
         expect(result.entities[2].startDate).to.deep.equal(date)
-        expect(result.entities[2].statsId).to.be.null
         expect(result.entities[2].team).to.equal(TeamType.Red)
         expect(result.entities[3].active).to.equal(true)
         expect(result.entities[3].finishDate).to.be.null
@@ -2740,7 +2735,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[3].roundId).to.be.null
         expect(result.entities[3].serverId).to.equal(1)
         expect(result.entities[3].startDate).to.deep.equal(date)
-        expect(result.entities[3].statsId).to.be.null
         expect(result.entities[3].team).to.equal(TeamType.Blue)
       })
 
@@ -2839,7 +2833,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].roundId).to.be.null
         expect(result.entities[0].serverId).to.equal(1)
         expect(result.entities[0].startDate).to.deep.equal(startDate)
-        expect(result.entities[0].statsId).to.be.null
         expect(result.entities[0].team).to.equal(TeamType.Red)
         expect(result.entities[1].active).to.equal(true)
         expect(result.entities[1].finishDate).to.be.null
@@ -2848,7 +2841,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[1].roundId).to.be.null
         expect(result.entities[1].serverId).to.equal(1)
         expect(result.entities[1].startDate).to.deep.equal(startDate)
-        expect(result.entities[1].statsId).to.be.null
         expect(result.entities[1].team).to.equal(TeamType.Blue)
       })
 
@@ -3032,7 +3024,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].roundId).to.be.null
         expect(result.entities[0].serverId).to.equal(1)
         expect(result.entities[0].startDate).to.deep.equal(startDate)
-        expect(result.entities[0].statsId).to.be.null
         expect(result.entities[0].team).to.equal(TeamType.Blue)
         expect(result.entities[1].active).to.equal(false)
         expect(result.entities[1].finishDate).to.be.null
@@ -3041,7 +3032,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[1].roundId).to.be.null
         expect(result.entities[1].serverId).to.equal(1)
         expect(result.entities[1].startDate).to.deep.equal(startDate)
-        expect(result.entities[1].statsId).to.be.null
         expect(result.entities[1].team).to.equal(TeamType.Red)
         expect(result.entities[2].active).to.equal(true)
         expect(result.entities[2].finishDate).to.be.null
@@ -3050,7 +3040,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[2].roundId).to.be.null
         expect(result.entities[2].serverId).to.equal(2)
         expect(result.entities[2].startDate).to.deep.equal(startDate)
-        expect(result.entities[2].statsId).to.be.null
         expect(result.entities[2].team).to.equal(TeamType.Blue)
       })
 
@@ -3153,7 +3142,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].roundId).to.be.null
         expect(result.entities[0].serverId).to.equal(2)
         expect(result.entities[0].startDate).to.deep.equal(startDate)
-        expect(result.entities[0].statsId).to.be.null
         expect(result.entities[0].team).to.equal(TeamType.Blue)
         expect(result.entities[1].active).to.equal(false)
         expect(result.entities[1].finishDate).to.be.null
@@ -3162,7 +3150,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[1].roundId).to.be.null
         expect(result.entities[1].serverId).to.equal(2)
         expect(result.entities[1].startDate).to.deep.equal(startDate)
-        expect(result.entities[1].statsId).to.be.null
         expect(result.entities[1].team).to.equal(TeamType.Red)
         expect(result.entities[2].active).to.equal(true)
         expect(result.entities[2].finishDate).to.be.null
@@ -3171,7 +3158,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[2].roundId).to.be.null
         expect(result.entities[2].serverId).to.equal(2)
         expect(result.entities[2].startDate).to.deep.equal(startDate)
-        expect(result.entities[2].statsId).to.be.null
         expect(result.entities[2].team).to.equal(TeamType.Red)
       })
 
@@ -3275,7 +3261,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].roundId).to.be.null
         expect(result.entities[0].serverId).to.equal(1)
         expect(result.entities[0].startDate).to.deep.equal(startDate)
-        expect(result.entities[0].statsId).to.be.null
         expect(result.entities[0].team).to.equal(TeamType.Red)
         expect(result.entities[1].active).to.equal(false)
         // expect(result.entities[1].finishDate).to.be.not.null
@@ -3284,7 +3269,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[1].roundId).to.be.null
         expect(result.entities[1].serverId).to.equal(1)
         expect(result.entities[1].startDate).to.deep.equal(startDate)
-        expect(result.entities[1].statsId).to.be.null
         expect(result.entities[1].team).to.equal(TeamType.Blue)
         expect(result.entities[2].active).to.equal(true)
         expect(result.entities[2].finishDate).to.be.null
@@ -3293,7 +3277,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[2].roundId).to.be.null
         expect(result.entities[2].serverId).to.equal(2)
         expect(result.entities[2].startDate).to.deep.equal(startDate)
-        expect(result.entities[2].statsId).to.be.null
         expect(result.entities[2].team).to.equal(TeamType.Red)
         expect(result.entities[3].active).to.equal(true)
         expect(result.entities[3].finishDate).to.be.null
@@ -3302,7 +3285,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[3].roundId).to.be.null
         expect(result.entities[3].serverId).to.equal(1)
         expect(result.entities[3].startDate).to.deep.equal(date)
-        expect(result.entities[3].statsId).to.be.null
         expect(result.entities[3].team).to.equal(TeamType.Blue)
         expect(result.entities[4].active).to.equal(true)
         expect(result.entities[4].finishDate).to.be.null
@@ -3311,7 +3293,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[4].roundId).to.be.null
         expect(result.entities[4].serverId).to.equal(1)
         expect(result.entities[4].startDate).to.deep.equal(date)
-        expect(result.entities[4].statsId).to.be.null
         expect(result.entities[4].team).to.equal(TeamType.Red)
       })
 
@@ -3400,7 +3381,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].roundId).to.be.null
         expect(result.entities[0].serverId).to.equal(1)
         expect(result.entities[0].startDate).to.deep.equal(date)
-        expect(result.entities[0].statsId).to.be.null
         expect(result.entities[0].team).to.equal(TeamType.Free)
       })
 
@@ -3496,7 +3476,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].roundId).to.be.null
         expect(result.entities[0].serverId).to.equal(1)
         expect(result.entities[0].startDate).to.deep.equal(startDate)
-        expect(result.entities[0].statsId).to.be.null
         expect(result.entities[0].team).to.equal(TeamType.Red)
         expect(result.entities[1].active).to.equal(true)
         expect(result.entities[1].finishDate).to.be.null
@@ -3505,7 +3484,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[1].roundId).to.be.null
         expect(result.entities[1].serverId).to.equal(1)
         expect(result.entities[1].startDate).to.deep.equal(date)
-        expect(result.entities[1].statsId).to.be.null
         expect(result.entities[1].team).to.equal(TeamType.Red)
       })
 
@@ -3601,7 +3579,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].roundId).to.be.null
         expect(result.entities[0].serverId).to.equal(1)
         expect(result.entities[0].startDate).to.deep.equal(startDate)
-        expect(result.entities[0].statsId).to.be.null
         expect(result.entities[0].team).to.equal(TeamType.Free)
       })
 
@@ -3785,7 +3762,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].roundId).to.be.null
         expect(result.entities[0].serverId).to.equal(1)
         expect(result.entities[0].startDate).to.deep.equal(startDate)
-        expect(result.entities[0].statsId).to.be.null
         expect(result.entities[0].team).to.equal(TeamType.Blue)
         expect(result.entities[1].active).to.equal(false)
         expect(result.entities[1].finishDate).to.be.null
@@ -3794,7 +3770,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[1].roundId).to.be.null
         expect(result.entities[1].serverId).to.equal(1)
         expect(result.entities[1].startDate).to.deep.equal(startDate)
-        expect(result.entities[1].statsId).to.be.null
         expect(result.entities[1].team).to.equal(TeamType.Red)
         expect(result.entities[2].active).to.equal(true)
         expect(result.entities[2].finishDate).to.be.null
@@ -3803,7 +3778,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[2].roundId).to.be.null
         expect(result.entities[2].serverId).to.equal(2)
         expect(result.entities[2].startDate).to.deep.equal(startDate)
-        expect(result.entities[2].statsId).to.be.null
         expect(result.entities[2].team).to.equal(TeamType.Blue)
       })
 
@@ -3906,7 +3880,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].roundId).to.be.null
         expect(result.entities[0].serverId).to.equal(2)
         expect(result.entities[0].startDate).to.deep.equal(startDate)
-        expect(result.entities[0].statsId).to.be.null
         expect(result.entities[0].team).to.equal(TeamType.Blue)
         expect(result.entities[1].active).to.equal(true)
         expect(result.entities[1].finishDate).to.be.null
@@ -3915,7 +3888,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[1].roundId).to.be.null
         expect(result.entities[1].serverId).to.equal(2)
         expect(result.entities[1].startDate).to.deep.equal(startDate)
-        expect(result.entities[1].statsId).to.be.null
         expect(result.entities[1].team).to.equal(TeamType.Red)
         expect(result.entities[2].active).to.equal(true)
         expect(result.entities[2].finishDate).to.be.null
@@ -3924,7 +3896,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[2].roundId).to.be.null
         expect(result.entities[2].serverId).to.equal(2)
         expect(result.entities[2].startDate).to.deep.equal(startDate)
-        expect(result.entities[2].statsId).to.be.null
         expect(result.entities[2].team).to.equal(TeamType.Red)
       })
 
@@ -4028,7 +3999,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].roundId).to.be.null
         expect(result.entities[0].serverId).to.equal(1)
         expect(result.entities[0].startDate).to.deep.equal(startDate)
-        expect(result.entities[0].statsId).to.be.null
         expect(result.entities[0].team).to.equal(TeamType.Red)
         expect(result.entities[1].active).to.equal(true)
         // expect(result.entities[1].finishDate).to.be.not.null
@@ -4037,7 +4007,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[1].roundId).to.be.null
         expect(result.entities[1].serverId).to.equal(1)
         expect(result.entities[1].startDate).to.deep.equal(startDate)
-        expect(result.entities[1].statsId).to.be.null
         expect(result.entities[1].team).to.equal(TeamType.Blue)
         expect(result.entities[2].active).to.equal(true)
         expect(result.entities[2].finishDate).to.be.null
@@ -4046,7 +4015,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[2].roundId).to.be.null
         expect(result.entities[2].serverId).to.equal(2)
         expect(result.entities[2].startDate).to.deep.equal(startDate)
-        expect(result.entities[2].statsId).to.be.null
         expect(result.entities[2].team).to.equal(TeamType.Red)
         expect(result.entities[3].active).to.equal(true)
         expect(result.entities[3].finishDate).to.be.null
@@ -4055,7 +4023,6 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[3].roundId).to.be.null
         expect(result.entities[3].serverId).to.equal(1)
         expect(result.entities[3].startDate).to.deep.equal(date)
-        expect(result.entities[3].statsId).to.be.null
         expect(result.entities[3].team).to.equal(TeamType.Blue)
       })
     })

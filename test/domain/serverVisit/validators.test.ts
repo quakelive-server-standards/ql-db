@@ -18,7 +18,6 @@ describe('domain/serverVisit/validators.ts', function() {
       await create('round')
       await create('server')
       await create('server_visit')
-      await create('stats')
 
       let validator = new ServerVisitValidator(
         Services.get().playerLogic,
@@ -47,7 +46,6 @@ describe('domain/serverVisit/validators.ts', function() {
       await create('round')
       await create('server')
       await create('server_visit')
-      await create('stats')
 
       await create('player')
       await create('server')

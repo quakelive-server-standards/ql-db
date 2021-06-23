@@ -1906,9 +1906,5 @@ describe('service/QlStatsIntegrator.ts', function () {
     describe('MatchParticipation', function () {
 
     })
-
-    describe('Frag', function () {
-
-    })
   })
 })

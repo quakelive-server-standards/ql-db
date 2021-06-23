@@ -3,7 +3,6 @@ import { MatchParticipation } from '../matchParticipation/MatchParticipation'
 import { Medal } from '../medal/Medal'
 import { Player } from '../player/Player'
 import { Server } from '../server/Server'
-import { Stats } from '../stats/Stats'
 
 /**
  * Represents a 
@@ -27,6 +26,5 @@ export class ServerVisit {
   medals?: Medal[]
   player?: Player
   server?: Server
-  stats?: Stats[]
 
 }

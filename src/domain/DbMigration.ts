@@ -138,146 +138,73 @@ export default class DbMigration extends PostgresMigration {
 
     await this.pool.query(`
       CREATE TABLE match_participation (
-        id SERIAL PRIMARY KEY,
-        match_id INTEGER,
-        player_id INTEGER,
-        round_id INTEGER,
-        server_id INTEGER,
-        server_visit_id INTEGER,
-        stats_id INTEGER,
-        active BOOLEAN,
-        finish_date TIMESTAMP,
-        start_date TIMESTAMP,
-        team VARCHAR(9)
-      )`
-    )
-
-    await this.pool.query(`
-      CREATE TABLE medal (
-        id SERIAL PRIMARY KEY,
-        match_id INTEGER,
-        match_participation_id INTEGER,
-        player_id INTEGER,
-        round_id INTEGER,
-        server_id INTEGER,
-        server_visit_id INTEGER,
-        date TIMESTAMP,
-        medal VARCHAR(11),
-        warmup BOOLEAN
-      )`
-    )
-
-    await this.pool.query(`
-      CREATE TABLE player (
-        id SERIAL PRIMARY KEY,
-        first_seen TIMESTAMP,
-        name VARCHAR(64),
-        model VARCHAR(50),
-        steam_id CHAR(17)
-      )`
-    )
-
-    await this.pool.query(`
-      CREATE TABLE round (
-        id SERIAL PRIMARY KEY,
-        match_id INTEGER,
-        server_id INTEGER,
-        finish_date TIMESTAMP,
-        round INTEGER,
-        team_won VARCHAR(9),
-        time INTEGER,
-        start_date TIMESTAMP
-      )`
-    )
-
-    await this.pool.query(`
-      CREATE TABLE server (
-        id SERIAL PRIMARY KEY,
-        first_seen TIMESTAMP,
-        ip VARCHAR(15),
-        port INTEGER,
-        title VARCHAR(200)
-      )`
-    )
-
-    await this.pool.query(`
-      CREATE TABLE server_visit (
-        id SERIAL PRIMARY KEY,
-        player_id INTEGER,
-        server_id INTEGER,
-        active BOOLEAN,
-        connect_date TIMESTAMP,
-        disconnect_date TIMESTAMP
-      )`
-    )
-
-    await this.pool.query(`
-      CREATE TABLE stats (
-        id SERIAL PRIMARY KEY,
-        match_id INTEGER,
-        match_participation_id INTEGER,
-        player_id INTEGER,
-        round_id INTEGER,
-        server_id INTEGER,
-        server_visit_id INTEGER,
+        id SERIAL PRIMARY KEY,     
         aborted BOOLEAN,
+        active BOOLEAN,
         blue_flag_pickups INTEGER,
         damage_dealt INTEGER,
         damage_taken INTEGER,
-        date TIMESTAMP,
-        deaths INTEGER,
+        death_count INTEGER,
+        finish_date TIMESTAMP,
         holy_shits INTEGER,
-        kills INTEGER,
+        kill_count INTEGER,
+        match_id INTEGER,
         max_streak INTEGER,
-        medal_accuracy INTEGER,
-        medal_assists INTEGER,
-        medal_captures INTEGER,
-        medal_combo_kill INTEGER,
-        medal_defends INTEGER,
-        medal_excellent INTEGER,
-        medal_first_frag INTEGER,
-        medal_headshot INTEGER,
-        medal_humiliation INTEGER,
-        medal_impressive INTEGER,
-        medal_midair INTEGER,
-        medal_perfect INTEGER,
-        medal_perforated INTEGER,
-        medal_quad_god INTEGER,
-        medal_rampage INTEGER,
-        medal_revenge INTEGER,
+        medal_stats_accuracy INTEGER,
+        medal_stats_assists INTEGER,
+        medal_stats_captures INTEGER,
+        medal_stats_combo_kill INTEGER,
+        medal_stats_defends INTEGER,
+        medal_stats_excellent INTEGER,
+        medal_stats_first_frag INTEGER,
+        medal_stats_headshot INTEGER,
+        medal_stats_humiliation INTEGER,
+        medal_stats_impressive INTEGER,
+        medal_stats_midair INTEGER,
+        medal_stats_perfect INTEGER,
+        medal_stats_perforated INTEGER,
+        medal_stats_quad_god INTEGER,
+        medal_stats_rampage INTEGER,
+        medal_stats_revenge INTEGER,
         neutral_flag_pickups INTEGER,
-        pickup_ammo INTEGER,
-        pickup_armor INTEGER,
-        pickup_armor_regeneration INTEGER,
-        pickup_battle_suit INTEGER,
-        pickup_doubler INTEGER,
-        pickup_flight INTEGER,
-        pickup_green_armor INTEGER,
-        pickup_guard INTEGER,
-        pickup_haste INTEGER,
-        pickup_health INTEGER,
-        pickup_invisibility INTEGER,
-        pickup_invulnerability INTEGER,
-        pickup_kamikaze INTEGER,
-        pickup_medkit INTEGER,
-        pickup_mega_health INTEGER,
-        pickup_other_holdable INTEGER,
-        pickup_other_power_up INTEGER,
-        pickup_portal INTEGER,
-        pickup_quad_damage INTEGER,
-        pickup_red_armor INTEGER,
-        pickup_regeneration INTEGER,
-        pickup_scout INTEGER,
-        pickup_teleporter INTEGER,
-        pickup_yellow_armor INTEGER,
+        pickup_stats_ammo INTEGER,
+        pickup_stats_armor INTEGER,
+        pickup_stats_armor_regeneration INTEGER,
+        pickup_stats_battle_suit INTEGER,
+        pickup_stats_doubler INTEGER,
+        pickup_stats_flight INTEGER,
+        pickup_stats_green_armor INTEGER,
+        pickup_stats_guard INTEGER,
+        pickup_stats_haste INTEGER,
+        pickup_stats_health INTEGER,
+        pickup_stats_invisibility INTEGER,
+        pickup_stats_invulnerability INTEGER,
+        pickup_stats_kamikaze INTEGER,
+        pickup_stats_medkit INTEGER,
+        pickup_stats_mega_health INTEGER,
+        pickup_stats_other_holdable INTEGER,
+        pickup_stats_other_power_up INTEGER,
+        pickup_stats_portal INTEGER,
+        pickup_stats_quad_damage INTEGER,
+        pickup_stats_red_armor INTEGER,
+        pickup_stats_regeneration INTEGER,
+        pickup_stats_scout INTEGER,
+        pickup_stats_teleporter INTEGER,
+        pickup_stats_yellow_armor INTEGER,
         play_time INTEGER,
+        player_id INTEGER,
         rank INTEGER,
         red_flag_pickups INTEGER,
+        round_id INTEGER,
         score INTEGER,
+        start_date TIMESTAMP,
+        team VARCHAR(9),
         team_join_time INTEGER,
         team_rank INTEGER,
         tied_rank INTEGER,
         tied_team_rank INTEGER,
+        server_id INTEGER,
+        server_visit_id INTEGER,
         warmup BOOLEAN,
         bfg_deaths INTEGER,
         bfg_damage_given INTEGER,
@@ -394,7 +321,66 @@ export default class DbMigration extends PostgresMigration {
       )`
     )
 
+    await this.pool.query(`
+      CREATE TABLE medal (
+        id SERIAL PRIMARY KEY,
+        match_id INTEGER,
+        match_participation_id INTEGER,
+        player_id INTEGER,
+        round_id INTEGER,
+        server_id INTEGER,
+        server_visit_id INTEGER,
+        date TIMESTAMP,
+        medal VARCHAR(11),
+        warmup BOOLEAN
+      )`
+    )
+
+    await this.pool.query(`
+      CREATE TABLE player (
+        id SERIAL PRIMARY KEY,
+        first_seen TIMESTAMP,
+        name VARCHAR(64),
+        model VARCHAR(50),
+        steam_id CHAR(17)
+      )`
+    )
+
+    await this.pool.query(`
+      CREATE TABLE round (
+        id SERIAL PRIMARY KEY,
+        match_id INTEGER,
+        server_id INTEGER,
+        finish_date TIMESTAMP,
+        round INTEGER,
+        team_won VARCHAR(9),
+        time INTEGER,
+        start_date TIMESTAMP
+      )`
+    )
+
+    await this.pool.query(`
+      CREATE TABLE server (
+        id SERIAL PRIMARY KEY,
+        first_seen TIMESTAMP,
+        ip VARCHAR(15),
+        port INTEGER,
+        title VARCHAR(200)
+      )`
+    )
+
+    await this.pool.query(`
+      CREATE TABLE server_visit (
+        id SERIAL PRIMARY KEY,
+        player_id INTEGER,
+        server_id INTEGER,
+        active BOOLEAN,
+        connect_date TIMESTAMP,
+        disconnect_date TIMESTAMP
+      )`
+    )
+
     await this.increaseVersion()
-    log.admin('Migrated to version 1 (Create tables change, factory, frag, map, match, match_participation, medal, player, round, server, server_visit, stats)')
+    log.admin('Migrated to version 1 (Create tables change, factory, frag, map, match, match_participation, medal, player, round, server, server_visit)')
   }
 }

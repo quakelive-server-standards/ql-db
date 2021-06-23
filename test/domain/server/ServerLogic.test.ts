@@ -137,21 +137,6 @@ describe('domain/server/ServerLogic.ts', function() {
       expect(result.entities[0].visits[0].id).to.equal(1)
       expect(result.entities[0].visits[1].id).to.equal(2)
     })
-
-    it('should load all stats', async function() {
-      await create('server')
-      await create('stats', { serverId: 1 })
-      await create('stats', { serverId: 1 })
-      await create('stats', { serverId: 2 })
-
-      let result = await Services.get().serverLogic.read({ stats: {} }, tx())
-
-      expect(result.isValue()).to.be.true
-      expect(result.entities[0].stats).to.be.not.undefined
-      expect(result.entities[0].stats.length).to.equal(2)
-      expect(result.entities[0].stats[0].id).to.equal(1)
-      expect(result.entities[0].stats[1].id).to.equal(2)
-    })
   })
 
   describe('update', function() {

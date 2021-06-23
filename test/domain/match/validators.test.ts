@@ -18,7 +18,6 @@ describe('domain/match/validators.ts', function() {
       await create('round')
       await create('server')
       await create('server_visit')
-      await create('stats')
 
       let validator = new MatchValidator(
         Services.get().factoryLogic, 
@@ -50,7 +49,6 @@ describe('domain/match/validators.ts', function() {
       await create('round')
       await create('server')
       await create('server_visit')
-      await create('stats')
 
       await create('factory')
       await create('map')

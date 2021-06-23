@@ -114,7 +114,7 @@ describe('domain/round/RoundLogic.ts', function() {
       await create('match_participation', { roundId: 1 })
       await create('match_participation', { roundId: 2 })
 
-      let result = await Services.get().roundLogic.read({ participations: {} }, tx())
+      let result = await Services.get().roundLogic.read({ participations: { '@orderBy': 'id' } }, tx())
 
       expect(result.isValue()).to.be.true
       expect(result.entities[0].participations).to.be.not.undefined

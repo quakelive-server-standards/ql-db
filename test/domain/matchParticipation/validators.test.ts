@@ -18,7 +18,6 @@ describe('domain/matchParticipation/validators.ts', function() {
       await create('round')
       await create('server')
       await create('server_visit')
-      await create('stats')
 
       let validator = new MatchParticipationValidator(
         Services.get().matchLogic,
@@ -26,7 +25,6 @@ describe('domain/matchParticipation/validators.ts', function() {
         Services.get().roundLogic,
         Services.get().serverLogic,
         Services.get().serverVisitLogic,
-        Services.get().statsLogic,
         tx()
       )
 
@@ -36,7 +34,6 @@ describe('domain/matchParticipation/validators.ts', function() {
       matchParticipation.roundId = 2
       matchParticipation.serverId = 2
       matchParticipation.serverVisitId = 2
-      matchParticipation.statsId = 2
 
       let misfits = await validator.validate(matchParticipation)
 
@@ -45,7 +42,6 @@ describe('domain/matchParticipation/validators.ts', function() {
       expect(containsMisfit('roundId', 'Exists', misfits)).to.be.true
       expect(containsMisfit('serverId', 'Exists', misfits)).to.be.true
       expect(containsMisfit('serverVisitId', 'Exists', misfits)).to.be.true
-      expect(containsMisfit('statsId', 'Exists', misfits)).to.be.true
     })
 
     it('should not return misfits for valid relationship ids', async function() {
@@ -59,14 +55,12 @@ describe('domain/matchParticipation/validators.ts', function() {
       await create('round')
       await create('server')
       await create('server_visit')
-      await create('stats')
 
       await create('match')
       await create('player')
       await create('round')
       await create('server')
       await create('server_visit')
-      await create('stats')
 
       let validator = new MatchParticipationValidator(
         Services.get().matchLogic,
@@ -74,7 +68,6 @@ describe('domain/matchParticipation/validators.ts', function() {
         Services.get().roundLogic,
         Services.get().serverLogic,
         Services.get().serverVisitLogic,
-        Services.get().statsLogic,
         tx()
       )
 
@@ -84,7 +77,6 @@ describe('domain/matchParticipation/validators.ts', function() {
       matchParticipation.roundId = 2
       matchParticipation.serverId = 2
       matchParticipation.serverVisitId = 2
-      matchParticipation.statsId = 2
 
       let misfits = await validator.validate(matchParticipation)
 
@@ -93,7 +85,6 @@ describe('domain/matchParticipation/validators.ts', function() {
       expect(containsMisfit('roundId', 'Exists', misfits)).to.be.false
       expect(containsMisfit('serverId', 'Exists', misfits)).to.be.false
       expect(containsMisfit('serverVisitId', 'Exists', misfits)).to.be.false
-      expect(containsMisfit('statsId', 'Exists', misfits)).to.be.false
     })
   })
 })

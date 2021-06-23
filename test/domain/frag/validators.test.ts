@@ -18,7 +18,6 @@ describe('domain/frag/validators.ts', function() {
       await create('round')
       await create('server')
       await create('server_visit')
-      await create('stats')
 
       let validator = new FragValidator(
         Services.get().matchLogic, 
@@ -53,7 +52,6 @@ describe('domain/frag/validators.ts', function() {
       await create('round')
       await create('server')
       await create('server_visit')
-      await create('stats')
 
       await create('match')
       await create('round')
@@ -94,7 +92,6 @@ describe('domain/frag/validators.ts', function() {
       await create('round')
       await create('server')
       await create('server_visit')
-      await create('stats')
 
       let validator = new FragParticipantValidator(
         Services.get().playerLogic, 
@@ -126,7 +123,6 @@ describe('domain/frag/validators.ts', function() {
       await create('round')
       await create('server')
       await create('server_visit')
-      await create('stats')
 
       await create('player')
       await create('match_participation')

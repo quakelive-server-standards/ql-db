@@ -18,7 +18,6 @@ describe('domain/round/validators.ts', function() {
       await create('round')
       await create('server')
       await create('server_visit')
-      await create('stats')
 
       let validator = new RoundValidator(
         Services.get().matchLogic,
@@ -47,7 +46,6 @@ describe('domain/round/validators.ts', function() {
       await create('round')
       await create('server')
       await create('server_visit')
-      await create('stats')
 
       await create('match')
       await create('server')
