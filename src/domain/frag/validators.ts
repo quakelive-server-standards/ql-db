@@ -61,6 +61,9 @@ export class FragValidator extends Validator {
     this.add('teamAlive', new TypeOf('number'))
     this.add('teamDead', new TypeOf('number'))
     
+    this.add('teamKill', new Required)
+    this.add('teamKill', new TypeOf('boolean'))
+    
     this.add('time', new Required)
     this.add('time', new TypeOf('number'))
 
@@ -69,12 +72,6 @@ export class FragValidator extends Validator {
     
     this.add('warmup', new Required)
     this.add('warmup', new TypeOf('boolean'))
-
-    this.add(['environment', 'suicide'], 'JustOneCanBeTrue', async (frag: Frag) => {
-      if (frag.environment && frag.suicide) {
-        return new Misfit
-      }
-    })
   }
 }
 

@@ -4189,6 +4189,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].suicide).to.equal(false)
         expect(result.entities[0].teamAlive).to.be.null
         expect(result.entities[0].teamDead).to.be.null
+        expect(result.entities[0].teamKill).to.equal(false)
         expect(result.entities[0].time).to.equal(108)
         expect(result.entities[0].victim).to.be.not.null
         expect(result.entities[0].victim.airborne).to.equal(false)
@@ -4336,6 +4337,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].suicide).to.equal(false)
         expect(result.entities[0].teamAlive).to.be.null
         expect(result.entities[0].teamDead).to.be.null
+        expect(result.entities[0].teamKill).to.equal(false)
         expect(result.entities[0].time).to.equal(108)
         expect(result.entities[0].victim).to.be.not.null
         expect(result.entities[0].victim.airborne).to.equal(false)

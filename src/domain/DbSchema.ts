@@ -115,6 +115,7 @@ export default {
       'suicide': 'suicide',
       'team_alive': 'teamAlive',
       'team_dead': 'teamDead',
+      'team_kill': 'teamKill',
       'time': 'time',
       'victim_airborne': 'victim.airborne',
       'victim_ammo': 'victim.ammo',
@@ -261,6 +262,7 @@ export default {
       frag.suicide = row['suicide']
       frag.teamAlive = row['team_alive']
       frag.teamDead = row['team_dead']
+      frag.teamKill = row['team_kill']
       frag.time = row['time']
 
       frag.victim = new FragParticipant
@@ -326,6 +328,7 @@ export default {
         'suicide': frag.suicide,
         'team_alive': frag.teamAlive,
         'team_dead': frag.teamDead,
+        'team_kill': frag.teamKill,
         'time': frag.time,
         'victim_player_id': frag.victim?.playerId,
         'victim_match_participation_id': frag.victim?.matchParticipationId,

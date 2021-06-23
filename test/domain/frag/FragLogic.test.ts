@@ -35,6 +35,7 @@ describe('domain/frag/FragLogic.ts', function() {
       frag.suicide = true
       frag.teamAlive = 3
       frag.teamDead = 4
+      frag.teamKill = false
       frag.time = 5
       frag.warmup = false
       
@@ -105,6 +106,7 @@ describe('domain/frag/FragLogic.ts', function() {
       expect(result.entity.suicide).to.equal(true)
       expect(result.entity.teamAlive).to.equal(3)
       expect(result.entity.teamDead).to.equal(4)
+      expect(result.entity.teamKill).to.equal(false)
       expect(result.entity.time).to.equal(5)
       expect(result.entity.warmup).to.equal(false)
       
@@ -168,6 +170,7 @@ describe('domain/frag/FragLogic.ts', function() {
         suicide: true,
         teamAlive: 3,
         teamDead: 4,
+        teamKill: false,
         time: 5,
         warmup: false,
         
@@ -242,6 +245,7 @@ describe('domain/frag/FragLogic.ts', function() {
       expect(result.entities[0].suicide).to.equal(true)
       expect(result.entities[0].teamAlive).to.equal(3)
       expect(result.entities[0].teamDead).to.equal(4)
+      expect(result.entities[0].teamKill).to.equal(false)
       expect(result.entities[0].time).to.equal(5)
       expect(result.entities[0].warmup).to.equal(false)
       
@@ -436,6 +440,7 @@ describe('domain/frag/FragLogic.ts', function() {
         suicide: true,
         teamAlive: 3,
         teamDead: 4,
+        teamKill: false,
         time: 5,
         warmup: false,
         
@@ -507,6 +512,7 @@ describe('domain/frag/FragLogic.ts', function() {
       frag.suicide = false
       frag.teamAlive = 4
       frag.teamDead = 5
+      frag.teamKill = true
       frag.time = 6
       frag.warmup = true
       
@@ -577,6 +583,7 @@ describe('domain/frag/FragLogic.ts', function() {
       expect(result.entity.suicide).to.equal(false)
       expect(result.entity.teamAlive).to.equal(4)
       expect(result.entity.teamDead).to.equal(5)
+      expect(result.entity.teamKill).to.equal(true)
       expect(result.entity.time).to.equal(6)
       expect(result.entity.warmup).to.equal(true)
 
@@ -640,6 +647,7 @@ describe('domain/frag/FragLogic.ts', function() {
         suicide: true,
         teamAlive: 3,
         teamDead: 4,
+        teamKill: false,
         time: 5,
         warmup: false,
         
@@ -716,6 +724,7 @@ describe('domain/frag/FragLogic.ts', function() {
       expect(result.entity.suicide).to.equal(true)
       expect(result.entity.teamAlive).to.equal(3)
       expect(result.entity.teamDead).to.equal(4)
+      expect(result.entity.teamKill).to.equal(false)
       expect(result.entity.time).to.equal(5)
       expect(result.entity.warmup).to.equal(false)
       

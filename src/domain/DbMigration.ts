@@ -74,6 +74,7 @@ export default class DbMigration extends PostgresMigration {
         suicide BOOLEAN,
         team_alive INTEGER,
         team_dead INTEGER,
+        team_kill BOOLEAN,
         time INTEGER,
         victim_airborne BOOLEAN,
         victim_ammo INTEGER,

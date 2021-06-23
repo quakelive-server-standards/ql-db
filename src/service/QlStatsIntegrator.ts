@@ -803,9 +803,9 @@ export class QlStatsIntegrator {
         frag.otherTeamDead = event.otherTeamDead
         frag.serverId = server.id
         frag.suicide = event.suicide
-        // event.teamKill
         frag.teamAlive = event.teamAlive
         frag.teamDead = event.teamDead
+        frag.teamKill = event.teamKill
         frag.time = event.time
         frag.warmup = event.warmup
   
@@ -1204,9 +1204,9 @@ export class QlStatsIntegrator {
         frag.otherTeamDead = event.otherTeamDead
         frag.serverId = server.id
         frag.suicide = event.suicide
-        // event.teamKill
         frag.teamAlive = event.teamAlive
         frag.teamDead = event.teamDead
+        frag.teamKill = event.teamKill
         frag.time = event.time
         frag.warmup = event.warmup
 
