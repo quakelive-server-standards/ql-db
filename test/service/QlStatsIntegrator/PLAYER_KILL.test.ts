@@ -4196,7 +4196,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         let result = await Services.get().fragLogic.read({ '@orderBy': 'id' }, tx())
 
         expect(result.entities.length).to.equal(1)
-        expect(result.entities[0].cause).to.equal(CauseType.RocketSplash)
+        expect(result.entities[0].cause).to.equal(CauseType.ProjectileSplash)
         expect(result.entities[0].date).to.deep.equal(date)
         expect(result.entities[0].environment).to.equal(false)
         expect(result.entities[0].killer.airborne).to.equal(false)
@@ -4344,7 +4344,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         let result = await Services.get().fragLogic.read({ '@orderBy': 'id' }, tx())
 
         expect(result.entities.length).to.equal(1)
-        expect(result.entities[0].cause).to.equal(CauseType.RocketSplash)
+        expect(result.entities[0].cause).to.equal(CauseType.ProjectileSplash)
         expect(result.entities[0].date).to.deep.equal(date)
         expect(result.entities[0].environment).to.equal(false)
         expect(result.entities[0].killer.airborne).to.equal(false)

@@ -195,6 +195,7 @@ export default class DbMigration extends PostgresMigration {
         player_id INTEGER,
         rank INTEGER,
         red_flag_pickups INTEGER,
+        result VARCHAR(4),
         round_id INTEGER,
         score INTEGER,
         start_date TIMESTAMP,

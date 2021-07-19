@@ -506,7 +506,7 @@ describe('domain/frag/FragLogic.ts', function() {
       frag.matchId = 2
       frag.otherTeamAlive = 2
       frag.otherTeamDead = 3
-      frag.cause = CauseType.LightningGun
+      frag.cause = CauseType.Projectile
       frag.roundId = 2
       frag.serverId = 2
       frag.suicide = false
@@ -572,7 +572,7 @@ describe('domain/frag/FragLogic.ts', function() {
       
       expect(result.isValue()).to.be.true
       expect(result.entity.id).to.equal(1)
-      expect(result.entity.cause).to.equal(CauseType.LightningGun)
+      expect(result.entity.cause).to.equal(CauseType.Projectile)
       expect(result.entity.date).to.deep.equal(date2)
       expect(result.entity.environment).to.equal(true)
       expect(result.entity.matchId).to.equal(2)

@@ -32,6 +32,7 @@ export class MatchParticipation {
   playTime?: number
   rank?: number
   redFlagPickups?: number
+  result?: ResultType
   score?: number
   startDate?: Date
   // TODO: Map Duel team to Red and Blue
@@ -122,4 +123,8 @@ export class WeaponStats {
   p?: number
   shots?: number
   t?: number
+}
+
+export enum ResultType {
+  Win = 'Win', Lose = 'Lose', Quit = 'Quit'
 }

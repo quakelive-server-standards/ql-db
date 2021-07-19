@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import 'mocha'
 import { TeamType } from '../../../src/domain/enums/TeamType'
-import { MatchParticipation, MedalStats, PickupStats, WeaponStats } from '../../../src/domain/matchParticipation/MatchParticipation'
+import { MatchParticipation, MedalStats, PickupStats, ResultType, WeaponStats } from '../../../src/domain/matchParticipation/MatchParticipation'
 import Services from '../../../src/Services'
 import { create, tx } from '../../tools'
 
@@ -82,6 +82,7 @@ describe('domain/matchParticipation/MatchParticipationLogic.ts', function() {
       matchParticipation.playTime = 49
       matchParticipation.rank = 50
       matchParticipation.redFlagPickups = 51
+      matchParticipation.result = ResultType.Lose
       matchParticipation.score = 52
       matchParticipation.team = TeamType.Blue
       matchParticipation.teamJoinTime = 53
@@ -280,6 +281,7 @@ describe('domain/matchParticipation/MatchParticipationLogic.ts', function() {
       expect(result.entity.playTime).to.equal(49)
       expect(result.entity.rank).to.equal(50)
       expect(result.entity.redFlagPickups).to.equal(51)
+      expect(result.entity.result).to.equal(ResultType.Lose)
       expect(result.entity.score).to.equal(52)
       expect(result.entity.startDate).to.deep.equal(date2)
       expect(result.entity.team).to.equal(TeamType.Blue)
@@ -473,6 +475,7 @@ describe('domain/matchParticipation/MatchParticipationLogic.ts', function() {
         playTime: 49,
         rank: 50,
         redFlagPickups: 51,
+        result: ResultType.Lose,
         score: 52,
         startDate: date2,
         team: TeamType.Blue,
@@ -688,6 +691,7 @@ describe('domain/matchParticipation/MatchParticipationLogic.ts', function() {
       expect(result.entities[0].playTime).to.equal(49)
       expect(result.entities[0].rank).to.equal(50)
       expect(result.entities[0].redFlagPickups).to.equal(51)
+      expect(result.entities[0].result).to.equal(ResultType.Lose)
       expect(result.entities[0].score).to.equal(52)
       expect(result.entities[0].startDate).to.deep.equal(date2)
       expect(result.entities[0].team).to.equal(TeamType.Blue)
@@ -997,6 +1001,7 @@ describe('domain/matchParticipation/MatchParticipationLogic.ts', function() {
         playTime: 49,
         rank: 50,
         redFlagPickups: 51,
+        result: ResultType.Lose,
         score: 52,
         startDate: date2,
         team: TeamType.Blue,
@@ -1211,6 +1216,7 @@ describe('domain/matchParticipation/MatchParticipationLogic.ts', function() {
       matchParticipation.playTime = 50
       matchParticipation.rank = 51
       matchParticipation.redFlagPickups = 52
+      matchParticipation.result = ResultType.Win
       matchParticipation.score = 53
       matchParticipation.startDate = date1
       matchParticipation.team = TeamType.Red
@@ -1410,6 +1416,7 @@ describe('domain/matchParticipation/MatchParticipationLogic.ts', function() {
       expect(result.entity.playTime).to.equal(50)
       expect(result.entity.rank).to.equal(51)
       expect(result.entity.redFlagPickups).to.equal(52)
+      expect(result.entity.result).to.equal(ResultType.Win)
       expect(result.entity.score).to.equal(53)
       expect(result.entity.startDate).to.deep.equal(date1)
       expect(result.entity.team).to.equal(TeamType.Red)
@@ -1603,6 +1610,7 @@ describe('domain/matchParticipation/MatchParticipationLogic.ts', function() {
         playTime: 49,
         rank: 50,
         redFlagPickups: 51,
+        result: ResultType.Lose,
         score: 52,
         startDate: date2,
         team: TeamType.Blue,
@@ -1820,6 +1828,7 @@ describe('domain/matchParticipation/MatchParticipationLogic.ts', function() {
       expect(result.entity.playTime).to.equal(49)
       expect(result.entity.rank).to.equal(50)
       expect(result.entity.redFlagPickups).to.equal(51)
+      expect(result.entity.result).to.equal(ResultType.Lose)
       expect(result.entity.score).to.equal(52)
       expect(result.entity.startDate).to.deep.equal(date2)
       expect(result.entity.team).to.equal(TeamType.Blue)

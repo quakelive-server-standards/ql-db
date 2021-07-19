@@ -78,5 +78,5 @@ export class FragParticipant {
   player?: Player
   matchParticipation?: MatchParticipation
   serverVisit?: ServerVisit
-
+  
 }

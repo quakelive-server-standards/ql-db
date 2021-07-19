@@ -574,6 +574,7 @@ export default {
       'player_id': 'playerId',
       'rank': 'rank',
       'red_flag_pickups': 'redFlagPickups',
+      'result': 'result',
       'round_id': 'roundId',
       'score': 'score',
       'server_id': 'serverId',
@@ -768,6 +769,7 @@ export default {
       matchParticipation.playerId = row['player_id']
       matchParticipation.rank = row['rank']
       matchParticipation.redFlagPickups = row['red_flag_pickups']
+      matchParticipation.result = row['result']
       matchParticipation.roundId = row['round_id']
       matchParticipation.score = row['score']
       matchParticipation.serverId = row['server_id']
@@ -1003,6 +1005,7 @@ export default {
         'player_id': matchParticipation.playerId,
         'rank': matchParticipation.rank,
         'red_flag_pickups': matchParticipation.redFlagPickups,
+        'result': matchParticipation.result,
         'round_id': matchParticipation.roundId,
         'score': matchParticipation.score,
         'server_id': matchParticipation.serverId,

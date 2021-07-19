@@ -16,7 +16,7 @@ import { MapLogic } from '../domain/map/MapLogic'
 import { Cvars } from '../domain/match/Cvars'
 import { Match } from '../domain/match/Match'
 import { MatchLogic } from '../domain/match/MatchLogic'
-import { MatchParticipation, MedalStats, PickupStats } from '../domain/matchParticipation/MatchParticipation'
+import { MatchParticipation, MedalStats, PickupStats, ResultType } from '../domain/matchParticipation/MatchParticipation'
 import { MatchParticipationLogic } from '../domain/matchParticipation/MatchParticipationLogic'
 import { Medal } from '../domain/medal/Medal'
 import { MedalLogic } from '../domain/medal/MedalLogic'
@@ -1601,14 +1601,13 @@ export class QlStatsIntegrator {
       activeMatchParticipation.deathCount = event.deaths
       activeMatchParticipation.holyShits = event.holyShits
       activeMatchParticipation.killCount = event.kills
-      // event.lose
       activeMatchParticipation.maxStreak = event.maxStreak
       // event.model
       activeMatchParticipation.neutralFlagPickups = event.neutralFlagPickups
       activeMatchParticipation.playTime = event.playTime
-      // event.quit
       activeMatchParticipation.rank = event.rank
       activeMatchParticipation.redFlagPickups = event.redFlagPickups
+      activeMatchParticipation.result = event.win ? ResultType.Win : event.lose ? ResultType.Lose : ResultType.Quit
       activeMatchParticipation.score = event.score
       activeMatchParticipation.team = mapTeamType(event.team)
       activeMatchParticipation.teamJoinTime = event.teamJoinTime
@@ -1616,7 +1615,6 @@ export class QlStatsIntegrator {
       activeMatchParticipation.tiedRank = event.tiedRank
       activeMatchParticipation.tiedTeamRank = event.tiedTeamRank
       activeMatchParticipation.warmup = event.warmup
-      // event.win
       activeMatchParticipation.damageDealt = event.damage.dealt
       activeMatchParticipation.damageTaken = event.damage.taken
       
@@ -2030,29 +2028,29 @@ export function mapPowerUpType(statsPowerUps: StatsPowerUpType[]): PowerUpType[]
 
 export function mapModType(modType: ModType): CauseType {
   switch (modType) {
-    case ModType.BFG: return CauseType.Bfg
-    case ModType.BFG_SPLASH: return CauseType.BfgSlash
-    case ModType.CHAINGUN: return CauseType.ChainGun
+    case ModType.BFG: return CauseType.Projectile
+    case ModType.BFG_SPLASH: return CauseType.ProjectileSplash
+    case ModType.CHAINGUN: return CauseType.Projectile
     case ModType.CRUSH: return CauseType.Crush
     case ModType.FALLING: return CauseType.Falling
-    case ModType.GAUNTLET: return CauseType.Gauntlet
-    case ModType.GRENADE: return CauseType.GrenadeLauncher
-    case ModType.GRENADE_SPLASH: return CauseType.GrenadeSplash
-    case ModType.HMG: return CauseType.HeavyMachineGun
+    case ModType.GAUNTLET: return CauseType.Projectile
+    case ModType.GRENADE: return CauseType.Projectile
+    case ModType.GRENADE_SPLASH: return CauseType.ProjectileSplash
+    case ModType.HMG: return CauseType.Projectile
     case ModType.HURT: return CauseType.Hurt
     case ModType.KAMIKAZE: return CauseType.Kamikaze
     case ModType.LAVA: return CauseType.Lava
-    case ModType.LIGHTNING: return CauseType.LightningGun
-    case ModType.MACHINEGUN: return CauseType.MachineGun
-    case ModType.NAILGUN: return CauseType.Nailgun
-    case ModType.PLASMA: return CauseType.PlasmaGun
-    case ModType.PLASMA_SPLASH: return CauseType.PlasmaSplash
-    case ModType.PROXMINE: return CauseType.ProximityMineLauncher
-    case ModType.PROXMINE_SPLASH: return CauseType.ProximityMineSplash
-    case ModType.RAILGUN: return CauseType.Railgun
-    case ModType.ROCKET: return CauseType.RocketLauncher
-    case ModType.ROCKET_SPLASH: return CauseType.RocketSplash
-    case ModType.SHOTGUN: return CauseType.Shotgun
+    case ModType.LIGHTNING: return CauseType.Projectile
+    case ModType.MACHINEGUN: return CauseType.Projectile
+    case ModType.NAILGUN: return CauseType.Projectile
+    case ModType.PLASMA: return CauseType.Projectile
+    case ModType.PLASMA_SPLASH: return CauseType.ProjectileSplash
+    case ModType.PROXMINE: return CauseType.Projectile
+    case ModType.PROXMINE_SPLASH: return CauseType.ProjectileSplash
+    case ModType.RAILGUN: return CauseType.Projectile
+    case ModType.ROCKET: return CauseType.Projectile
+    case ModType.ROCKET_SPLASH: return CauseType.ProjectileSplash
+    case ModType.SHOTGUN: return CauseType.Projectile
     case ModType.SLIME: return CauseType.Slime
     case ModType.TRIGGER_HURT: return CauseType.TriggerHurt
     case ModType.WATER: return CauseType.Water

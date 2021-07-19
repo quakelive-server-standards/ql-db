@@ -22,7 +22,7 @@
     "knight-orm": "^0.1.0",
     "knight-pg-migration": "^1.0.0",
     "knight-pg-transaction": "^1.0.1",
-    "knight-validation": "^1.1.0",
+    "knight-validation": "^1.1.1",
     "pg": "^8.5.1",
     "ql-api": "^0.2.0",
     "ql-stats-model": "^0.1.6",

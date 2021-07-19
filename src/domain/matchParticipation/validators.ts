@@ -1,11 +1,12 @@
 import { PgTransaction } from 'knight-pg-transaction'
-import { Absent, Exists, Required, TypeOf, Validator } from 'knight-validation'
+import { Absent, Enum, Exists, Required, TypeOf, Validator } from 'knight-validation'
+import { TeamType } from '../enums/TeamType'
 import { MatchLogic } from '../match/MatchLogic'
 import { PlayerLogic } from '../player/PlayerLogic'
 import { RoundLogic } from '../round/RoundLogic'
 import { ServerLogic } from '../server/ServerLogic'
 import { ServerVisitLogic } from '../serverVisit/ServerVisitLogic'
-import { MatchParticipation } from './MatchParticipation'
+import { MatchParticipation, ResultType } from './MatchParticipation'
 import { MatchParticipationLogic } from './MatchParticipationLogic'
 
 export class MatchParticipationValidator extends Validator {
@@ -73,12 +74,13 @@ export class MatchParticipationValidator extends Validator {
     this.add('playTime', new TypeOf('number'))
     this.add('rank', new TypeOf('number'))
     this.add('redFlagPickups', new TypeOf('number'))
+    this.add('result', new Enum(ResultType))
     this.add('score', new TypeOf('number'))
 
     this.add('startDate', new Required)
     this.add('startDate', new TypeOf(Date))
 
-    // this.add('team', new Enum(TeamType))
+    this.add('team', new Enum(TeamType))
     this.add('teamJoinTime', new TypeOf('number'))
     this.add('teamRank', new TypeOf('number'))
     this.add('tiedRank', new TypeOf('number'))
