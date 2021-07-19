@@ -83,7 +83,7 @@ describe('domain/frag/FragLogic.ts', function() {
       frag.victim.powerUps = [ ]
       frag.victim.serverVisitId = 1
       frag.victim.speed = 24
-      frag.victim.team = TeamType.Spectator
+      frag.victim.team = TeamType.Blue
       frag.victim.view = {
         x: 25,
         y: 26,
@@ -146,7 +146,7 @@ describe('domain/frag/FragLogic.ts', function() {
       expect(result.entity.victim.powerUps).to.deep.equal([ ])
       expect(result.entity.victim.serverVisitId).to.equal(1)
       expect(result.entity.victim.speed).to.equal(24)
-      expect(result.entity.victim.team).to.equal(TeamType.Spectator)
+      expect(result.entity.victim.team).to.equal(TeamType.Blue)
       expect(result.entity.victim.view.x).to.equal(25)
       expect(result.entity.victim.view.y).to.equal(26)
       expect(result.entity.victim.view.z).to.equal(27)
@@ -219,7 +219,7 @@ describe('domain/frag/FragLogic.ts', function() {
           powerUps: [ ],
           serverVisitId: 1,
           speed: 24,
-          team: TeamType.Spectator,
+          team: TeamType.Blue,
           view: {
             x: 25,
             y: 26,
@@ -285,7 +285,7 @@ describe('domain/frag/FragLogic.ts', function() {
       expect(result.entities[0].victim.powerUps).to.deep.equal([ ])
       expect(result.entities[0].victim.serverVisitId).to.equal(1)
       expect(result.entities[0].victim.speed).to.equal(24)
-      expect(result.entities[0].victim.team).to.equal(TeamType.Spectator)
+      expect(result.entities[0].victim.team).to.equal(TeamType.Blue)
       expect(result.entities[0].victim.view.x).to.equal(25)
       expect(result.entities[0].victim.view.y).to.equal(26)
       expect(result.entities[0].victim.view.z).to.equal(27)
@@ -489,7 +489,7 @@ describe('domain/frag/FragLogic.ts', function() {
           powerUps: [ ],
           serverVisitId: 2,
           speed: 24,
-          team: TeamType.Spectator,
+          team: TeamType.Blue,
           view: {
             x: 25,
             y: 26,
@@ -696,7 +696,7 @@ describe('domain/frag/FragLogic.ts', function() {
           powerUps: [ ],
           serverVisitId: 2,
           speed: 24,
-          team: TeamType.Spectator,
+          team: TeamType.Blue,
           view: {
             x: 25,
             y: 26,
@@ -764,7 +764,7 @@ describe('domain/frag/FragLogic.ts', function() {
       expect(result.entity.victim.powerUps).to.deep.equal([ ])
       expect(result.entity.victim.serverVisitId).to.equal(2)
       expect(result.entity.victim.speed).to.equal(24)
-      expect(result.entity.victim.team).to.equal(TeamType.Spectator)
+      expect(result.entity.victim.team).to.equal(TeamType.Blue)
       expect(result.entity.victim.view.x).to.equal(25)
       expect(result.entity.victim.view.y).to.equal(26)
       expect(result.entity.victim.view.z).to.equal(27)

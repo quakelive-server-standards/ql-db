@@ -61,7 +61,7 @@ export default class DbMigration extends PostgresMigration {
         killer_position_z DOUBLE PRECISION,
         killer_server_visit_id INTEGER,
         killer_speed DOUBLE PRECISION,
-        killer_team VARCHAR(9),
+        killer_team VARCHAR(4),
         killer_view_x DOUBLE PRECISION,
         killer_view_y DOUBLE PRECISION,
         killer_view_z DOUBLE PRECISION,
@@ -199,7 +199,7 @@ export default class DbMigration extends PostgresMigration {
         round_id INTEGER,
         score INTEGER,
         start_date TIMESTAMP,
-        team VARCHAR(9),
+        team VARCHAR(4),
         team_join_time INTEGER,
         team_rank INTEGER,
         tied_rank INTEGER,
@@ -354,7 +354,7 @@ export default class DbMigration extends PostgresMigration {
         server_id INTEGER,
         finish_date TIMESTAMP,
         round INTEGER,
-        team_won VARCHAR(9),
+        team_won VARCHAR(4),
         time INTEGER,
         start_date TIMESTAMP
       )`

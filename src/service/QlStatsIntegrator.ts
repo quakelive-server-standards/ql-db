@@ -2065,8 +2065,9 @@ export function mapTeamType(statsTeamType: StatsTeamType): TeamType {
     case StatsTeamType.BLUE: return TeamType.Blue
     case StatsTeamType.FREE: return TeamType.Free
     case StatsTeamType.RED: return TeamType.Red
-    case StatsTeamType.SPECTATOR: return TeamType.Spectator
   }
+
+  throw new Error(`Team type '${statsTeamType}' is not mapped to a QLDB team type`)
 }
 
 export function mapWeaponType(statsWeaponType: StatsWeaponType): WeaponType {
