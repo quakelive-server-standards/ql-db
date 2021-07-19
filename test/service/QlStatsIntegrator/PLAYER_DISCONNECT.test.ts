@@ -509,10 +509,10 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('match')
         await create('match')
         await create('match')
-        await create('match_participation', { active: true, playerId: 1, serverId: 1, serverVisitId: 1, matchId: 1, startDate: new Date, team: TeamType.Free })
-        await create('match_participation', { active: true, playerId: 1, serverId: 2, serverVisitId: 2, matchId: 2, startDate: new Date, team: TeamType.Free })
-        await create('match_participation', { active: true, playerId: 2, serverId: 1, serverVisitId: 3, matchId: 3, startDate: new Date, team: TeamType.Free })
-        await create('match_participation', { active: true, playerId: 2, serverId: 2, serverVisitId: 4, matchId: 4, startDate: new Date, team: TeamType.Free })
+        await create('match_participation', { active: true, playerId: 1, serverId: 1, serverVisitId: 1, matchId: 1, startDate: new Date, team: TeamType.Free, warmup: false })
+        await create('match_participation', { active: true, playerId: 1, serverId: 2, serverVisitId: 2, matchId: 2, startDate: new Date, team: TeamType.Free, warmup: false })
+        await create('match_participation', { active: true, playerId: 2, serverId: 1, serverVisitId: 3, matchId: 3, startDate: new Date, team: TeamType.Free, warmup: false })
+        await create('match_participation', { active: true, playerId: 2, serverId: 2, serverVisitId: 4, matchId: 4, startDate: new Date, team: TeamType.Free, warmup: false })
   
         let qlEvent = {
           "DATA" : {

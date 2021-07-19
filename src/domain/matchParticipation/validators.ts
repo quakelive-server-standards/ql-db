@@ -20,7 +20,7 @@ export class MatchParticipationValidator extends Validator {
 
     super()
 
-    this.add('matchId', new Required)
+    this.add('matchId', new Required, async (matchParticipation: MatchParticipation) => matchParticipation.warmup === false)
     this.add('matchId', new TypeOf('number'))
     this.add('matchId', new Exists(async (matchParticipation: MatchParticipation) => {
       let result = await matchLogic.count({ id: matchParticipation.matchId }, tx)
@@ -83,6 +83,9 @@ export class MatchParticipationValidator extends Validator {
     this.add('teamRank', new TypeOf('number'))
     this.add('tiedRank', new TypeOf('number'))
     this.add('tiedTeamRank', new TypeOf('number'))
+    
+    this.add('warmup', new Required)
+    this.add('warmup', new TypeOf('boolean'))
     
     this.add('bfg', new WeaponStatsValidator)
     this.add('chainGun', new WeaponStatsValidator)

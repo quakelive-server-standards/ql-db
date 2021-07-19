@@ -3505,8 +3505,8 @@ describe('service/QlStatsIntegrator.ts', function () {
         await create('server_visit', { serverId: 1, playerId: 1 })
         await create('server_visit', { serverId: 1, playerId: 2 })
         await create('match', { serverId: 1, guid: '111111111111111111111111111111111111', active: true })
-        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: false, startDate: startDate, team: TeamType.Red })
-        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: false, startDate: startDate, team: TeamType.Blue })
+        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: false, startDate: startDate, team: TeamType.Red, warmup: false })
+        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: false, startDate: startDate, team: TeamType.Blue, warmup: false })
 
         let qlEvent = {
           "DATA": {
@@ -3627,8 +3627,8 @@ describe('service/QlStatsIntegrator.ts', function () {
         await create('server_visit', { serverId: 1, playerId: 1 })
         await create('server_visit', { serverId: 1, playerId: 2 })
         await create('match', { serverId: 1, guid: '111111111111111111111111111111111111', active: true })
-        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Red })
-        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue })
+        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Red, warmup: false })
+        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue, warmup: false })
 
         let qlEvent = {
           "DATA": {
@@ -3715,6 +3715,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].serverId).to.equal(1)
         expect(result.entities[0].startDate).to.deep.equal(startDate)
         expect(result.entities[0].team).to.equal(TeamType.Red)
+        expect(result.entities[0].warmup).to.equal(false)
         expect(result.entities[1].active).to.equal(true)
         expect(result.entities[1].finishDate).to.be.null
         expect(result.entities[1].matchId).to.equal(1)
@@ -3723,9 +3724,10 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[1].serverId).to.equal(1)
         expect(result.entities[1].startDate).to.deep.equal(startDate)
         expect(result.entities[1].team).to.equal(TeamType.Blue)
+        expect(result.entities[1].warmup).to.equal(false)
       })
 
-      it('(player kills player) should not create a new match participation for warmup', async function () {
+      it('(player kills player) should create new match participations for warmup', async function () {
         let qlEvent = {
           "DATA": {
             "KILLER": {
@@ -3800,9 +3802,27 @@ describe('service/QlStatsIntegrator.ts', function () {
         let event = PlayerDeathEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
 
-        let result = await Services.get().matchParticipationLogic.count({}, tx())
+        let result = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
 
-        expect(result.count).to.equal(0)
+        expect(result.entities.length).to.equal(2)
+        expect(result.entities[0].active).to.equal(true)
+        expect(result.entities[0].finishDate).to.be.null
+        expect(result.entities[0].matchId).to.be.null
+        expect(result.entities[0].playerId).to.equal(1)
+        expect(result.entities[0].roundId).to.be.null
+        expect(result.entities[0].serverId).to.equal(1)
+        expect(result.entities[0].startDate).to.deep.equal(date)
+        expect(result.entities[0].team).to.equal(TeamType.Red)
+        expect(result.entities[0].warmup).to.equal(true)
+        expect(result.entities[1].active).to.equal(true)
+        expect(result.entities[1].finishDate).to.be.null
+        expect(result.entities[1].matchId).to.be.null
+        expect(result.entities[1].playerId).to.equal(2)
+        expect(result.entities[1].roundId).to.be.null
+        expect(result.entities[1].serverId).to.equal(1)
+        expect(result.entities[1].startDate).to.deep.equal(date)
+        expect(result.entities[1].team).to.equal(TeamType.Blue)
+        expect(result.entities[1].warmup).to.equal(true)
       })
 
       it('(player kills player) should inactivate any former match participations on the same server if the current game is another one', async function () {
@@ -3817,9 +3837,9 @@ describe('service/QlStatsIntegrator.ts', function () {
         await create('server_visit', { serverId: 2, playerId: 3 })
         await create('match', { serverId: 1, guid: '111111111111111111111111111111111111', active: true })
         await create('match', { serverId: 2, guid: '222222222222222222222222222222222222', active: true })
-        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue })
-        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Red })
-        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 2, active: true, startDate: startDate, team: TeamType.Blue })
+        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue, warmup: true })
+        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Red, warmup: false })
+        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 2, active: true, startDate: startDate, team: TeamType.Blue, warmup: true })
 
         let qlEvent = {
           "DATA": {
@@ -3886,7 +3906,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               },
               "WEAPON": "PLASMA"
             },
-            "WARMUP": true
+            "WARMUP": false
           },
           "TYPE": "PLAYER_DEATH"
         }
@@ -3897,7 +3917,7 @@ describe('service/QlStatsIntegrator.ts', function () {
 
         let result = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
 
-        expect(result.entities.length).to.equal(3)
+        expect(result.entities.length).to.equal(5)
         expect(result.entities[0].active).to.equal(false)
         expect(result.entities[0].finishDate).to.be.null
         expect(result.entities[0].matchId).to.equal(1)
@@ -3906,6 +3926,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].serverId).to.equal(1)
         expect(result.entities[0].startDate).to.deep.equal(startDate)
         expect(result.entities[0].team).to.equal(TeamType.Blue)
+        expect(result.entities[0].warmup).to.equal(true)
         expect(result.entities[1].active).to.equal(false)
         expect(result.entities[1].finishDate).to.be.null
         expect(result.entities[1].matchId).to.equal(1)
@@ -3914,6 +3935,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[1].serverId).to.equal(1)
         expect(result.entities[1].startDate).to.deep.equal(startDate)
         expect(result.entities[1].team).to.equal(TeamType.Red)
+        expect(result.entities[1].warmup).to.equal(false)
         expect(result.entities[2].active).to.equal(true)
         expect(result.entities[2].finishDate).to.be.null
         expect(result.entities[2].matchId).to.equal(2)
@@ -3922,6 +3944,25 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[2].serverId).to.equal(2)
         expect(result.entities[2].startDate).to.deep.equal(startDate)
         expect(result.entities[2].team).to.equal(TeamType.Blue)
+        expect(result.entities[2].warmup).to.equal(true)
+        expect(result.entities[3].active).to.equal(true)
+        expect(result.entities[3].finishDate).to.be.null
+        expect(result.entities[3].matchId).to.equal(3)
+        expect(result.entities[3].playerId).to.equal(1)
+        expect(result.entities[3].roundId).to.be.null
+        expect(result.entities[3].serverId).to.equal(1)
+        expect(result.entities[3].startDate).to.deep.equal(date)
+        expect(result.entities[3].team).to.equal(TeamType.Red)
+        expect(result.entities[3].warmup).to.equal(false)
+        expect(result.entities[4].active).to.equal(true)
+        expect(result.entities[4].finishDate).to.be.null
+        expect(result.entities[4].matchId).to.equal(3)
+        expect(result.entities[4].playerId).to.equal(2)
+        expect(result.entities[4].roundId).to.be.null
+        expect(result.entities[4].serverId).to.equal(1)
+        expect(result.entities[4].startDate).to.deep.equal(date)
+        expect(result.entities[4].team).to.equal(TeamType.Blue)
+        expect(result.entities[4].warmup).to.equal(false)
       })
 
       it('(player kills player) should inactivate any former match participation of the same player on any other servers', async function () {
@@ -3935,9 +3976,9 @@ describe('service/QlStatsIntegrator.ts', function () {
         await create('server_visit', { serverId: 2, playerId: 2 })
         await create('server_visit', { serverId: 2, playerId: 3 })
         await create('match', { serverId: 2, guid: '111111111111111111111111111111111111', active: true })
-        await create('match_participation', { serverId: 2, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue })
-        await create('match_participation', { serverId: 2, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Red })
-        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 1, active: true, startDate: startDate, team: TeamType.Red })
+        await create('match_participation', { serverId: 2, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue, warmup: true })
+        await create('match_participation', { serverId: 2, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Red, warmup: false })
+        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 1, active: true, startDate: startDate, team: TeamType.Red, warmup: true })
 
         let qlEvent = {
           "DATA": {
@@ -4004,7 +4045,7 @@ describe('service/QlStatsIntegrator.ts', function () {
               },
               "WEAPON": "PLASMA"
             },
-            "WARMUP": true
+            "WARMUP": false
           },
           "TYPE": "PLAYER_DEATH"
         }
@@ -4015,7 +4056,7 @@ describe('service/QlStatsIntegrator.ts', function () {
 
         let result = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
 
-        expect(result.entities.length).to.equal(3)
+        expect(result.entities.length).to.equal(5)
         expect(result.entities[0].active).to.equal(false)
         expect(result.entities[0].finishDate).to.be.null
         expect(result.entities[0].matchId).to.equal(1)
@@ -4024,6 +4065,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].serverId).to.equal(2)
         expect(result.entities[0].startDate).to.deep.equal(startDate)
         expect(result.entities[0].team).to.equal(TeamType.Blue)
+        expect(result.entities[0].warmup).to.equal(true)
         expect(result.entities[1].active).to.equal(false)
         expect(result.entities[1].finishDate).to.be.null
         expect(result.entities[1].matchId).to.equal(1)
@@ -4032,6 +4074,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[1].serverId).to.equal(2)
         expect(result.entities[1].startDate).to.deep.equal(startDate)
         expect(result.entities[1].team).to.equal(TeamType.Red)
+        expect(result.entities[1].warmup).to.equal(false)
         expect(result.entities[2].active).to.equal(true)
         expect(result.entities[2].finishDate).to.be.null
         expect(result.entities[2].matchId).to.equal(1)
@@ -4040,6 +4083,25 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[2].serverId).to.equal(2)
         expect(result.entities[2].startDate).to.deep.equal(startDate)
         expect(result.entities[2].team).to.equal(TeamType.Red)
+        expect(result.entities[2].warmup).to.equal(true)
+        expect(result.entities[3].active).to.equal(true)
+        expect(result.entities[3].finishDate).to.be.null
+        expect(result.entities[3].matchId).to.equal(2)
+        expect(result.entities[3].playerId).to.equal(1)
+        expect(result.entities[3].roundId).to.be.null
+        expect(result.entities[3].serverId).to.equal(1)
+        expect(result.entities[3].startDate).to.deep.equal(date)
+        expect(result.entities[3].team).to.equal(TeamType.Red)
+        expect(result.entities[3].warmup).to.equal(false)
+        expect(result.entities[4].active).to.equal(true)
+        expect(result.entities[4].finishDate).to.be.null
+        expect(result.entities[4].matchId).to.equal(2)
+        expect(result.entities[4].playerId).to.equal(2)
+        expect(result.entities[4].roundId).to.be.null
+        expect(result.entities[4].serverId).to.equal(1)
+        expect(result.entities[4].startDate).to.deep.equal(date)
+        expect(result.entities[4].team).to.equal(TeamType.Blue)
+        expect(result.entities[4].warmup).to.equal(false)
       })
 
       it('(player kills player) should create a new match participation if the player is in a different team than expected', async function () {
@@ -4054,9 +4116,9 @@ describe('service/QlStatsIntegrator.ts', function () {
         await create('server_visit', { serverId: 2, playerId: 3, active: true })
         await create('match', { serverId: 1, guid: '111111111111111111111111111111111111', active: true })
         await create('match', { serverId: 2, guid: '222222222222222222222222222222222222', active: true })
-        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Red })
-        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue })
-        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 2, active: true, startDate: startDate, team: TeamType.Red })
+        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Red, warmup: false })
+        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue, warmup: false })
+        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 2, active: true, startDate: startDate, team: TeamType.Red, warmup: false })
 
         let qlEvent = {
           "DATA": {
@@ -4143,6 +4205,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].serverId).to.equal(1)
         expect(result.entities[0].startDate).to.deep.equal(startDate)
         expect(result.entities[0].team).to.equal(TeamType.Red)
+        expect(result.entities[0].warmup).to.equal(false)
         expect(result.entities[1].active).to.equal(false)
         // expect(result.entities[1].finishDate).to.be.not.null
         expect(result.entities[1].matchId).to.equal(1)
@@ -4151,6 +4214,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[1].serverId).to.equal(1)
         expect(result.entities[1].startDate).to.deep.equal(startDate)
         expect(result.entities[1].team).to.equal(TeamType.Blue)
+        expect(result.entities[1].warmup).to.equal(false)
         expect(result.entities[2].active).to.equal(true)
         expect(result.entities[2].finishDate).to.be.null
         expect(result.entities[2].matchId).to.equal(2)
@@ -4159,6 +4223,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[2].serverId).to.equal(2)
         expect(result.entities[2].startDate).to.deep.equal(startDate)
         expect(result.entities[2].team).to.equal(TeamType.Red)
+        expect(result.entities[2].warmup).to.equal(false)
         expect(result.entities[3].active).to.equal(true)
         expect(result.entities[3].finishDate).to.be.null
         expect(result.entities[3].matchId).to.equal(1)
@@ -4167,6 +4232,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[3].serverId).to.equal(1)
         expect(result.entities[3].startDate).to.deep.equal(date)
         expect(result.entities[3].team).to.equal(TeamType.Blue)
+        expect(result.entities[3].warmup).to.equal(false)
         expect(result.entities[4].active).to.equal(true)
         expect(result.entities[4].finishDate).to.be.null
         expect(result.entities[4].matchId).to.equal(1)
@@ -4175,6 +4241,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[4].serverId).to.equal(1)
         expect(result.entities[4].startDate).to.deep.equal(date)
         expect(result.entities[4].team).to.equal(TeamType.Red)
+        expect(result.entities[4].warmup).to.equal(false)
       })
 
       it('(player kills itself) should create a new match participation', async function () {
@@ -4463,7 +4530,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].team).to.equal(TeamType.Free)
       })
 
-      it('(player kills itself) should not create a new match participation for warmup', async function () {
+      it('(player kills itself) should create a new match participation for warmup', async function () {
         let qlEvent = {
           "DATA": {
             "KILLER": {
@@ -4538,9 +4605,17 @@ describe('service/QlStatsIntegrator.ts', function () {
         let event = PlayerDeathEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
 
-        let result = await Services.get().matchParticipationLogic.count({}, tx())
+        let result = await Services.get().matchParticipationLogic.read({}, tx())
 
-        expect(result.count).to.equal(0)
+        expect(result.entities.length).to.equal(1)
+        expect(result.entities[0].active).to.equal(true)
+        expect(result.entities[0].finishDate).to.be.null
+        expect(result.entities[0].matchId).to.be.null
+        expect(result.entities[0].playerId).to.equal(1)
+        expect(result.entities[0].roundId).to.be.null
+        expect(result.entities[0].serverId).to.equal(1)
+        expect(result.entities[0].startDate).to.deep.equal(date)
+        expect(result.entities[0].team).to.equal(TeamType.Free)
       })
 
       it('(player kills itself) should inactivate any former match participations on the same server if the current game is another one', async function () {
@@ -4555,9 +4630,9 @@ describe('service/QlStatsIntegrator.ts', function () {
         await create('server_visit', { serverId: 2, playerId: 3 })
         await create('match', { serverId: 1, guid: '111111111111111111111111111111111111', active: true })
         await create('match', { serverId: 2, guid: '222222222222222222222222222222222222', active: true })
-        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue })
-        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Red })
-        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 2, active: true, startDate: startDate, team: TeamType.Blue })
+        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue, warmup: false })
+        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Red, warmup: false })
+        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 2, active: true, startDate: startDate, team: TeamType.Blue, warmup: false })
 
         let qlEvent = {
           "DATA": {
@@ -4635,7 +4710,7 @@ describe('service/QlStatsIntegrator.ts', function () {
 
         let result = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
 
-        expect(result.entities.length).to.equal(3)
+        expect(result.entities.length).to.equal(4)
         expect(result.entities[0].active).to.equal(false)
         expect(result.entities[0].finishDate).to.be.null
         expect(result.entities[0].matchId).to.equal(1)
@@ -4660,6 +4735,14 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[2].serverId).to.equal(2)
         expect(result.entities[2].startDate).to.deep.equal(startDate)
         expect(result.entities[2].team).to.equal(TeamType.Blue)
+        expect(result.entities[3].active).to.equal(true)
+        expect(result.entities[3].finishDate).to.be.null
+        expect(result.entities[3].matchId).to.be.null
+        expect(result.entities[3].playerId).to.equal(2)
+        expect(result.entities[3].roundId).to.be.null
+        expect(result.entities[3].serverId).to.equal(1)
+        expect(result.entities[3].startDate).to.deep.equal(date)
+        expect(result.entities[3].team).to.equal(TeamType.Blue)
       })
 
       it('(player kills itself) should inactivate any former match participation of the same player on any other servers', async function () {
@@ -4673,9 +4756,9 @@ describe('service/QlStatsIntegrator.ts', function () {
         await create('server_visit', { serverId: 2, playerId: 2 })
         await create('server_visit', { serverId: 2, playerId: 3 })
         await create('match', { serverId: 2, guid: '111111111111111111111111111111111111', active: true })
-        await create('match_participation', { serverId: 2, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue })
-        await create('match_participation', { serverId: 2, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Red })
-        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 1, active: true, startDate: startDate, team: TeamType.Red })
+        await create('match_participation', { serverId: 2, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue, warmup: false })
+        await create('match_participation', { serverId: 2, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Red, warmup: false })
+        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 1, active: true, startDate: startDate, team: TeamType.Red, warmup: false })
 
         let qlEvent = {
           "DATA": {
@@ -4753,7 +4836,7 @@ describe('service/QlStatsIntegrator.ts', function () {
 
         let result = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
 
-        expect(result.entities.length).to.equal(3)
+        expect(result.entities.length).to.equal(4)
         expect(result.entities[0].active).to.equal(false)
         expect(result.entities[0].finishDate).to.be.null
         expect(result.entities[0].matchId).to.equal(1)
@@ -4778,6 +4861,14 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[2].serverId).to.equal(2)
         expect(result.entities[2].startDate).to.deep.equal(startDate)
         expect(result.entities[2].team).to.equal(TeamType.Red)
+        expect(result.entities[3].active).to.equal(true)
+        expect(result.entities[3].finishDate).to.be.null
+        expect(result.entities[3].matchId).to.be.null
+        expect(result.entities[3].playerId).to.equal(1)
+        expect(result.entities[3].roundId).to.be.null
+        expect(result.entities[3].serverId).to.equal(1)
+        expect(result.entities[3].startDate).to.deep.equal(date)
+        expect(result.entities[3].team).to.equal(TeamType.Free)
       })
 
       it('(player kills itself) should create a new match participation if the player is in a different team than expected', async function () {
@@ -4792,9 +4883,9 @@ describe('service/QlStatsIntegrator.ts', function () {
         await create('server_visit', { serverId: 2, playerId: 3, active: true })
         await create('match', { serverId: 1, guid: '111111111111111111111111111111111111', active: true })
         await create('match', { serverId: 2, guid: '222222222222222222222222222222222222', active: true })
-        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Red })
-        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue })
-        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 2, active: true, startDate: startDate, team: TeamType.Red })
+        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Red, warmup: false })
+        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue, warmup: false })
+        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 2, active: true, startDate: startDate, team: TeamType.Red, warmup: false })
 
         let qlEvent = {
           "DATA": {
@@ -5118,7 +5209,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].team).to.equal(TeamType.Free)
       })
 
-      it('(player killed by environment) should not create a new match participation for warmup', async function () {
+      it('(player killed by environment) should create a new match participation for warmup', async function () {
         let qlEvent = {
           "DATA": {
             "KILLER": null,
@@ -5168,9 +5259,17 @@ describe('service/QlStatsIntegrator.ts', function () {
         let event = PlayerDeathEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
 
-        let result = await Services.get().matchParticipationLogic.count({}, tx())
+        let result = await Services.get().matchParticipationLogic.read({}, tx())
 
-        expect(result.count).to.equal(0)
+        expect(result.entities.length).to.equal(1)
+        expect(result.entities[0].active).to.equal(true)
+        expect(result.entities[0].finishDate).to.be.null
+        expect(result.entities[0].matchId).to.be.null
+        expect(result.entities[0].playerId).to.equal(1)
+        expect(result.entities[0].roundId).to.be.null
+        expect(result.entities[0].serverId).to.equal(1)
+        expect(result.entities[0].startDate).to.deep.equal(date)
+        expect(result.entities[0].team).to.equal(TeamType.Free)
       })
 
       it('(player killed by environment) should inactivate any former match participations on the same server if the current game is another one', async function () {
@@ -5185,9 +5284,9 @@ describe('service/QlStatsIntegrator.ts', function () {
         await create('server_visit', { serverId: 2, playerId: 3 })
         await create('match', { serverId: 1, guid: '111111111111111111111111111111111111', active: true })
         await create('match', { serverId: 2, guid: '222222222222222222222222222222222222', active: true })
-        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue })
-        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Red })
-        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 2, active: true, startDate: startDate, team: TeamType.Blue })
+        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue, warmup: false })
+        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Red, warmup: false })
+        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 2, active: true, startDate: startDate, team: TeamType.Blue, warmup: false })
 
         let qlEvent = {
           "DATA": {
@@ -5240,7 +5339,7 @@ describe('service/QlStatsIntegrator.ts', function () {
 
         let result = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
 
-        expect(result.entities.length).to.equal(3)
+        expect(result.entities.length).to.equal(4)
         expect(result.entities[0].active).to.equal(false)
         expect(result.entities[0].finishDate).to.be.null
         expect(result.entities[0].matchId).to.equal(1)
@@ -5265,6 +5364,14 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[2].serverId).to.equal(2)
         expect(result.entities[2].startDate).to.deep.equal(startDate)
         expect(result.entities[2].team).to.equal(TeamType.Blue)
+        expect(result.entities[3].active).to.equal(true)
+        expect(result.entities[3].finishDate).to.be.null
+        expect(result.entities[3].matchId).to.be.null
+        expect(result.entities[3].playerId).to.equal(2)
+        expect(result.entities[3].roundId).to.be.null
+        expect(result.entities[3].serverId).to.equal(1)
+        expect(result.entities[3].startDate).to.deep.equal(date)
+        expect(result.entities[3].team).to.equal(TeamType.Free)
       })
 
       it('(player killed by environment) should inactivate any former match participation of the same player on any other servers', async function () {
@@ -5278,9 +5385,9 @@ describe('service/QlStatsIntegrator.ts', function () {
         await create('server_visit', { serverId: 2, playerId: 2 })
         await create('server_visit', { serverId: 2, playerId: 3 })
         await create('match', { serverId: 2, guid: '111111111111111111111111111111111111', active: true })
-        await create('match_participation', { serverId: 2, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue })
-        await create('match_participation', { serverId: 2, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Red })
-        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 1, active: true, startDate: startDate, team: TeamType.Red })
+        await create('match_participation', { serverId: 2, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue, warmup: false })
+        await create('match_participation', { serverId: 2, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Red, warmup: false })
+        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 1, active: true, startDate: startDate, team: TeamType.Red, warmup: false })
 
         let qlEvent = {
           "DATA": {
@@ -5333,7 +5440,7 @@ describe('service/QlStatsIntegrator.ts', function () {
 
         let result = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
 
-        expect(result.entities.length).to.equal(3)
+        expect(result.entities.length).to.equal(4)
         expect(result.entities[0].active).to.equal(false)
         expect(result.entities[0].finishDate).to.be.null
         expect(result.entities[0].matchId).to.equal(1)
@@ -5358,6 +5465,14 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[2].serverId).to.equal(2)
         expect(result.entities[2].startDate).to.deep.equal(startDate)
         expect(result.entities[2].team).to.equal(TeamType.Red)
+        expect(result.entities[3].active).to.equal(true)
+        expect(result.entities[3].finishDate).to.be.null
+        expect(result.entities[3].matchId).to.be.null
+        expect(result.entities[3].playerId).to.equal(1)
+        expect(result.entities[3].roundId).to.be.null
+        expect(result.entities[3].serverId).to.equal(1)
+        expect(result.entities[3].startDate).to.deep.equal(date)
+        expect(result.entities[3].team).to.equal(TeamType.Free)
       })
 
       it('(player killed by environment) should create a new match participation if the player is in a different team than expected', async function () {
@@ -5372,9 +5487,9 @@ describe('service/QlStatsIntegrator.ts', function () {
         await create('server_visit', { serverId: 2, playerId: 3, active: true })
         await create('match', { serverId: 1, guid: '111111111111111111111111111111111111', active: true })
         await create('match', { serverId: 2, guid: '222222222222222222222222222222222222', active: true })
-        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Red })
-        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue })
-        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 2, active: true, startDate: startDate, team: TeamType.Red })
+        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Red, warmup: false })
+        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue, warmup: false })
+        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 2, active: true, startDate: startDate, team: TeamType.Red, warmup: false })
 
         let qlEvent = {
           "DATA": {
@@ -5478,10 +5593,10 @@ describe('service/QlStatsIntegrator.ts', function () {
         await create('server_visit', { serverId: 2, playerId: 4 })
         await create('match', { serverId: 1, guid: '111111111111111111111111111111111111', active: true })
         await create('match', { serverId: 2, guid: '222222222222222222222222222222222222', active: true })
-        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue })
-        await create('match_participation', { serverId: 2, playerId: 2, serverVisitId: 2, matchId: 2, active: true, startDate: startDate, team: TeamType.Red })
-        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 2, active: true, startDate: startDate, team: TeamType.Red })
-        await create('match_participation', { serverId: 2, playerId: 4, serverVisitId: 4, matchId: 2, active: true, startDate: startDate, team: TeamType.Blue })
+        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue, warmup: false })
+        await create('match_participation', { serverId: 2, playerId: 2, serverVisitId: 2, matchId: 2, active: true, startDate: startDate, team: TeamType.Red, warmup: false })
+        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 2, active: true, startDate: startDate, team: TeamType.Red, warmup: false })
+        await create('match_participation', { serverId: 2, playerId: 4, serverVisitId: 4, matchId: 2, active: true, startDate: startDate, team: TeamType.Blue, warmup: false })
 
         let qlEvent = {
           "DATA": {
@@ -5899,7 +6014,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].victim.botSkill).to.be.null
         expect(result.entities[0].victim.health).to.equal(-14)
         expect(result.entities[0].victim.holdable).to.be.null
-        expect(result.entities[0].victim.matchParticipationId).to.be.null
+        expect(result.entities[0].victim.matchParticipationId).to.equal(1)
         expect(result.entities[0].victim.playerId).to.equal(3)
         expect(result.entities[0].victim.position).to.be.not.null
         expect(result.entities[0].victim.position.x).to.equal(-728.875)
@@ -6272,7 +6387,7 @@ describe('service/QlStatsIntegrator.ts', function () {
         expect(result.entities[0].victim.botSkill).to.be.null
         expect(result.entities[0].victim.health).to.equal(25)
         expect(result.entities[0].victim.holdable).to.be.null
-        expect(result.entities[0].victim.matchParticipationId).to.be.null
+        expect(result.entities[0].victim.matchParticipationId).to.equal(1)
         expect(result.entities[0].victim.playerId).to.equal(3)
         expect(result.entities[0].victim.position).to.be.not.null
         expect(result.entities[0].victim.position.x).to.equal(311.6126098632812)

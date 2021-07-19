@@ -37,7 +37,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "QUADHOG": 0,
             "ROUND_LIMIT": 10,
             "SCORE_LIMIT": 150,
-            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "SERVER_TITLE": "Server Title",
             "TIME_LIMIT": 10,
             "TRAINING": 0
           },
@@ -54,7 +54,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(result.entities[0].firstSeen).to.deep.equal(date)
         expect(result.entities[0].ip).to.equal('127.0.0.1')
         expect(result.entities[0].port).to.equal(27960)
-        expect(result.entities[0].title).to.equal('.de #topdog.io Ranked Duel #4')
+        expect(result.entities[0].title).to.equal('Server Title')
       })
 
       it('should not create a new server', async function() {
@@ -88,7 +88,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "QUADHOG": 0,
             "ROUND_LIMIT": 10,
             "SCORE_LIMIT": 150,
-            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "SERVER_TITLE": "Server Title",
             "TIME_LIMIT": 10,
             "TRAINING": 0
           },
@@ -105,7 +105,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(result.entities[0].firstSeen).to.deep.equal(firstSeen)
         expect(result.entities[0].ip).to.equal('127.0.0.1')
         expect(result.entities[0].port).to.equal(27960)
-        expect(result.entities[0].title).to.equal('.de #topdog.io Ranked Duel #4')
+        expect(result.entities[0].title).to.equal('Server Title')
       })
 
       it('should update the first seen date', async function() {
@@ -138,7 +138,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "QUADHOG": 0,
             "ROUND_LIMIT": 10,
             "SCORE_LIMIT": 150,
-            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "SERVER_TITLE": "Server Title",
             "TIME_LIMIT": 10,
             "TRAINING": 0
           },
@@ -155,7 +155,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(result.entities[0].firstSeen).to.deep.equal(date)
         expect(result.entities[0].ip).to.equal('127.0.0.1')
         expect(result.entities[0].port).to.equal(27960)
-        expect(result.entities[0].title).to.equal('.de #topdog.io Ranked Duel #4')
+        expect(result.entities[0].title).to.equal('Server Title')
       })
 
       it('should update the server title', async function() {
@@ -189,7 +189,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "QUADHOG": 0,
             "ROUND_LIMIT": 10,
             "SCORE_LIMIT": 150,
-            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "SERVER_TITLE": "Server Title",
             "TIME_LIMIT": 10,
             "TRAINING": 0
           },
@@ -206,7 +206,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(result.entities[0].firstSeen).to.deep.equal(firstSeen)
         expect(result.entities[0].ip).to.equal('127.0.0.1')
         expect(result.entities[0].port).to.equal(27960)
-        expect(result.entities[0].title).to.equal('.de #topdog.io Ranked Duel #4')
+        expect(result.entities[0].title).to.equal('Server Title')
       })
     })
 
@@ -239,7 +239,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "QUADHOG": 0,
             "ROUND_LIMIT": 10,
             "SCORE_LIMIT": 150,
-            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "SERVER_TITLE": "Server Title",
             "TIME_LIMIT": 10,
             "TRAINING": 0
           },
@@ -288,7 +288,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "QUADHOG": 0,
             "ROUND_LIMIT": 10,
             "SCORE_LIMIT": 150,
-            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "SERVER_TITLE": "Server Title",
             "TIME_LIMIT": 10,
             "TRAINING": 0
           },
@@ -337,7 +337,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "QUADHOG": 0,
             "ROUND_LIMIT": 10,
             "SCORE_LIMIT": 150,
-            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "SERVER_TITLE": "Server Title",
             "TIME_LIMIT": 10,
             "TRAINING": 0
           },
@@ -385,7 +385,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "QUADHOG": 0,
             "ROUND_LIMIT": 10,
             "SCORE_LIMIT": 150,
-            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "SERVER_TITLE": "Server Title",
             "TIME_LIMIT": 10,
             "TRAINING": 0
           },
@@ -437,7 +437,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "QUADHOG": 0,
             "ROUND_LIMIT": 10,
             "SCORE_LIMIT": 150,
-            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "SERVER_TITLE": "Server Title",
             "TIME_LIMIT": 10,
             "TRAINING": 0
           },
@@ -484,7 +484,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "QUADHOG": 0,
             "ROUND_LIMIT": 10,
             "SCORE_LIMIT": 150,
-            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "SERVER_TITLE": "Server Title",
             "TIME_LIMIT": 10,
             "TRAINING": 0
           },
@@ -530,7 +530,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "QUADHOG": 0,
             "ROUND_LIMIT": 10,
             "SCORE_LIMIT": 150,
-            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "SERVER_TITLE": "Server Title",
             "TIME_LIMIT": 10,
             "TRAINING": 0
           },
@@ -585,7 +585,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "QUADHOG": 0,
             "ROUND_LIMIT": 10,
             "SCORE_LIMIT": 150,
-            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "SERVER_TITLE": "Server Title",
             "TIME_LIMIT": 10,
             "TRAINING": 0
           },
@@ -640,7 +640,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "QUADHOG": 0,
             "ROUND_LIMIT": 10,
             "SCORE_LIMIT": 150,
-            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "SERVER_TITLE": "Server Title",
             "TIME_LIMIT": 10,
             "TRAINING": 0
           },
@@ -695,7 +695,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "QUADHOG": 0,
             "ROUND_LIMIT": 10,
             "SCORE_LIMIT": 150,
-            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "SERVER_TITLE": "Server Title",
             "TIME_LIMIT": 10,
             "TRAINING": 0
           },
@@ -749,7 +749,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "QUADHOG": 0,
             "ROUND_LIMIT": 10,
             "SCORE_LIMIT": 150,
-            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "SERVER_TITLE": "Server Title",
             "TIME_LIMIT": 10,
             "TRAINING": 0
           },
@@ -810,7 +810,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "QUADHOG": 0,
             "ROUND_LIMIT": 10,
             "SCORE_LIMIT": 150,
-            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "SERVER_TITLE": "Server Title",
             "TIME_LIMIT": 10,
             "TRAINING": 0
           },
@@ -875,7 +875,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "QUADHOG": 0,
             "ROUND_LIMIT": 10,
             "SCORE_LIMIT": 150,
-            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "SERVER_TITLE": "Server Title",
             "TIME_LIMIT": 10,
             "TRAINING": 0
           },
@@ -939,7 +939,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "QUADHOG": 0,
             "ROUND_LIMIT": 10,
             "SCORE_LIMIT": 150,
-            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "SERVER_TITLE": "Server Title",
             "TIME_LIMIT": 10,
             "TRAINING": 0
           },
@@ -1009,7 +1009,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "QUADHOG": 0,
             "ROUND_LIMIT": 10,
             "SCORE_LIMIT": 150,
-            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "SERVER_TITLE": "Server Title",
             "TIME_LIMIT": 10,
             "TRAINING": 0
           },
@@ -1057,7 +1057,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "QUADHOG": 0,
             "ROUND_LIMIT": 10,
             "SCORE_LIMIT": 150,
-            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "SERVER_TITLE": "Server Title",
             "TIME_LIMIT": 10,
             "TRAINING": 0
           },
@@ -1098,8 +1098,8 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('server_visit', { serverId: 1, playerId: 1 })
         await create('server_visit', { serverId: 1, playerId: 2 })
         await create('match', { serverId: 1, guid: '111111111111111111111111111111111111', active: true })
-        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: new Date, team: TeamType.Blue })
-        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 1, matchId: 1, active: true, startDate: new Date, team: TeamType.Red })
+        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: new Date, team: TeamType.Blue, warmup: false })
+        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 1, matchId: 1, active: true, startDate: new Date, team: TeamType.Red, warmup: false })
 
         let qlEvent = {
           "DATA": {
@@ -1128,7 +1128,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "QUADHOG": 0,
             "ROUND_LIMIT": 10,
             "SCORE_LIMIT": 150,
-            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "SERVER_TITLE": "Server Title",
             "TIME_LIMIT": 10,
             "TRAINING": 0
           },
@@ -1162,10 +1162,10 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('match', { serverId: 2, guid: '111111111111111111111111111111111111', active: true })
         await create('match', { serverId: 3, guid: '222222222222222222222222222222222222', active: true })
         await create('match', { serverId: 1, guid: '333333333333333333333333333333333333', active: true })
-        await create('match_participation', { playerId: 1, serverId: 2, serverVisitId: 1, matchId: 1, active: true, startDate: new Date, team: TeamType.Red })
-        await create('match_participation', { playerId: 2, serverId: 3, serverVisitId: 2, matchId: 2, active: true, startDate: new Date, team: TeamType.Blue })
-        await create('match_participation', { playerId: 3, serverId: 1, serverVisitId: 3, matchId: 3, active: true, startDate: new Date, team: TeamType.Blue })
-        await create('match_participation', { playerId: 3, serverId: 2, serverVisitId: 4, matchId: 1, active: true, startDate: new Date, team: TeamType.Blue })
+        await create('match_participation', { playerId: 1, serverId: 2, serverVisitId: 1, matchId: 1, active: true, startDate: new Date, team: TeamType.Red, warmup: false })
+        await create('match_participation', { playerId: 2, serverId: 3, serverVisitId: 2, matchId: 2, active: true, startDate: new Date, team: TeamType.Blue, warmup: false })
+        await create('match_participation', { playerId: 3, serverId: 1, serverVisitId: 3, matchId: 3, active: true, startDate: new Date, team: TeamType.Blue, warmup: false })
+        await create('match_participation', { playerId: 3, serverId: 2, serverVisitId: 4, matchId: 1, active: true, startDate: new Date, team: TeamType.Blue, warmup: false })
 
         let qlEvent = {
           "DATA": {
@@ -1194,7 +1194,7 @@ describe('service/QlStatsIntegrator.ts', function() {
             "QUADHOG": 0,
             "ROUND_LIMIT": 10,
             "SCORE_LIMIT": 150,
-            "SERVER_TITLE": ".de #topdog.io Ranked Duel #4",
+            "SERVER_TITLE": "Server Title",
             "TIME_LIMIT": 10,
             "TRAINING": 0
           },

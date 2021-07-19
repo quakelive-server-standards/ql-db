@@ -34,6 +34,7 @@ export class MatchParticipation {
   redFlagPickups?: number
   score?: number
   startDate?: Date
+  // TODO: Map Duel team to Red and Blue
   team?: TeamType
   teamJoinTime?: number
   teamRank?: number

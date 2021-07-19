@@ -592,7 +592,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(result.entities[2].team).to.be.null
       })
 
-      it('should not create a new match participation for warmup', async function() {
+      it('should create a new match participation for warmup', async function() {
         let qlEvent = {
           "DATA" : {
              "MATCH_GUID" : "111111111111111111111111111111111111",
@@ -610,9 +610,17 @@ describe('service/QlStatsIntegrator.ts', function() {
         let event = PlayerMedalEvent.fromQl(qlEvent['DATA'])
         await Services.get().qlStatsIntegrator.integrate('127.0.0.1', 27960, event, tx(), date)
   
-        let result = await Services.get().matchParticipationLogic.count({}, tx())
+        let result = await Services.get().matchParticipationLogic.read({}, tx())
         
-        expect(result.count).to.equal(0)
+        expect(result.entities.length).to.equal(1)
+        expect(result.entities[0].active).to.equal(true)
+        expect(result.entities[0].finishDate).to.be.null
+        expect(result.entities[0].matchId).to.be.null
+        expect(result.entities[0].playerId).to.equal(1)
+        expect(result.entities[0].roundId).to.be.null
+        expect(result.entities[0].serverId).to.equal(1)
+        expect(result.entities[0].startDate).to.deep.equal(date)
+        expect(result.entities[0].team).to.be.null
       })  
 
       it('should inactivate any former match participations on the same server if the current game is another one', async function() {
@@ -626,9 +634,9 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('server_visit', { serverId: 2, playerId: 3 })
         await create('match', { serverId: 1, guid: '111111111111111111111111111111111111', active: true })
         await create('match', { serverId: 2, guid: '222222222222222222222222222222222222', active: true })
-        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue })
-        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Red })
-        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 2, active: true, startDate: startDate, team: TeamType.Free })
+        await create('match_participation', { serverId: 1, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue, warmup: false })
+        await create('match_participation', { serverId: 1, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Red, warmup: false })
+        await create('match_participation', { serverId: 2, playerId: 3, serverVisitId: 3, matchId: 2, active: true, startDate: startDate, team: TeamType.Free, warmup: false })
   
         let qlEvent = {
           "DATA" : {
@@ -649,7 +657,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         let result = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
         
-        expect(result.entities.length).to.equal(3)
+        expect(result.entities.length).to.equal(4)
         expect(result.entities[0].active).to.equal(false)
         expect(result.entities[0].finishDate).to.be.null
         expect(result.entities[0].matchId).to.equal(1)
@@ -674,6 +682,14 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(result.entities[2].serverId).to.equal(2)
         expect(result.entities[2].startDate).to.deep.equal(startDate)
         expect(result.entities[2].team).to.equal(TeamType.Free)
+        expect(result.entities[3].active).to.equal(true)
+        expect(result.entities[3].finishDate).to.be.null
+        expect(result.entities[3].matchId).to.be.null
+        expect(result.entities[3].playerId).to.equal(1)
+        expect(result.entities[3].roundId).to.be.null
+        expect(result.entities[3].serverId).to.equal(1)
+        expect(result.entities[3].startDate).to.deep.equal(date)
+        expect(result.entities[3].team).to.be.null
       })  
 
       it('should inactivate any former match participation of the same player on any other servers', async function() {
@@ -685,8 +701,8 @@ describe('service/QlStatsIntegrator.ts', function() {
         await create('server_visit', { serverId: 2, playerId: 2 })
         await create('server_visit', { serverId: 2, playerId: 2 })
         await create('match', { serverId: 2, guid: '111111111111111111111111111111111111', active: true })
-        await create('match_participation', { serverId: 2, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue })
-        await create('match_participation', { serverId: 2, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Red })
+        await create('match_participation', { serverId: 2, playerId: 1, serverVisitId: 1, matchId: 1, active: true, startDate: startDate, team: TeamType.Blue, warmup: false })
+        await create('match_participation', { serverId: 2, playerId: 2, serverVisitId: 2, matchId: 1, active: true, startDate: startDate, team: TeamType.Red, warmup: false })
   
         let qlEvent = {
           "DATA" : {
@@ -707,7 +723,7 @@ describe('service/QlStatsIntegrator.ts', function() {
   
         let result = await Services.get().matchParticipationLogic.read({ '@orderBy': 'id' }, tx())
         
-        expect(result.entities.length).to.equal(2)
+        expect(result.entities.length).to.equal(3)
         expect(result.entities[0].active).to.equal(false)
         expect(result.entities[0].finishDate).to.be.null
         expect(result.entities[0].matchId).to.equal(1)
@@ -724,6 +740,14 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(result.entities[1].serverId).to.equal(2)
         expect(result.entities[1].startDate).to.deep.equal(startDate)
         expect(result.entities[1].team).to.equal(TeamType.Red)
+        expect(result.entities[2].active).to.equal(true)
+        expect(result.entities[2].finishDate).to.be.null
+        expect(result.entities[2].matchId).to.be.null
+        expect(result.entities[2].playerId).to.equal(1)
+        expect(result.entities[2].roundId).to.be.null
+        expect(result.entities[2].serverId).to.equal(1)
+        expect(result.entities[2].startDate).to.deep.equal(date)
+        expect(result.entities[2].team).to.be.null
       })  
     })
 
@@ -804,7 +828,7 @@ describe('service/QlStatsIntegrator.ts', function() {
         expect(result.entities.length).to.equal(1)
         expect(result.entities[0].date).to.deep.equal(date)
         expect(result.entities[0].matchId).to.be.null
-        expect(result.entities[0].matchParticipationId).to.be.null
+        expect(result.entities[0].matchParticipationId).to.equal(1)
         expect(result.entities[0].medal).to.equal(MedalType.FirstFrag)
         expect(result.entities[0].playerId).to.equal(2)
         expect(result.entities[0].roundId).to.be.null

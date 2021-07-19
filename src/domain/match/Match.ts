@@ -30,6 +30,10 @@ export class Match {
   lastLeadChangeTime?: number
   length?: number
   restarted?: boolean
+  /**
+   * TODO: Rename to scoreRed, scoreBlue
+   * TODO: Map Duel scores
+   */
   score1?: number
   score2?: number
   startDate?: Date

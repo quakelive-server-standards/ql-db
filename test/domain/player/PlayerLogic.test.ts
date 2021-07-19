@@ -84,7 +84,7 @@ describe('domain/player/PlayerLogic.ts', function() {
       await create('match_participation', { playerId: 1 })
       await create('match_participation', { playerId: 2 })
 
-      let result = await Services.get().playerLogic.read({ matchParticipations: { '@orderBy': 'id'} }, tx())
+      let result = await Services.get().playerLogic.read({ matchParticipations: { '@orderBy': 'id' }}, tx())
 
       expect(result.isValue()).to.be.true
       expect(result.entities[0].matchParticipations).to.be.not.undefined

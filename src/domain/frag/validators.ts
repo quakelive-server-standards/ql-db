@@ -89,7 +89,7 @@ export class FragParticipantValidator extends Validator {
 
     this.add('matchParticipationId', new TypeOf('number'))
     this.add('matchParticipationId', new Exists(async (fragParticipant: FragParticipant) => {
-      let result = await matchParticipationLogic.count({ id: fragParticipant.playerId }, tx)
+      let result = await matchParticipationLogic.count({ id: fragParticipant.matchParticipationId }, tx)
       return result.count == 1
     }))
 
@@ -99,7 +99,6 @@ export class FragParticipantValidator extends Validator {
       let result = await serverVisitLogic.count({ id: fragParticipant.serverVisitId }, tx)
       return result.count == 1
     }))
-
 
     this.add('airborn', new TypeOf('boolean'))
     this.add('ammo', new TypeOf('number'))
