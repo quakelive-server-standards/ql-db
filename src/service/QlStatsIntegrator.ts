@@ -1529,311 +1529,304 @@ export class QlStatsIntegrator {
 
       // if we have a match then we can try to get the corresponding match participation for the player
       let activeMatchParticipation
-      if (match) {
-        let activeMatchParticipationsResult = await this.matchParticipationLogic.read({ matchId: match.id, playerId: player.id, active: true }, tx)
+      activeMatchParticipationsResult = await this.matchParticipationLogic.read({ matchId: match?.id, playerId: player.id, active: true }, tx)
 
-        if (activeMatchParticipationsResult.entities.length == 0) {
-          activeMatchParticipation = new MatchParticipation
-          activeMatchParticipation.active = true
-          activeMatchParticipation.matchId = match.id
-          activeMatchParticipation.playerId = player.id
-          activeMatchParticipation.serverId = server.id
-          activeMatchParticipation.serverVisitId = activeServerVisit.id
-          // we cannot know the start date thus we just take the date of the medal itself
-          activeMatchParticipation.startDate = eventEmitDate
-          activeMatchParticipation.warmup = event.warmup
-
-          let matchParticipationCreateResult = await this.matchParticipationLogic.create(activeMatchParticipation, tx)
-
-          if (matchParticipationCreateResult.isMisfits()) {
-            throw new MisfitsError(matchParticipationCreateResult.misfits)
-          }
-
-          activeMatchParticipation = matchParticipationCreateResult.entity
-        }
-        else {
-          activeMatchParticipation = activeMatchParticipationsResult.entities[0]
-        }
-
-        // if the event denotes a different team for a player than what is stored in the match participation,
-        // then it means that the player switched teams without the server recognizing the PLAYER_SWITCH_TEAM event.
-        // in that case we will deactivate the current match participation and create a new one.
-
-        if (activeMatchParticipation.team != mapTeamType(event.team)) {
-          activeMatchParticipation.active = false
-  
-          // TODO: Determine finish date by searching for the last medal or frag
-  
-          let matchParticipationUpdateResult = await this.matchParticipationLogic.update(activeMatchParticipation, tx)
-  
-          if (matchParticipationUpdateResult.isMisfits()) {
-            throw new MisfitsError(matchParticipationUpdateResult.misfits)
-          }
-  
-          l.dev('Deactivated active match participation because the team has changed', matchParticipationUpdateResult.entity)
-  
-          activeMatchParticipation = new MatchParticipation
-          activeMatchParticipation.active = true
-          activeMatchParticipation.matchId = match ? match.id : null
-          activeMatchParticipation.playerId = player.id
-          activeMatchParticipation.roundId = matchParticipationUpdateResult.entity.roundId
-          activeMatchParticipation.serverId = server.id
-          activeMatchParticipation.serverVisitId = activeServerVisit.id
-          activeMatchParticipation.startDate = eventEmitDate
-          activeMatchParticipation.team = mapTeamType(event.team)
-          activeMatchParticipation.warmup = event.warmup
-  
-          let matchParticipationCreateResult = await this.matchParticipationLogic.create(activeMatchParticipation, tx)
-  
-          if (matchParticipationCreateResult.isMisfits()) {
-            throw new MisfitsError(matchParticipationCreateResult.misfits)
-          }
-  
-          activeMatchParticipation = matchParticipationCreateResult.entity
-          l.dev('Created new active match participation', activeMatchParticipation)
-        }
-      }
-
-      if (match && activeMatchParticipation) {
-        let playerResult = await this.playerLogic.createOrGet(event.steamId, event.name, eventEmitDate, tx)
-        let player = playerResult.entity
-
+      if (activeMatchParticipationsResult.entities.length == 0) {
+        activeMatchParticipation = new MatchParticipation
+        activeMatchParticipation.active = true
         activeMatchParticipation.matchId = match ? match.id : null
         activeMatchParticipation.playerId = player.id
         activeMatchParticipation.serverId = server.id
-  
-        activeMatchParticipation.aborted = event.aborted
-        activeMatchParticipation.blueFlagPickups = event.blueFlagPickups
-        activeMatchParticipation.deathCount = event.deaths
-        activeMatchParticipation.holyShits = event.holyShits
-        activeMatchParticipation.killCount = event.kills
-        // event.lose
-        activeMatchParticipation.maxStreak = event.maxStreak
-        // event.model
-        activeMatchParticipation.neutralFlagPickups = event.neutralFlagPickups
-        activeMatchParticipation.playTime = event.playTime
-        // event.quit
-        activeMatchParticipation.rank = event.rank
-        activeMatchParticipation.redFlagPickups = event.redFlagPickups
-        activeMatchParticipation.score = event.score
-        // event.team
-        activeMatchParticipation.teamJoinTime = event.teamJoinTime
-        activeMatchParticipation.teamRank = event.teamRank
-        activeMatchParticipation.tiedRank = event.tiedRank
-        activeMatchParticipation.tiedTeamRank = event.tiedTeamRank
+        activeMatchParticipation.serverVisitId = activeServerVisit.id
+        // we cannot know the start date thus we just take the date of the medal itself
+        activeMatchParticipation.startDate = eventEmitDate
         activeMatchParticipation.warmup = event.warmup
-        // event.win
-        activeMatchParticipation.damageDealt = event.damage.dealt
-        activeMatchParticipation.damageTaken = event.damage.taken
-        
-        activeMatchParticipation.medalStats = new MedalStats
-        activeMatchParticipation.medalStats.accuracy = event.medals.accuracy,
-        activeMatchParticipation.medalStats.assists = event.medals.assists,
-        activeMatchParticipation.medalStats.captures = event.medals.captures,
-        activeMatchParticipation.medalStats.comboKill = event.medals.comboKill,
-        activeMatchParticipation.medalStats.defends = event.medals.defends,
-        activeMatchParticipation.medalStats.excellent = event.medals.excellent,
-        activeMatchParticipation.medalStats.firstFrag = event.medals.firstFrag,
-        activeMatchParticipation.medalStats.headshot = event.medals.headshot,
-        activeMatchParticipation.medalStats.humiliation = event.medals.humiliation,
-        activeMatchParticipation.medalStats.impressive = event.medals.impressive,
-        activeMatchParticipation.medalStats.midair = event.medals.midair,
-        activeMatchParticipation.medalStats.perfect = event.medals.perfect,
-        activeMatchParticipation.medalStats.perforated = event.medals.perforated,
-        activeMatchParticipation.medalStats.quadGod = event.medals.quadGod,
-        activeMatchParticipation.medalStats.rampage = event.medals.rampage,
-        activeMatchParticipation.medalStats.revenge = event.medals.revenge
 
-        activeMatchParticipation.pickupStats = new PickupStats
-        activeMatchParticipation.pickupStats.ammo = event.pickups.ammo,
-        activeMatchParticipation.pickupStats.armor = event.pickups.armor,
-        activeMatchParticipation.pickupStats.armorRegeneration = event.pickups.armorRegeneration,
-        activeMatchParticipation.pickupStats.battleSuit = event.pickups.battleSuit,
-        activeMatchParticipation.pickupStats.doubler = event.pickups.doubler,
-        activeMatchParticipation.pickupStats.flight = event.pickups.flight,
-        activeMatchParticipation.pickupStats.greenArmor = event.pickups.greenArmor,
-        activeMatchParticipation.pickupStats.guard = event.pickups.guard,
-        activeMatchParticipation.pickupStats.haste = event.pickups.haste,
-        activeMatchParticipation.pickupStats.health = event.pickups.health,
-        activeMatchParticipation.pickupStats.invisibility = event.pickups.invisibility,
-        activeMatchParticipation.pickupStats.invulnerability = event.pickups.invulnerability,
-        activeMatchParticipation.pickupStats.kamikaze = event.pickups.kamikaze,
-        activeMatchParticipation.pickupStats.medkit = event.pickups.medkit,
-        activeMatchParticipation.pickupStats.megaHealth = event.pickups.megaHealth,
-        activeMatchParticipation.pickupStats.otherHoldable = event.pickups.otherHoldable,
-        activeMatchParticipation.pickupStats.otherPowerUp = event.pickups.otherPowerUp,
-        activeMatchParticipation.pickupStats.portal = event.pickups.portal,
-        activeMatchParticipation.pickupStats.quadDamage = event.pickups.quadDamage,
-        activeMatchParticipation.pickupStats.redArmor = event.pickups.redArmor,
-        activeMatchParticipation.pickupStats.regeneration = event.pickups.regeneration,
-        activeMatchParticipation.pickupStats.scout = event.pickups.scout,
-        activeMatchParticipation.pickupStats.teleporter = event.pickups.teleporter,
-        activeMatchParticipation.pickupStats.yellowArmor = event.pickups.yellowArmor,
+        let matchParticipationCreateResult = await this.matchParticipationLogic.create(activeMatchParticipation, tx)
 
-        activeMatchParticipation.bfg = {
-          deaths: event.weapons.bfg.deaths,
-          damageGiven: event.weapons.bfg.damageGiven,
-          damageReceived: event.weapons.bfg.damageReceived,
-          hits: event.weapons.bfg.hits,
-          kills: event.weapons.bfg.kills,
-          p: event.weapons.bfg.p,
-          shots: event.weapons.bfg.shots,
-          t: event.weapons.bfg.t
+        if (matchParticipationCreateResult.isMisfits()) {
+          throw new MisfitsError(matchParticipationCreateResult.misfits)
         }
 
-        activeMatchParticipation.chainGun = {
-          deaths: event.weapons.chainGun.deaths,
-          damageGiven: event.weapons.chainGun.damageGiven,
-          damageReceived: event.weapons.chainGun.damageReceived,
-          hits: event.weapons.chainGun.hits,
-          kills: event.weapons.chainGun.kills,
-          p: event.weapons.chainGun.p,
-          shots: event.weapons.chainGun.shots,
-          t: event.weapons.chainGun.t
-        }
-
-        activeMatchParticipation.gauntlet = {
-          deaths: event.weapons.gauntlet.deaths,
-          damageGiven: event.weapons.gauntlet.damageGiven,
-          damageReceived: event.weapons.gauntlet.damageReceived,
-          hits: event.weapons.gauntlet.hits,
-          kills: event.weapons.gauntlet.kills,
-          p: event.weapons.gauntlet.p,
-          shots: event.weapons.gauntlet.shots,
-          t: event.weapons.gauntlet.t
-        }
-
-        activeMatchParticipation.grenadeLauncher = {
-          deaths: event.weapons.grenadeLauncher.deaths,
-          damageGiven: event.weapons.grenadeLauncher.damageGiven,
-          damageReceived: event.weapons.grenadeLauncher.damageReceived,
-          hits: event.weapons.grenadeLauncher.hits,
-          kills: event.weapons.grenadeLauncher.kills,
-          p: event.weapons.grenadeLauncher.p,
-          shots: event.weapons.grenadeLauncher.shots,
-          t: event.weapons.grenadeLauncher.t
-        }
-
-        activeMatchParticipation.heavyMachineGun = {
-          deaths: event.weapons.heavyMachineGun.deaths,
-          damageGiven: event.weapons.heavyMachineGun.damageGiven,
-          damageReceived: event.weapons.heavyMachineGun.damageReceived,
-          hits: event.weapons.heavyMachineGun.hits,
-          kills: event.weapons.heavyMachineGun.kills,
-          p: event.weapons.heavyMachineGun.p,
-          shots: event.weapons.heavyMachineGun.shots,
-          t: event.weapons.heavyMachineGun.t
-        }
-
-        activeMatchParticipation.lightningGun = {
-          deaths: event.weapons.lightningGun.deaths,
-          damageGiven: event.weapons.lightningGun.damageGiven,
-          damageReceived: event.weapons.lightningGun.damageReceived,
-          hits: event.weapons.lightningGun.hits,
-          kills: event.weapons.lightningGun.kills,
-          p: event.weapons.lightningGun.p,
-          shots: event.weapons.lightningGun.shots,
-          t: event.weapons.lightningGun.t
-        }
-
-        activeMatchParticipation.machineGun = {
-          deaths: event.weapons.machineGun.deaths,
-          damageGiven: event.weapons.machineGun.damageGiven,
-          damageReceived: event.weapons.machineGun.damageReceived,
-          hits: event.weapons.machineGun.hits,
-          kills: event.weapons.machineGun.kills,
-          p: event.weapons.machineGun.p,
-          shots: event.weapons.machineGun.shots,
-          t: event.weapons.machineGun.t
-        }
-
-        activeMatchParticipation.nailGun = {
-          deaths: event.weapons.nailGun.deaths,
-          damageGiven: event.weapons.nailGun.damageGiven,
-          damageReceived: event.weapons.nailGun.damageReceived,
-          hits: event.weapons.nailGun.hits,
-          kills: event.weapons.nailGun.kills,
-          p: event.weapons.nailGun.p,
-          shots: event.weapons.nailGun.shots,
-          t: event.weapons.nailGun.t
-        }
-
-        activeMatchParticipation.otherWeapon = {
-          deaths: event.weapons.otherWeapon.deaths,
-          damageGiven: event.weapons.otherWeapon.damageGiven,
-          damageReceived: event.weapons.otherWeapon.damageReceived,
-          hits: event.weapons.otherWeapon.hits,
-          kills: event.weapons.otherWeapon.kills,
-          p: event.weapons.otherWeapon.p,
-          shots: event.weapons.otherWeapon.shots,
-          t: event.weapons.otherWeapon.t
-        }
-
-        activeMatchParticipation.plasmaGun = {
-          deaths: event.weapons.plasmaGun.deaths,
-          damageGiven: event.weapons.plasmaGun.damageGiven,
-          damageReceived: event.weapons.plasmaGun.damageReceived,
-          hits: event.weapons.plasmaGun.hits,
-          kills: event.weapons.plasmaGun.kills,
-          p: event.weapons.plasmaGun.p,
-          shots: event.weapons.plasmaGun.shots,
-          t: event.weapons.plasmaGun.t
-        }
-
-        activeMatchParticipation.proximityLauncher = {
-          deaths: event.weapons.proximityLauncher.deaths,
-          damageGiven: event.weapons.proximityLauncher.damageGiven,
-          damageReceived: event.weapons.proximityLauncher.damageReceived,
-          hits: event.weapons.proximityLauncher.hits,
-          kills: event.weapons.proximityLauncher.kills,
-          p: event.weapons.proximityLauncher.p,
-          shots: event.weapons.proximityLauncher.shots,
-          t: event.weapons.proximityLauncher.t
-        }
-
-        activeMatchParticipation.railgun = {
-          deaths: event.weapons.railgun.deaths,
-          damageGiven: event.weapons.railgun.damageGiven,
-          damageReceived: event.weapons.railgun.damageReceived,
-          hits: event.weapons.railgun.hits,
-          kills: event.weapons.railgun.kills,
-          p: event.weapons.railgun.p,
-          shots: event.weapons.railgun.shots,
-          t: event.weapons.railgun.t
-        }
-
-        activeMatchParticipation.rocketLauncher = {
-          deaths: event.weapons.rocketLauncher.deaths,
-          damageGiven: event.weapons.rocketLauncher.damageGiven,
-          damageReceived: event.weapons.rocketLauncher.damageReceived,
-          hits: event.weapons.rocketLauncher.hits,
-          kills: event.weapons.rocketLauncher.kills,
-          p: event.weapons.rocketLauncher.p,
-          shots: event.weapons.rocketLauncher.shots,
-          t: event.weapons.rocketLauncher.t
-        }
-
-        activeMatchParticipation.shotgun = {
-          deaths: event.weapons.shotgun.deaths,
-          damageGiven: event.weapons.shotgun.damageGiven,
-          damageReceived: event.weapons.shotgun.damageReceived,
-          hits: event.weapons.shotgun.hits,
-          kills: event.weapons.shotgun.kills,
-          p: event.weapons.shotgun.p,
-          shots: event.weapons.shotgun.shots,
-          t: event.weapons.shotgun.t
-        }
-
-        // if (matchParticipation) {
-        //   let finishDate = utc(matchParticipation.startDate)
-        //   finishDate.setSeconds(finishDate.getSeconds() + event.playTime)
-  
-        //   matchParticipation.finishDate = finishDate
-        //   await this.matchParticipationLogic.update(matchParticipation, tx)
-        // }
-
-        // await this.statsLogic.create(stats, tx)
+        activeMatchParticipation = matchParticipationCreateResult.entity
       }
+      else {
+        activeMatchParticipation = activeMatchParticipationsResult.entities[0]
+      }
+
+      // if the event denotes a different team for a player than what is stored in the match participation,
+      // then it means that the player switched teams without the server recognizing the PLAYER_SWITCH_TEAM event.
+      // in that case we will deactivate the current match participation and create a new one.
+
+      if (activeMatchParticipation.team != mapTeamType(event.team)) {
+        activeMatchParticipation.active = false
+
+        // TODO: Determine finish date by searching for the last medal or frag
+
+        let matchParticipationUpdateResult = await this.matchParticipationLogic.update(activeMatchParticipation, tx)
+
+        if (matchParticipationUpdateResult.isMisfits()) {
+          throw new MisfitsError(matchParticipationUpdateResult.misfits)
+        }
+
+        l.dev('Deactivated active match participation because the team has changed', matchParticipationUpdateResult.entity)
+
+        activeMatchParticipation = new MatchParticipation
+        activeMatchParticipation.active = true
+        activeMatchParticipation.matchId = match ? match.id : null
+        activeMatchParticipation.playerId = player.id
+        activeMatchParticipation.roundId = matchParticipationUpdateResult.entity.roundId
+        activeMatchParticipation.serverId = server.id
+        activeMatchParticipation.serverVisitId = activeServerVisit.id
+        activeMatchParticipation.startDate = eventEmitDate
+        activeMatchParticipation.team = mapTeamType(event.team)
+        activeMatchParticipation.warmup = event.warmup
+
+        let matchParticipationCreateResult = await this.matchParticipationLogic.create(activeMatchParticipation, tx)
+
+        if (matchParticipationCreateResult.isMisfits()) {
+          throw new MisfitsError(matchParticipationCreateResult.misfits)
+        }
+
+        activeMatchParticipation = matchParticipationCreateResult.entity
+        l.dev('Created new active match participation', activeMatchParticipation)
+      }
+
+      activeMatchParticipation.matchId = match ? match.id : null
+      activeMatchParticipation.playerId = player.id
+      activeMatchParticipation.serverId = server.id
+
+      activeMatchParticipation.aborted = event.aborted
+      activeMatchParticipation.blueFlagPickups = event.blueFlagPickups
+      activeMatchParticipation.deathCount = event.deaths
+      activeMatchParticipation.holyShits = event.holyShits
+      activeMatchParticipation.killCount = event.kills
+      // event.lose
+      activeMatchParticipation.maxStreak = event.maxStreak
+      // event.model
+      activeMatchParticipation.neutralFlagPickups = event.neutralFlagPickups
+      activeMatchParticipation.playTime = event.playTime
+      // event.quit
+      activeMatchParticipation.rank = event.rank
+      activeMatchParticipation.redFlagPickups = event.redFlagPickups
+      activeMatchParticipation.score = event.score
+      activeMatchParticipation.team = mapTeamType(event.team)
+      activeMatchParticipation.teamJoinTime = event.teamJoinTime
+      activeMatchParticipation.teamRank = event.teamRank
+      activeMatchParticipation.tiedRank = event.tiedRank
+      activeMatchParticipation.tiedTeamRank = event.tiedTeamRank
+      activeMatchParticipation.warmup = event.warmup
+      // event.win
+      activeMatchParticipation.damageDealt = event.damage.dealt
+      activeMatchParticipation.damageTaken = event.damage.taken
+      
+      activeMatchParticipation.medalStats = new MedalStats
+      activeMatchParticipation.medalStats.accuracy = event.medals.accuracy,
+      activeMatchParticipation.medalStats.assists = event.medals.assists,
+      activeMatchParticipation.medalStats.captures = event.medals.captures,
+      activeMatchParticipation.medalStats.comboKill = event.medals.comboKill,
+      activeMatchParticipation.medalStats.defends = event.medals.defends,
+      activeMatchParticipation.medalStats.excellent = event.medals.excellent,
+      activeMatchParticipation.medalStats.firstFrag = event.medals.firstFrag,
+      activeMatchParticipation.medalStats.headshot = event.medals.headshot,
+      activeMatchParticipation.medalStats.humiliation = event.medals.humiliation,
+      activeMatchParticipation.medalStats.impressive = event.medals.impressive,
+      activeMatchParticipation.medalStats.midair = event.medals.midair,
+      activeMatchParticipation.medalStats.perfect = event.medals.perfect,
+      activeMatchParticipation.medalStats.perforated = event.medals.perforated,
+      activeMatchParticipation.medalStats.quadGod = event.medals.quadGod,
+      activeMatchParticipation.medalStats.rampage = event.medals.rampage,
+      activeMatchParticipation.medalStats.revenge = event.medals.revenge
+
+      activeMatchParticipation.pickupStats = new PickupStats
+      activeMatchParticipation.pickupStats.ammo = event.pickups.ammo,
+      activeMatchParticipation.pickupStats.armor = event.pickups.armor,
+      activeMatchParticipation.pickupStats.armorRegeneration = event.pickups.armorRegeneration,
+      activeMatchParticipation.pickupStats.battleSuit = event.pickups.battleSuit,
+      activeMatchParticipation.pickupStats.doubler = event.pickups.doubler,
+      activeMatchParticipation.pickupStats.flight = event.pickups.flight,
+      activeMatchParticipation.pickupStats.greenArmor = event.pickups.greenArmor,
+      activeMatchParticipation.pickupStats.guard = event.pickups.guard,
+      activeMatchParticipation.pickupStats.haste = event.pickups.haste,
+      activeMatchParticipation.pickupStats.health = event.pickups.health,
+      activeMatchParticipation.pickupStats.invisibility = event.pickups.invisibility,
+      activeMatchParticipation.pickupStats.invulnerability = event.pickups.invulnerability,
+      activeMatchParticipation.pickupStats.kamikaze = event.pickups.kamikaze,
+      activeMatchParticipation.pickupStats.medkit = event.pickups.medkit,
+      activeMatchParticipation.pickupStats.megaHealth = event.pickups.megaHealth,
+      activeMatchParticipation.pickupStats.otherHoldable = event.pickups.otherHoldable,
+      activeMatchParticipation.pickupStats.otherPowerUp = event.pickups.otherPowerUp,
+      activeMatchParticipation.pickupStats.portal = event.pickups.portal,
+      activeMatchParticipation.pickupStats.quadDamage = event.pickups.quadDamage,
+      activeMatchParticipation.pickupStats.redArmor = event.pickups.redArmor,
+      activeMatchParticipation.pickupStats.regeneration = event.pickups.regeneration,
+      activeMatchParticipation.pickupStats.scout = event.pickups.scout,
+      activeMatchParticipation.pickupStats.teleporter = event.pickups.teleporter,
+      activeMatchParticipation.pickupStats.yellowArmor = event.pickups.yellowArmor,
+
+      activeMatchParticipation.bfg = {
+        deaths: event.weapons.bfg.deaths,
+        damageGiven: event.weapons.bfg.damageGiven,
+        damageReceived: event.weapons.bfg.damageReceived,
+        hits: event.weapons.bfg.hits,
+        kills: event.weapons.bfg.kills,
+        p: event.weapons.bfg.p,
+        shots: event.weapons.bfg.shots,
+        t: event.weapons.bfg.t
+      }
+
+      activeMatchParticipation.chainGun = {
+        deaths: event.weapons.chainGun.deaths,
+        damageGiven: event.weapons.chainGun.damageGiven,
+        damageReceived: event.weapons.chainGun.damageReceived,
+        hits: event.weapons.chainGun.hits,
+        kills: event.weapons.chainGun.kills,
+        p: event.weapons.chainGun.p,
+        shots: event.weapons.chainGun.shots,
+        t: event.weapons.chainGun.t
+      }
+
+      activeMatchParticipation.gauntlet = {
+        deaths: event.weapons.gauntlet.deaths,
+        damageGiven: event.weapons.gauntlet.damageGiven,
+        damageReceived: event.weapons.gauntlet.damageReceived,
+        hits: event.weapons.gauntlet.hits,
+        kills: event.weapons.gauntlet.kills,
+        p: event.weapons.gauntlet.p,
+        shots: event.weapons.gauntlet.shots,
+        t: event.weapons.gauntlet.t
+      }
+
+      activeMatchParticipation.grenadeLauncher = {
+        deaths: event.weapons.grenadeLauncher.deaths,
+        damageGiven: event.weapons.grenadeLauncher.damageGiven,
+        damageReceived: event.weapons.grenadeLauncher.damageReceived,
+        hits: event.weapons.grenadeLauncher.hits,
+        kills: event.weapons.grenadeLauncher.kills,
+        p: event.weapons.grenadeLauncher.p,
+        shots: event.weapons.grenadeLauncher.shots,
+        t: event.weapons.grenadeLauncher.t
+      }
+
+      activeMatchParticipation.heavyMachineGun = {
+        deaths: event.weapons.heavyMachineGun.deaths,
+        damageGiven: event.weapons.heavyMachineGun.damageGiven,
+        damageReceived: event.weapons.heavyMachineGun.damageReceived,
+        hits: event.weapons.heavyMachineGun.hits,
+        kills: event.weapons.heavyMachineGun.kills,
+        p: event.weapons.heavyMachineGun.p,
+        shots: event.weapons.heavyMachineGun.shots,
+        t: event.weapons.heavyMachineGun.t
+      }
+
+      activeMatchParticipation.lightningGun = {
+        deaths: event.weapons.lightningGun.deaths,
+        damageGiven: event.weapons.lightningGun.damageGiven,
+        damageReceived: event.weapons.lightningGun.damageReceived,
+        hits: event.weapons.lightningGun.hits,
+        kills: event.weapons.lightningGun.kills,
+        p: event.weapons.lightningGun.p,
+        shots: event.weapons.lightningGun.shots,
+        t: event.weapons.lightningGun.t
+      }
+
+      activeMatchParticipation.machineGun = {
+        deaths: event.weapons.machineGun.deaths,
+        damageGiven: event.weapons.machineGun.damageGiven,
+        damageReceived: event.weapons.machineGun.damageReceived,
+        hits: event.weapons.machineGun.hits,
+        kills: event.weapons.machineGun.kills,
+        p: event.weapons.machineGun.p,
+        shots: event.weapons.machineGun.shots,
+        t: event.weapons.machineGun.t
+      }
+
+      activeMatchParticipation.nailGun = {
+        deaths: event.weapons.nailGun.deaths,
+        damageGiven: event.weapons.nailGun.damageGiven,
+        damageReceived: event.weapons.nailGun.damageReceived,
+        hits: event.weapons.nailGun.hits,
+        kills: event.weapons.nailGun.kills,
+        p: event.weapons.nailGun.p,
+        shots: event.weapons.nailGun.shots,
+        t: event.weapons.nailGun.t
+      }
+
+      activeMatchParticipation.otherWeapon = {
+        deaths: event.weapons.otherWeapon.deaths,
+        damageGiven: event.weapons.otherWeapon.damageGiven,
+        damageReceived: event.weapons.otherWeapon.damageReceived,
+        hits: event.weapons.otherWeapon.hits,
+        kills: event.weapons.otherWeapon.kills,
+        p: event.weapons.otherWeapon.p,
+        shots: event.weapons.otherWeapon.shots,
+        t: event.weapons.otherWeapon.t
+      }
+
+      activeMatchParticipation.plasmaGun = {
+        deaths: event.weapons.plasmaGun.deaths,
+        damageGiven: event.weapons.plasmaGun.damageGiven,
+        damageReceived: event.weapons.plasmaGun.damageReceived,
+        hits: event.weapons.plasmaGun.hits,
+        kills: event.weapons.plasmaGun.kills,
+        p: event.weapons.plasmaGun.p,
+        shots: event.weapons.plasmaGun.shots,
+        t: event.weapons.plasmaGun.t
+      }
+
+      activeMatchParticipation.proximityLauncher = {
+        deaths: event.weapons.proximityLauncher.deaths,
+        damageGiven: event.weapons.proximityLauncher.damageGiven,
+        damageReceived: event.weapons.proximityLauncher.damageReceived,
+        hits: event.weapons.proximityLauncher.hits,
+        kills: event.weapons.proximityLauncher.kills,
+        p: event.weapons.proximityLauncher.p,
+        shots: event.weapons.proximityLauncher.shots,
+        t: event.weapons.proximityLauncher.t
+      }
+
+      activeMatchParticipation.railgun = {
+        deaths: event.weapons.railgun.deaths,
+        damageGiven: event.weapons.railgun.damageGiven,
+        damageReceived: event.weapons.railgun.damageReceived,
+        hits: event.weapons.railgun.hits,
+        kills: event.weapons.railgun.kills,
+        p: event.weapons.railgun.p,
+        shots: event.weapons.railgun.shots,
+        t: event.weapons.railgun.t
+      }
+
+      activeMatchParticipation.rocketLauncher = {
+        deaths: event.weapons.rocketLauncher.deaths,
+        damageGiven: event.weapons.rocketLauncher.damageGiven,
+        damageReceived: event.weapons.rocketLauncher.damageReceived,
+        hits: event.weapons.rocketLauncher.hits,
+        kills: event.weapons.rocketLauncher.kills,
+        p: event.weapons.rocketLauncher.p,
+        shots: event.weapons.rocketLauncher.shots,
+        t: event.weapons.rocketLauncher.t
+      }
+
+      activeMatchParticipation.shotgun = {
+        deaths: event.weapons.shotgun.deaths,
+        damageGiven: event.weapons.shotgun.damageGiven,
+        damageReceived: event.weapons.shotgun.damageReceived,
+        hits: event.weapons.shotgun.hits,
+        kills: event.weapons.shotgun.kills,
+        p: event.weapons.shotgun.p,
+        shots: event.weapons.shotgun.shots,
+        t: event.weapons.shotgun.t
+      }
+
+      // if (matchParticipation) {
+      //   let finishDate = utc(matchParticipation.startDate)
+      //   finishDate.setSeconds(finishDate.getSeconds() + event.playTime)
+
+      //   matchParticipation.finishDate = finishDate
+      //   await this.matchParticipationLogic.update(matchParticipation, tx)
+      // }
+
+      // await this.statsLogic.create(stats, tx)
     }
 
     /********************************************/
@@ -1915,7 +1908,7 @@ export class QlStatsIntegrator {
     let player = playerResult.entity
     
     if (playerResult.created) {
-      l.returning('Returning newly created player...', player)
+      l.returning('Returning created player...', player)
     }
     else {
       l.returning('Returning existing player...', player)
