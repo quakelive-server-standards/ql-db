@@ -1,5 +1,6 @@
 import { PgTransaction } from 'knight-pg-transaction'
-import { Absent, Exists, Required, TypeOf, Validator } from 'knight-validation'
+import { Absent, Enum, Exists, Required, TypeOf, Validator } from 'knight-validation'
+import { TeamType } from '../enums/TeamType'
 import { MatchLogic } from '../match/MatchLogic'
 import { ServerLogic } from '../server/ServerLogic'
 import { Round } from './Round'
@@ -29,7 +30,7 @@ export class RoundValidator extends Validator {
     this.add('round', new Required)
     this.add('round', new TypeOf('number'))
 
-    // this.add('teamWon', new Enum(TeamType))
+    this.add('teamWon', new Enum(TeamType))
     
     this.add('time', new Required)
     this.add('time', new TypeOf('number'))

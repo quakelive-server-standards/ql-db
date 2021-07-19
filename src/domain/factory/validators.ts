@@ -1,5 +1,6 @@
 import { PgTransaction } from 'knight-pg-transaction'
-import { Absent, Exists, Max, Required, TypeOf, Validator } from 'knight-validation'
+import { Absent, Enum, Exists, Max, Required, TypeOf, Validator } from 'knight-validation'
+import { GameType } from '../enums/GameType'
 import { Factory } from './Factory'
 import { FactoryLogic } from './FactoryLogic'
 
@@ -9,8 +10,7 @@ export class FactoryValidator extends Validator {
     super()
 
     this.add('gameType', new Required)
-    this.add('gameType', new TypeOf('string'))
-    this.add('gameType', new Max(20))
+    this.add('gameType', new Enum(GameType))
 
     this.add('name', new Required)
     this.add('name', new TypeOf('string'))
