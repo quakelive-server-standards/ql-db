@@ -1795,16 +1795,56 @@ export class QlStatsIntegrator {
     /********************************************/
     else if (event instanceof MatchReportEvent) {
       l.dev('Processing MatchReportEvent...')
-      
-      let matchResult = await this.matchLogic.createOrGet(event.matchGuid, event.gameLength, eventEmitDate, tx)
-      let match = matchResult.entity
 
+      // update server title if its different
+      if (server.title != event.serverTitle) {
+        server.title = event.serverTitle
+        let serverUpdateResult = await this.serverLogic.update(server, tx)
+        
+        if (serverUpdateResult.isMisfits()) {
+          throw new MisfitsError(serverUpdateResult.misfits)
+        }
+
+        l.dev(`Updated the server title from (${server.title}) to (${event.serverTitle})`)
+      }
+
+      // create or get the factory while simultaneously updating the factory title 
       let factoryResult = await this.factoryLogic.createOrGet(event.factory, event.factoryTitle, mapGameType(event.gameType), tx)
-      let mapResult = await this.mapLogic.createOrGet(event.map, tx)
+
+      if (factoryResult.isMisfits()) {
+        throw new MisfitsError(factoryResult.misfits)
+      }
 
       let factory = factoryResult.entity
-      let map = mapResult.entity
+      l.dev('factory', factory)
 
+      // create or get the map
+      let mapResult = await this.mapLogic.createOrGet(event.map, tx)
+
+      if (mapResult.isMisfits()) {
+        throw new MisfitsError(mapResult.misfits)
+      }
+
+      let map = mapResult.entity
+      l.dev('map', map)
+
+      // find all active matches on the server and deactivate them if they are not the current active match
+      let activeMatchesResult = await this.matchLogic.read({ serverId: server.id, active: true, guid: { operator: '!=', value: event.matchGuid } }, tx)
+
+      for (let activeMatch of activeMatchesResult.entities) {
+        l.dev('Deactivating match', activeMatch)
+
+        activeMatch.active = false
+        let matchUpdateResult = await this.matchLogic.update(activeMatch, tx)
+
+        if (matchUpdateResult.isMisfits()) {
+          throw new MisfitsError(matchUpdateResult.misfits)
+        }
+      }
+
+      // since the match report event is only emitted when not in warmup, we create or get the match
+      let match = await this.createMissingMatch(server.id!, event.matchGuid, event.gameLength, eventEmitDate, tx)
+      
       let finishDate = utc(match.startDate)
       finishDate.setSeconds(finishDate.getSeconds() + event.gameLength)
 
@@ -1816,6 +1856,7 @@ export class QlStatsIntegrator {
       server.title = event.serverTitle
 
       match.aborted = event.aborted
+      match.active = false
       match.cvars.capturelimit = event.captureLimit
       match.exitMessage = event.exitMsg
       match.cvars.fraglimit = event.fragLimit
@@ -1833,8 +1874,13 @@ export class QlStatsIntegrator {
       match.score1 = event.teamScore0
       match.score2 = event.teamScore1
 
-      await this.serverLogic.update(server, tx)
-      await this.matchLogic.update(match, tx)
+      let updateResult = await this.matchLogic.update(match, tx)
+
+      if (updateResult.isMisfits()) {
+        throw new MisfitsError(updateResult.misfits)
+      }
+
+      l.dev('Updated match', updateResult.entity)
     }
 
     /********************************************/
