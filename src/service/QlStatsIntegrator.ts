@@ -1,4 +1,5 @@
 import Log from 'knight-log'
+import { determineRelationshipsToLoad } from 'knight-orm'
 import { PgTransaction } from 'knight-pg-transaction'
 import { MisfitsError } from 'knight-validation'
 import { GameType as StatsGameType, HoldableType as StatsHoldableType, isEnvironment, MatchReportEvent, MatchStartedEvent, MedalType as StatsMedalType, ModType, PlayerConnectEvent, PlayerDeathEvent, PlayerDisconnectEvent, PlayerKillEvent, PlayerMedalEvent, PlayerStatsEvent, PlayerSwitchTeamEvent, PowerUpType as StatsPowerUpType, RoundOverEvent, TeamType as StatsTeamType, WeaponType as StatsWeaponType } from 'ql-stats-model'
@@ -451,53 +452,6 @@ export class QlStatsIntegrator {
     }
 
     /********************************************/
-    /*               MATCH_REPORT               */
-    /********************************************/
-    else if (event instanceof MatchReportEvent) {
-      l.dev('Processing MatchReportEvent...')
-      
-      let matchResult = await this.matchLogic.createOrGet(event.matchGuid, event.gameLength, eventEmitDate, tx)
-      let match = matchResult.entity
-
-      let factoryResult = await this.factoryLogic.createOrGet(event.factory, event.factoryTitle, mapGameType(event.gameType), tx)
-      let mapResult = await this.mapLogic.createOrGet(event.map, tx)
-
-      let factory = factoryResult.entity
-      let map = mapResult.entity
-
-      let finishDate = utc(match.startDate)
-      finishDate.setSeconds(finishDate.getSeconds() + event.gameLength)
-
-      match.cvars = new Cvars
-      match.finishDate = finishDate
-      match.factoryId = factory.id
-      match.mapId = map.id
-      match.serverId = server.id
-      server.title = event.serverTitle
-
-      match.aborted = event.aborted
-      match.cvars.capturelimit = event.captureLimit
-      match.exitMessage = event.exitMsg
-      match.cvars.fraglimit = event.fragLimit
-      match.length = event.gameLength
-      match.cvars.g_instagib = event.instagib
-      match.lastLeadChangeTime = event.lastLeadChangeTime
-      match.guid = event.matchGuid
-      match.cvars.mercylimit = event.mercyLimit
-      match.cvars.g_quadHog = event.quadHog
-      match.restarted = event.restarted
-      match.cvars.roundlimit = event.roundLimit
-      match.cvars.scorelimit = event.scoreLimit
-      match.cvars.timelimit = event.timeLimit
-      match.cvars.g_training = event.training
-      match.score1 = event.teamScore0
-      match.score2 = event.teamScore1
-
-      await this.serverLogic.update(server, tx)
-      await this.matchLogic.update(match, tx)
-    }
-
-    /********************************************/
     /*               PLAYER_KILL                */
     /********************************************/
     else if (event instanceof PlayerKillEvent) {
@@ -691,11 +645,11 @@ export class QlStatsIntegrator {
         }
 
         killerMatchParticipation = matchParticipationCreateResult.entity
-        l.dev('Did not found existing match participation for killer. Created one.', killerMatchParticipation)
+        l.dev('Did not find existing active match participation for killer. Created one.', killerMatchParticipation)
       }
       else {
         killerMatchParticipation = killerMatchParticipationsResult.entities[0]
-        l.dev('Found existing match particiation for killer', killerMatchParticipation)
+        l.dev('Found existing active match particiation for killer', killerMatchParticipation)
       }
 
       // if the event denotes a different team for a player than what is stored in the match participation,
@@ -762,11 +716,11 @@ export class QlStatsIntegrator {
         }
 
         victimMatchParticipation = matchParticipationCreateResult.entity
-        l.dev('Did not found existing match participation for victim. Created one.', victimMatchParticipation)
+        l.dev('Did not find existing active match participation for victim. Created one.', victimMatchParticipation)
       }
       else {
         victimMatchParticipation = victimMatchParticipationsResult.entities[0]
-        l.dev('Found existing match particiation for victim', victimMatchParticipation)
+        l.dev('Found existing active match particiation for victim', victimMatchParticipation)
       }
 
       // if the event denotes a different team for a player than what is stored in the match participation,
@@ -1096,11 +1050,11 @@ export class QlStatsIntegrator {
           }
 
           killerMatchParticipation = matchParticipationCreateResult.entity
-          l.dev('Did not found existing match participation for killer. Created one.', killerMatchParticipation)
+          l.dev('Did not find existing active match participation for killer. Created one.', killerMatchParticipation)
         }
         else {
           killerMatchParticipation = killerMatchParticipationsResult.entities[0]
-          l.dev('Found existing match particiation for killer', killerMatchParticipation)
+          l.dev('Found existing active match particiation for killer', killerMatchParticipation)
         }
 
         // if the event denotes a different team for a player than what is stored in the match participation,
@@ -1150,8 +1104,6 @@ export class QlStatsIntegrator {
       }, tx)
 
       if (victimMatchParticipationsResult.entities.length == 0) {
-        l.dev('Did not found existing match participation for victim. Creating one...')
-
         victimMatchParticipation = new MatchParticipation
         victimMatchParticipation.active = true
         victimMatchParticipation.matchId = match ? match.id : null
@@ -1170,11 +1122,11 @@ export class QlStatsIntegrator {
         }
 
         victimMatchParticipation = matchParticipationCreateResult.entity
-        l.dev('Did not found existing match participation for victim. Created one.', victimMatchParticipation)
+        l.dev('Did not find existing active match participation for victim. Created one.', victimMatchParticipation)
       }
       else {
         victimMatchParticipation = victimMatchParticipationsResult.entities[0]
-        l.dev('Found existing match particiation for victim', victimMatchParticipation)
+        l.dev('Found existing active match particiation for victim', victimMatchParticipation)
       }
 
       // if the event denotes a different team for a player than what is stored in the match participation,
@@ -1287,7 +1239,7 @@ export class QlStatsIntegrator {
       let activeServerVisit = activeServerVisitResult.entity
 
       if (activeServerVisit == undefined) {
-        l.dev('Did not found any active server visit. Creating one...')
+        l.dev('Did not find any active server visit. Creating one...')
         let serverVisit = new ServerVisit
 
         serverVisit.playerId = player.id
@@ -1437,21 +1389,21 @@ export class QlStatsIntegrator {
       let activeServerVisit = activeServerVisitResult.entity
 
       if (activeServerVisit == undefined) {
-        l.dev('Did not found any active server visit. Creating one...')
-        let serverVisit = new ServerVisit
+        activeServerVisit = new ServerVisit
 
-        serverVisit.playerId = player.id
-        serverVisit.serverId = server.id
-        serverVisit.active = true
-        serverVisit.connectDate = eventEmitDate
+        activeServerVisit.playerId = player.id
+        activeServerVisit.serverId = server.id
+        activeServerVisit.active = true
+        activeServerVisit.connectDate = eventEmitDate
   
-        let serverVisitCreateResult = await this.serverVisitLogic.create(serverVisit, tx)
+        let createResult = await this.serverVisitLogic.create(activeServerVisit, tx)
 
-        if (serverVisitCreateResult.isMisfits()) {
-          throw new MisfitsError(serverVisitCreateResult.misfits)
+        if (createResult.isMisfits()) {
+          throw new MisfitsError(createResult.misfits)
         }
 
-        activeServerVisit = serverVisitCreateResult.entity
+        activeServerVisit = createResult.entity
+        l.dev('Created new active server visit', activeServerVisit)
       }
       else {
         l.dev('Found active server visit', activeServerVisit)
@@ -1527,7 +1479,6 @@ export class QlStatsIntegrator {
         match = await this.createMissingMatch(server.id!, event.matchGuid, event.playTime, eventEmitDate, tx)
       }
 
-      // if we have a match then we can try to get the corresponding match participation for the player
       let activeMatchParticipation
       activeMatchParticipationsResult = await this.matchParticipationLogic.read({ matchId: match?.id, playerId: player.id, active: true }, tx)
 
@@ -1538,20 +1489,21 @@ export class QlStatsIntegrator {
         activeMatchParticipation.playerId = player.id
         activeMatchParticipation.serverId = server.id
         activeMatchParticipation.serverVisitId = activeServerVisit.id
-        // we cannot know the start date thus we just take the date of the medal itself
-        activeMatchParticipation.startDate = eventEmitDate
+        activeMatchParticipation.startDate = new Date(new Date(eventEmitDate).setSeconds(eventEmitDate.getSeconds() - event.playTime))
+        activeMatchParticipation.team = mapTeamType(event.team)
         activeMatchParticipation.warmup = event.warmup
 
-        let matchParticipationCreateResult = await this.matchParticipationLogic.create(activeMatchParticipation, tx)
+        let createResult = await this.matchParticipationLogic.create(activeMatchParticipation, tx)
 
-        if (matchParticipationCreateResult.isMisfits()) {
-          throw new MisfitsError(matchParticipationCreateResult.misfits)
+        if (createResult.isMisfits()) {
+          throw new MisfitsError(createResult.misfits)
         }
 
-        activeMatchParticipation = matchParticipationCreateResult.entity
+        activeMatchParticipation = createResult.entity
       }
       else {
         activeMatchParticipation = activeMatchParticipationsResult.entities[0]
+        l.dev('Found existing active match particiation', activeMatchParticipation)
       }
 
       // if the event denotes a different team for a player than what is stored in the match participation,
@@ -1573,22 +1525,23 @@ export class QlStatsIntegrator {
 
         activeMatchParticipation = new MatchParticipation
         activeMatchParticipation.active = true
+        activeMatchParticipation.finishDate = eventEmitDate
         activeMatchParticipation.matchId = match ? match.id : null
         activeMatchParticipation.playerId = player.id
         activeMatchParticipation.roundId = matchParticipationUpdateResult.entity.roundId
         activeMatchParticipation.serverId = server.id
         activeMatchParticipation.serverVisitId = activeServerVisit.id
-        activeMatchParticipation.startDate = eventEmitDate
+        activeMatchParticipation.startDate = new Date(new Date(eventEmitDate).setSeconds(eventEmitDate.getSeconds() - event.playTime))
         activeMatchParticipation.team = mapTeamType(event.team)
         activeMatchParticipation.warmup = event.warmup
 
-        let matchParticipationCreateResult = await this.matchParticipationLogic.create(activeMatchParticipation, tx)
+        let createResult = await this.matchParticipationLogic.create(activeMatchParticipation, tx)
 
-        if (matchParticipationCreateResult.isMisfits()) {
-          throw new MisfitsError(matchParticipationCreateResult.misfits)
+        if (createResult.isMisfits()) {
+          throw new MisfitsError(createResult.misfits)
         }
 
-        activeMatchParticipation = matchParticipationCreateResult.entity
+        activeMatchParticipation = createResult.entity
         l.dev('Created new active match participation', activeMatchParticipation)
       }
 
@@ -1597,8 +1550,10 @@ export class QlStatsIntegrator {
       activeMatchParticipation.serverId = server.id
 
       activeMatchParticipation.aborted = event.aborted
+      activeMatchParticipation.active = false
       activeMatchParticipation.blueFlagPickups = event.blueFlagPickups
       activeMatchParticipation.deathCount = event.deaths
+      activeMatchParticipation.finishDate = eventEmitDate
       activeMatchParticipation.holyShits = event.holyShits
       activeMatchParticipation.killCount = event.kills
       activeMatchParticipation.maxStreak = event.maxStreak
@@ -1816,6 +1771,14 @@ export class QlStatsIntegrator {
         t: event.weapons.shotgun.t
       }
 
+      let matchParticipationUpdateResult = await this.matchParticipationLogic.update(activeMatchParticipation, tx)
+
+      if (matchParticipationUpdateResult.isMisfits()) {
+        throw new MisfitsError(matchParticipationUpdateResult.misfits)
+      }
+
+      l.dev('Updated active match participation', matchParticipationUpdateResult.entity)
+
       // if (matchParticipation) {
       //   let finishDate = utc(matchParticipation.startDate)
       //   finishDate.setSeconds(finishDate.getSeconds() + event.playTime)
@@ -1825,6 +1788,53 @@ export class QlStatsIntegrator {
       // }
 
       // await this.statsLogic.create(stats, tx)
+    }
+
+    /********************************************/
+    /*               MATCH_REPORT               */
+    /********************************************/
+    else if (event instanceof MatchReportEvent) {
+      l.dev('Processing MatchReportEvent...')
+      
+      let matchResult = await this.matchLogic.createOrGet(event.matchGuid, event.gameLength, eventEmitDate, tx)
+      let match = matchResult.entity
+
+      let factoryResult = await this.factoryLogic.createOrGet(event.factory, event.factoryTitle, mapGameType(event.gameType), tx)
+      let mapResult = await this.mapLogic.createOrGet(event.map, tx)
+
+      let factory = factoryResult.entity
+      let map = mapResult.entity
+
+      let finishDate = utc(match.startDate)
+      finishDate.setSeconds(finishDate.getSeconds() + event.gameLength)
+
+      match.cvars = new Cvars
+      match.finishDate = finishDate
+      match.factoryId = factory.id
+      match.mapId = map.id
+      match.serverId = server.id
+      server.title = event.serverTitle
+
+      match.aborted = event.aborted
+      match.cvars.capturelimit = event.captureLimit
+      match.exitMessage = event.exitMsg
+      match.cvars.fraglimit = event.fragLimit
+      match.length = event.gameLength
+      match.cvars.g_instagib = event.instagib
+      match.lastLeadChangeTime = event.lastLeadChangeTime
+      match.guid = event.matchGuid
+      match.cvars.mercylimit = event.mercyLimit
+      match.cvars.g_quadHog = event.quadHog
+      match.restarted = event.restarted
+      match.cvars.roundlimit = event.roundLimit
+      match.cvars.scorelimit = event.scoreLimit
+      match.cvars.timelimit = event.timeLimit
+      match.cvars.g_training = event.training
+      match.score1 = event.teamScore0
+      match.score2 = event.teamScore1
+
+      await this.serverLogic.update(server, tx)
+      await this.matchLogic.update(match, tx)
     }
 
     /********************************************/
